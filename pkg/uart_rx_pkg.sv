@@ -1,6 +1,6 @@
 package uart_rx_pkg;
 
-typedef enum logic [3:0] {
+  typedef enum logic [3:0] {
     IDLE,
     START_BIT,
     DATA_0,
@@ -13,6 +13,6 @@ typedef enum logic [3:0] {
     DATA_7,
     PARITY_BIT,
     STOP_BIT
-} uart_rx_state_e;
+  } uart_rx_state_e;
 
 endpackage

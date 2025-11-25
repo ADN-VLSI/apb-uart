@@ -118,5 +118,5 @@ Controls interrupt enables and provides status flags for various UART conditions
 
 ## Detailed Design
 ![TX FSM](svg/tx_fsm.svg)
-![Transmitter](svg/transmitter.drawio.svg)
+![Transmitter](svg/transmitter.svg)
 ![parity_detector](svg/parity_detector.svg)

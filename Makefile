@@ -22,6 +22,8 @@ TB_DIR    := ${ROOT_DIR}/tb
 
 FILE_LIST += -i ${INC_DIR}
 FILE_LIST += ${PKG_DIR}/apb_uart_pkg.sv
+FILE_LIST += ${PKG_DIR}/uart_tx_pkg.sv
+FILE_LIST += ${PKG_DIR}/uart_rx_pkg.sv
 FILE_LIST += $(shell find ${RTL_DIR}/ -name "*.sv")
 FILE_LIST += $(shell find ${TB_DIR}/ -name "*.sv")
 	
