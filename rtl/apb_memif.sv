@@ -1,109 +1,94 @@
-// -----------------------------------------------------------------------------
-// APB to memory-interface bridge
-//
-// This block converts the 2-phase APB handshake (PSEL/PENABLE/PREADY) into a
-// simple request/ack pair (mreq/mack). Requests are issued when PSEL and
-// PENABLE are asserted and remain active until the downstream logic raises
-// MACK. The read data and response coming back from the memory side are
-// registered before they are returned on the APB bus so they naturally align
-// with the cycle where PREADY is asserted.
-// -----------------------------------------------------------------------------
 module apb_memif #(
-    parameter int ADDR_WIDTH  = 32,
-    parameter int DATA_WIDTH  = 32,
-    parameter int STRB_WIDTH  = DATA_WIDTH / 8,
-    parameter int MRESP_WIDTH = 1
+    parameter int ADDR_WIDTH = 32,
+    parameter int DATA_WIDTH = 32
 ) (
-    input  logic                    arst_ni,
-    input  logic                    clk_i,
+    // Global signals
+    input logic arst_ni,  // Asynchronous reset, active low
+    input logic clk_i,    // Clock input
 
-    // APB slave side
-    input  logic                    psel_i,
-    input  logic                    penable_i,
-    input  logic [ADDR_WIDTH-1:0]   paddr_i,
-    input  logic                    pwrite_i,
-    input  logic [DATA_WIDTH-1:0]   pwdata_i,
-    input  logic [STRB_WIDTH-1:0]   pstrb_i,
+    // APB Slave Interface Inputs
+    input logic                        psel_i,     // Peripheral select
+    input logic                        penable_i,  // Peripheral enable
+    input logic [      ADDR_WIDTH-1:0] paddr_i,    // Peripheral address
+    input logic                        pwrite_i,   // Peripheral write enable
+    input logic [      DATA_WIDTH-1:0] pwdata_i,   // Peripheral write data
+    input logic [(DATA_WIDTH / 8)-1:0] pstrb_i,    // Peripheral byte strobe
 
-    output logic                    pready_o,
-    output logic [DATA_WIDTH-1:0]   prdata_o,
-    output logic                    pslverr_o,
+    // APB Slave Interface Outputs
+    output logic                  pready_o,  // Peripheral ready
+    output logic [DATA_WIDTH-1:0] prdata_o,  // Peripheral read data
+    output logic                  pslverr_o, // Peripheral slave error
 
-    // Memory side
-    output logic                    mreq_o,
-    output logic [ADDR_WIDTH-1:0]   maddr_o,
-    output logic                    mwe_o,
-    output logic [DATA_WIDTH-1:0]   mwdata_o,
-    output logic [STRB_WIDTH-1:0]   mstrb_o,
+    // Memory Interface Outputs
+    output logic                      mreq_o,    // Memory request
+    output logic [    ADDR_WIDTH-1:0] maddr_o,   // Memory address
+    output logic                      mwe_o,     // Memory write enable
+    output logic [    DATA_WIDTH-1:0] mwdata_o,  // Memory write data
+    output logic [(DATA_WIDTH/8)-1:0] mstrb_o,   // Memory byte strobe
 
-    input  logic                    mack_i,
-    input  logic [DATA_WIDTH-1:0]   mrdata_i,
-    input  logic [MRESP_WIDTH-1:0]  mresp_i
+    // Memory Interface Inputs
+    input logic                  mack_i,    // Memory acknowledge
+    input logic [DATA_WIDTH-1:0] mrdata_i,  // Memory read data
+    input logic                  mresp_i    // Memory response (error indicator)
 );
 
-  // Pass-through address/control signals remain in the APB clock domain.
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Signals
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Register to track previous penable state.
+  logic penable_q;
+
+  // Signal to indicate when to update output signals.
+  logic pout_update;
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Combinational Logic
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  assign mreq_o = penable_i & psel_i & ~penable_q;
+
   assign maddr_o  = paddr_i;
   assign mwe_o    = pwrite_i;
   assign mwdata_o = pwdata_i;
   assign mstrb_o  = pstrb_i;
 
-  // ---------------------------------------------------------------------------
-  // Request / ready tracking
-  // ---------------------------------------------------------------------------
-  logic mreq_q;
-  logic pready_q;
-  logic [DATA_WIDTH-1:0]  prdata_q;
-  logic [MRESP_WIDTH-1:0] mresp_q;
+  assign pout_update = mack_i | mreq_o;
 
-  logic req_fire;
-  logic mreq_d;
-  logic pready_d;
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Sequential Logic
+  //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Request is issued when a new enable phase starts and no other request is
-  // outstanding. It stays asserted until the downstream asserts mack_i.
-  assign req_fire = psel_i & penable_i & ~mreq_q;
-
-  always_comb begin
-    mreq_d = mreq_q;
-    if (mack_i) begin
-      mreq_d = 1'b0;
-    end else if (req_fire) begin
-      mreq_d = 1'b1;
-    end
-  end
-
-  // APB PREADY is held low while a request is in flight and re-asserted when
-  // the memory side acknowledges. This mirrors the APB wait-state behavior.
-  always_comb begin
-    pready_d = pready_q;
-    if (req_fire) begin
-      pready_d = 1'b0;
-    end
-    if (mack_i) begin
-      pready_d = 1'b1;
-    end
-  end
-
-  // Capture read data / response on the cycle the memory acknowledges.
   always_ff @(posedge clk_i or negedge arst_ni) begin
-    if (!arst_ni) begin
-      mreq_q   <= 1'b0;
-      pready_q <= 1'b1;
-      prdata_q <= '0;
-      mresp_q  <= '0;
+    if (~arst_ni) begin
+      penable_q <= 1'b0;
     end else begin
-      mreq_q   <= mreq_d;
-      pready_q <= pready_d;
-      if (mack_i) begin
-        prdata_q <= mrdata_i;
-        mresp_q  <= mresp_i;
-      end
+      penable_q <= penable_i;
     end
   end
 
-  assign mreq_o    = mreq_q;
-  assign pready_o  = pready_q;
-  assign prdata_o  = prdata_q;
-  assign pslverr_o = mresp_q[0];  // LSB of the downstream response flags PSLVERR.
+  always_ff @(posedge clk_i or negedge arst_ni) begin
+    if (~arst_ni) begin
+      pready_o <= 1'b0;
+    end else if (pout_update) begin
+      pready_o <= mack_i;
+    end
+  end
+
+  always_ff @(posedge clk_i or negedge arst_ni) begin
+    if (~arst_ni) begin
+      prdata_o <= '0;
+    end else if (pout_update) begin
+      prdata_o <= mrdata_i;
+    end
+  end
+
+  always_ff @(posedge clk_i or negedge arst_ni) begin
+    if (~arst_ni) begin
+      pslverr_o <= 1'b0;
+    end else if (pout_update) begin
+      pslverr_o <= mresp_i;
+    end
+  end
 
 endmodule
