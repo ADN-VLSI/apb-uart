@@ -7,15 +7,16 @@ module uart_top
     input logic arst_ni,
     input logic clk_i,
 
-    input logic psel_i,
-    input logic penable_i,
-    input logic [ADDR_WIDTH-1:0] paddr_i,
-    input logic pwrite_i,
-    input logic [DATA_WIDTH-1:0] pwdata_i,
+    input logic                      psel_i,
+    input logic                      penable_i,
+    input logic [    ADDR_WIDTH-1:0] paddr_i,
+    input logic                      pwrite_i,
+    input logic [    DATA_WIDTH-1:0] pwdata_i,
+    input logic [(DATA_WIDTH/8)-1:0] pstrb_i,
 
-    output logic pready_o,
+    output logic                  pready_o,
     output logic [DATA_WIDTH-1:0] prdata_o,
-    output logic pslverr_o,
+    output logic                  pslverr_o,
 
     input  logic rx_i,
     output logic tx_o,
@@ -74,11 +75,13 @@ module uart_top
   tx_data_reg_t                            uart_tx_data_reg;
   logic                                    uart_tx_data_valid;
   logic                                    uart_tx_data_ready;
-  logic               [               7:0] uart_tx_data;
 
   rx_data_reg_t                            uart_rx_data_reg;
   logic                                    uart_rx_data_valid;
   logic                                    uart_rx_data_ready;
+
+  logic               [    TX_FIFO_SIZE:0] tx_fifo_count_adpt;
+  logic               [    RX_FIFO_SIZE:0] rx_fifo_count_adpt;
 
   ////////////////////////////////////////////////
   // MISCELLANEOUS
@@ -97,10 +100,10 @@ module uart_top
   // APB Memory Interface
   ////////////////////////////////////////////////
 
-  apb_memif#(
+  apb_memif #(
       .ADDR_WIDTH(ADDR_WIDTH),
       .DATA_WIDTH(DATA_WIDTH)
-  ) (
+  ) u_apb_memif (
       .arst_ni(arst_ni),
       .clk_i(clk_i),
       .psel_i(psel_i),
@@ -132,7 +135,7 @@ module uart_top
   ) u_uart_regif (
       .arst_ni(arst_ni),
       .clk_i(clk_i),
-      .mreq_i(mreq_i),
+      .mreq_i(mreq),
       .maddr_i(maddr),
       .mwe_i(mwe),
       .mwdata_i(mwdata),
@@ -160,14 +163,15 @@ module uart_top
 
   cdc_fifo #(
       .ELEM_WIDTH(8),
-      .FIFO_SIZE (8)
+      .FIFO_SIZE (TX_FIFO_SIZE)
   ) u_tx_fifo (
+      .arst_ni(arst_ni),
       .elem_in_i(regif_tx_data_reg.TX_DATA),
       .elem_in_clk_i(clk_i),
       .elem_in_valid_i(regif_tx_data_valid),
       .elem_in_ready_o(regif_tx_data_ready),
-      .elem_in_count_o(tx_fifo_count_reg),
-      .elem_out_o(uart_tx_data),
+      .elem_in_count_o(tx_fifo_count_adpt),
+      .elem_out_o(uart_tx_data_reg.TX_DATA),
       .elem_out_clk_i(divided_clk_8n),
       .elem_out_valid_o(uart_tx_data_valid),
       .elem_out_ready_i(uart_tx_data_ready),
@@ -180,19 +184,19 @@ module uart_top
 
   cdc_fifo #(
       .ELEM_WIDTH(8),
-      .FIFO_SIZE (2)
+      .FIFO_SIZE (RX_FIFO_SIZE)
   ) u_rx_fifo (
       .arst_ni(arst_ni),
-      .elem_in_i(uart_rx_data_reg),
+      .elem_in_i(uart_rx_data_reg.RX_DATA),
       .elem_in_clk_i(divided_clk_n),
       .elem_in_valid_i(uart_rx_data_valid),
       .elem_in_ready_o(uart_rx_data_ready),
       .elem_in_count_o(),
-      .elem_out_o(regif_tx_data_reg),
+      .elem_out_o(regif_rx_data_reg.RX_DATA),
       .elem_out_clk_i(clk_i),
-      .elem_out_valid_o(uart_rx_data_valid),
+      .elem_out_valid_o(regif_rx_data_valid),
       .elem_out_ready_i(regif_rx_data_ready),
-      .elem_out_count_o(rx_fifo_count_reg)
+      .elem_out_count_o(rx_fifo_count_adpt)
   );
 
 
@@ -219,7 +223,7 @@ module uart_top
   ) u_clk_div_8n (
       .arst_ni(arst_ni),
       .clk_i  (divided_clk_n),
-      .div_i  (8),
+      .div_i  (4'd8),
       .clk_o  (divided_clk_8n)
   );
 
@@ -231,9 +235,9 @@ module uart_top
       .arst_ni(arst_ni),
       .clk_i  (divided_clk_8n),
 
-      .data_i(tx_data_reg_o),
-      .data_valid_i(tx_data_valid_o),
-      .data_ready_o(tx_data_ready_i),
+      .data_i(uart_tx_data_reg.TX_DATA),
+      .data_valid_i(uart_tx_data_valid),
+      .data_ready_o(uart_tx_data_ready),
 
       .parity_en_i (cfg_reg.PARITY_EN),
       .extra_stop_i(cfg_reg.EXTRA_STOP_BITS),
@@ -247,24 +251,31 @@ module uart_top
 
   uart_rx u_rx (
       .arst_ni(arst_ni),
-      .clk_i  (clk_i),
+      .clk_i  (divided_clk_n),
 
       .rx_i(rx_i),
 
       .parity_en_i  (cfg_reg.PARITY_EN),
       .parity_type_i(cfg_reg.PARITY_TYPE),
 
-      .data_o(uart_rx_data_reg),
+      .data_o(uart_rx_data_reg.RX_DATA),
       .data_valid_o(uart_rx_data_valid)
   );
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // Interrupt Signals
+  // Combinational Logic
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  assign irq_tx_almost_full  = intr_ctrl_reg.TX_ALMOST_FULL ? tx_fifo_count_reg_i > 200 : '0;
-  assign irq_rx_almost_full  = intr_ctrl_reg.RX_ALMOST_FULL ? rx_fifo_count_reg_i > 200 : '0;
-  assign irq_rx_parity_error = intr_ctrl_reg.RX_PARITY_ERROR ? '0 : '0; // TODO LATER
+  assign tx_fifo_count_reg   = tx_fifo_count_adpt;
+  assign rx_fifo_count_reg   = rx_fifo_count_adpt;
+
+  ////////////////////////////////////////////////
+  // Interrupt Signals
+  ////////////////////////////////////////////////
+
+  assign irq_tx_almost_full  = intr_ctrl_reg.TX_ALMOST_FULL ? tx_fifo_count_reg > 200 : '0;
+  assign irq_rx_almost_full  = intr_ctrl_reg.RX_ALMOST_FULL ? rx_fifo_count_reg > 200 : '0;
+  assign irq_rx_parity_error = intr_ctrl_reg.RX_PARITY_ERROR ? '0 : '0;  // TODO LATER
   assign irq_rx_valid        = intr_ctrl_reg.RX_VALID ? regif_rx_data_valid : '0;
 
 endmodule

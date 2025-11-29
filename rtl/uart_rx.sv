@@ -17,7 +17,7 @@
   // Parameters: BitTicks sets number of clk cycles per data bit.
   // HalfBitTicks used to sample mid of start bit.
   // --------------------------------------------------------------------------
-  parameter int BitTicks      = 16; // clock cycles per bit
+  parameter int BitTicks      = 8; // clock cycles per bit
   localparam int HalfBitTicks = BitTicks/2;
   localparam int TickCntWidth = (BitTicks > 1) ? $clog2(BitTicks) : 1;
 

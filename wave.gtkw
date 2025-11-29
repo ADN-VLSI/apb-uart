@@ -1,0 +1,40 @@
+[*]
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Sat Nov 29 12:26:01 2025
+[*]
+[dumpfile] "/home/foez/Documents/ADN/adn-apb-uart/build/apb_uart_sanity_check_tb.vcd"
+[dumpfile_mtime] "Sat Nov 29 12:24:54 2025"
+[dumpfile_size] 65622560
+[savefile] "/home/foez/Documents/ADN/adn-apb-uart/wave.gtkw"
+[timestart] 0
+[size] 1920 1001
+[pos] -1 -1
+*-30.072845 833585000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] apb_uart_sanity_check_tb.
+[treeopen] apb_uart_sanity_check_tb.u_dut.
+[sst_width] 277
+[signals_width] 126
+[sst_expanded] 1
+[sst_vpaned_height] 296
+@28
+apb_uart_sanity_check_tb.u_apb_if.arst_ni
+apb_uart_sanity_check_tb.u_apb_if.clk_i
+apb_uart_sanity_check_tb.u_apb_if.psel
+apb_uart_sanity_check_tb.u_apb_if.penable
+@22
+apb_uart_sanity_check_tb.u_apb_if.paddr[4:0]
+@28
+apb_uart_sanity_check_tb.u_apb_if.pwrite
+@22
+apb_uart_sanity_check_tb.u_apb_if.pwdata[31:0]
+apb_uart_sanity_check_tb.u_apb_if.pstrb[3:0]
+@28
+apb_uart_sanity_check_tb.u_apb_if.pready
+@22
+apb_uart_sanity_check_tb.u_apb_if.prdata[31:0]
+@28
+apb_uart_sanity_check_tb.u_apb_if.pslverr
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0

@@ -6,10 +6,8 @@ module uart_regif
 ) (
     // Global signals
     input logic arst_ni,  // Asynchronous reset, active low
-    input logic clk_i,    // Clock input
+    input logic clk_i,    // Clock Inputs
 
-    input logic                      arst_ni,   //global reset
-    input logic                      clk_i,     //global clock
     // Memory Interface Outputs
     input logic                      mreq_i,    // Memory request
     input logic [    ADDR_WIDTH-1:0] maddr_i,   // Memory address
@@ -60,51 +58,55 @@ module uart_regif
     mrdata_o = '0;  // Default read data
     rx_data_ready_o = '0;  // Default RX ready low
 
-    case (maddr_i)
-      REG_CTRL_ADDR: begin
-        read_err = '0;  // Valid read
-        mrdata_o = ctrl_reg_o;
-      end
-
-      REG_CLK_DIV_ADDR: begin
-        read_err = '0;
-        mrdata_o = clk_div_reg_o;
-      end
-
-      REG_CFG_ADDR: begin
-        read_err = '0;
-        mrdata_o = cfg_reg_o;
-      end
-
-      REG_TX_FIFO_COUNT_ADDR: begin
-        read_err = '0;
-        mrdata_o = tx_fifo_count_reg_i;
-      end
-
-      REG_RX_FIFO_COUNT_ADDR: begin
-        read_err = '0;
-        mrdata_o = rx_fifo_count_reg_i;
-      end
-
-      REG_RX_DATA_ADDR: begin
-        if (rx_data_valid_i) begin
-          read_err = '0;  // Valid only if data available
-          mrdata_o = rx_data_reg_i;
-          rx_data_ready_o = '1;  // Acknowledge read
+    if (mreq_i && ~mwe_i) begin
+      case (maddr_i)
+        REG_CTRL_ADDR: begin
+          read_err = '0;  // Valid read
+          mrdata_o = ctrl_reg_o;
         end
-      end
 
-      REG_INTR_CTRL_ADDR: begin
-        read_err = '0;
-        mrdata_o = intr_ctrl_reg_o;
-      end
+        REG_CLK_DIV_ADDR: begin
+          read_err = '0;
+          mrdata_o = clk_div_reg_o;
+        end
 
-      default: begin
-        // Invalid address, keep defaults
-      end
-    endcase
+        REG_CFG_ADDR: begin
+          read_err = '0;
+          mrdata_o = cfg_reg_o;
+        end
 
+        REG_TX_FIFO_COUNT_ADDR: begin
+          read_err = '0;
+          mrdata_o = tx_fifo_count_reg_i;
+        end
+
+        REG_RX_FIFO_COUNT_ADDR: begin
+          read_err = '0;
+          mrdata_o = rx_fifo_count_reg_i;
+        end
+
+        REG_RX_DATA_ADDR: begin
+          if (rx_data_valid_i) begin
+            read_err = '0;  // Valid only if data available
+            mrdata_o = rx_data_reg_i;
+            rx_data_ready_o = '1;  // Acknowledge read
+          end
+        end
+
+        REG_INTR_CTRL_ADDR: begin
+          read_err = '0;
+          mrdata_o = intr_ctrl_reg_o;
+        end
+
+        default: begin
+          // Invalid address, keep defaults
+        end
+      endcase
+    end
   end
+
+  assign mack_o  = mreq_i;
+  assign mresp_o = mreq_i ? (mwe_i ? write_err : read_err) : '0;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // Write Logic
@@ -116,37 +118,39 @@ module uart_regif
     tx_data_valid_o = '0;  // Default TX valid low
     tx_data_reg_o = mwdata_i;  // Pass write data to TX register
 
-    case (maddr_i)
-      REG_CTRL_ADDR: begin
-        write_err = '0;  // Always writable
-      end
-
-      REG_CLK_DIV_ADDR: begin
-        if (tx_fifo_count_reg_i == '0 && rx_fifo_count_reg_i == '0)
-          write_err = '0;  // Only when FIFOs empty
-      end
-
-      REG_CFG_ADDR: begin
-        if (tx_fifo_count_reg_i == '0 && rx_fifo_count_reg_i == '0)
-          write_err = '0;  // Only when FIFOs empty
-      end
-
-      REG_TX_DATA_ADDR: begin
-        if (tx_data_ready_i) begin
-          write_err = '0;  // Valid if TX ready
-          tx_data_valid_o = '1;  // Signal valid data
+    if (mreq_i && mwe_i) begin
+      case (maddr_i)
+        REG_CTRL_ADDR: begin
+          write_err = '0;  // Always writable
         end
-      end
 
-      REG_INTR_CTRL_ADDR: begin
-        write_err = '0;  // Always writable
-      end
+        REG_CLK_DIV_ADDR: begin
+          if (tx_fifo_count_reg_i == '0 && rx_fifo_count_reg_i == '0)
+            write_err = '0;  // Only when FIFOs empty
+        end
 
-      default: begin
-        // Invalid address, keep defaults
-      end
+        REG_CFG_ADDR: begin
+          if (tx_fifo_count_reg_i == '0 && rx_fifo_count_reg_i == '0)
+            write_err = '0;  // Only when FIFOs empty
+        end
 
-    endcase
+        REG_TX_DATA_ADDR: begin
+          if (tx_data_ready_i) begin
+            write_err = '0;  // Valid if TX ready
+            tx_data_valid_o = '1;  // Signal valid data
+          end
+        end
+
+        REG_INTR_CTRL_ADDR: begin
+          write_err = '0;  // Always writable
+        end
+
+        default: begin
+          // Invalid address, keep defaults
+        end
+
+      endcase
+    end
   end
 
   always_ff @(posedge clk_i or negedge arst_ni) begin

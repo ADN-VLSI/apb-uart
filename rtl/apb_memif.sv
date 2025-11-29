@@ -42,6 +42,13 @@ module apb_memif #(
   // Signal to indicate when to update output signals.
   logic pout_update;
 
+  // Register
+  logic                  pready_q;
+  // Register
+  logic [DATA_WIDTH-1:0] prdata_q;
+  // Register
+  logic                  pslverr_q;
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // Combinational Logic
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,26 +76,30 @@ module apb_memif #(
 
   always_ff @(posedge clk_i or negedge arst_ni) begin
     if (~arst_ni) begin
-      pready_o <= 1'b0;
+      pready_q <= 1'b0;
     end else if (pout_update) begin
-      pready_o <= mack_i;
+      pready_q <= mack_i;
     end
   end
 
   always_ff @(posedge clk_i or negedge arst_ni) begin
     if (~arst_ni) begin
-      prdata_o <= '0;
+      prdata_q <= '0;
     end else if (pout_update) begin
-      prdata_o <= mrdata_i;
+      prdata_q <= mrdata_i;
     end
   end
 
   always_ff @(posedge clk_i or negedge arst_ni) begin
     if (~arst_ni) begin
-      pslverr_o <= 1'b0;
+      pslverr_q <= 1'b0;
     end else if (pout_update) begin
-      pslverr_o <= mresp_i;
+      pslverr_q <= mresp_i;
     end
   end
+
+  assign pready_o  = (mreq_o & mack_i) ? mack_i : pready_q;
+  assign prdata_o  = (mreq_o & mack_i) ? mrdata_i : prdata_q;
+  assign pslverr_o = (mreq_o & mack_i) ? mresp_i : pslverr_q;
 
 endmodule

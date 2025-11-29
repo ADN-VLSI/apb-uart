@@ -15,6 +15,9 @@ package apb_uart_pkg;
   localparam bit DEFAULT_PARITY_TYPE = 1'b0;  // Default parity = even (0 = even, 1 = odd)
   localparam bit DEFAULT_EXTRA_STOP_BITS = 1'b0;  // Default = 1 stop bit
 
+  localparam int TX_FIFO_SIZE = 8;  // Transmit FIFO depth (in bytes) = 2 ^ TX_FIFO_SIZE
+  localparam int RX_FIFO_SIZE = 8;  // Receive FIFO depth (in bytes) = 2 ^ RX_FIFO_SIZE
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // REGISTER ADDRESSES
   //////////////////////////////////////////////////////////////////////////////////////////////////

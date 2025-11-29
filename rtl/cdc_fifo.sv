@@ -29,21 +29,21 @@ module cdc_fifo #(
     input logic arst_ni,
 
     // Write interface (input domain)
-    input  logic [          ELEM_WIDTH-1:0] elem_in_i,
-    input  logic                            elem_in_clk_i,
-    input  logic                            elem_in_valid_i,
+    input  logic [        ELEM_WIDTH-1:0] elem_in_i,
+    input  logic                          elem_in_clk_i,
+    input  logic                          elem_in_valid_i,
     // Ready is asserted when there's free space in the FIFO
-    output logic                            elem_in_ready_o,
+    output logic                          elem_in_ready_o,
     // Count of free/filled elements relative to write domain
-    output logic [$clog2(2**FIFO_SIZE)-1:0] elem_in_count_o,
+    output logic [$clog2(2**FIFO_SIZE):0] elem_in_count_o,
 
     // Read interface (output domain)
-    output logic [          ELEM_WIDTH-1:0] elem_out_o,
-    input  logic                            elem_out_clk_i,
-    output logic                            elem_out_valid_o,
-    input  logic                            elem_out_ready_i,
+    output logic [        ELEM_WIDTH-1:0] elem_out_o,
+    input  logic                          elem_out_clk_i,
+    output logic                          elem_out_valid_o,
+    input  logic                          elem_out_ready_i,
     // Count of items available relative to output domain
-    output logic [$clog2(2**FIFO_SIZE)-1:0] elem_out_count_o
+    output logic [$clog2(2**FIFO_SIZE):0] elem_out_count_o
 );
 
   // Gray-coded pointers (synchronized between domains). The pointers are one

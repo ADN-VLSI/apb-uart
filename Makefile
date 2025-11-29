@@ -2,7 +2,14 @@
 # Variables
 ######################################################################################################
 
-TOP_MODULE ?= hello_world
+TOP_MODULE ?= apb_uart_sanity_check_tb
+GUI ?= 0
+
+ifeq ($(GUI), 1)
+	XSIM_ARGS += -gui
+else
+	XSIM_ARGS += -runall
+endif
 
 ####################################################################################################
 # Directory Setup
@@ -14,6 +21,7 @@ LOG_DIR   := ${ROOT_DIR}/log
 INC_DIR   := ${ROOT_DIR}/inc
 PKG_DIR   := ${ROOT_DIR}/pkg
 RTL_DIR   := ${ROOT_DIR}/rtl
+INTF_DIR  := ${ROOT_DIR}/intf
 TB_DIR    := ${ROOT_DIR}/tb
 
 ####################################################################################################
@@ -24,6 +32,7 @@ FILE_LIST += -i ${INC_DIR}
 FILE_LIST += ${PKG_DIR}/apb_uart_pkg.sv
 FILE_LIST += ${PKG_DIR}/uart_tx_pkg.sv
 FILE_LIST += ${PKG_DIR}/uart_rx_pkg.sv
+FILE_LIST += $(shell find ${INTF_DIR}/ -name "*.sv")
 FILE_LIST += $(shell find ${RTL_DIR}/ -name "*.sv")
 FILE_LIST += $(shell find ${TB_DIR}/ -name "*.sv")
 	
@@ -76,4 +85,4 @@ simulate:
 	@$(eval TIME := $(shell date +%Y%m%d_%H%M%S))
 	@cd ${BUILD_DIR} && ${XVLOG} -sv ${FILE_LIST} --log ${LOG_DIR}/vlog_${TIME}.log
 	@cd ${BUILD_DIR} && ${XELAB} ${TOP_MODULE} -s ${TOP_MODULE} --log ${LOG_DIR}/xelab_${TIME}.log
-	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} -runall --log ${LOG_DIR}/xsim_${TIME}.log
+	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} $(XSIM_ARGS) --log ${LOG_DIR}/xsim_${TIME}.log

@@ -92,7 +92,7 @@ module uart_tx_fsm
 
   always_ff @(posedge clk_i or negedge arst_ni) begin
     if (!arst_ni) begin
-      mux_sel_o <= 4'd0;
+      mux_sel_o <= IDLE;
     end else begin
       mux_sel_o <= mux_sel_next;
     end
