@@ -98,8 +98,8 @@ module apb_memif #(
     end
   end
 
-  assign pready_o  = (mreq_o & mack_i) ? mack_i : pready_q;
-  assign prdata_o  = (mreq_o & mack_i) ? mrdata_i : prdata_q;
-  assign pslverr_o = (mreq_o & mack_i) ? mresp_i : pslverr_q;
+  assign pready_o  = pout_update ? mack_i : pready_q;
+  assign prdata_o  = pout_update ? mrdata_i : prdata_q;
+  assign pslverr_o = pout_update ? mresp_i : pslverr_q;
 
 endmodule
