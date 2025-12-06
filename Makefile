@@ -2,7 +2,7 @@
 # Variables
 ######################################################################################################
 
-TOP_MODULE ?= apb_uart_sanity_check_tb
+TOP_MODULE ?= apb_uart_tb
 GUI ?= 0
 
 ifeq ($(GUI), 1)
@@ -29,6 +29,7 @@ TB_DIR    := ${ROOT_DIR}/tb
 ####################################################################################################
 
 FILE_LIST += -i ${INC_DIR}
+FILE_LIST += -i ${TB_DIR}/include
 FILE_LIST += ${PKG_DIR}/apb_uart_pkg.sv
 FILE_LIST += ${PKG_DIR}/uart_tx_pkg.sv
 FILE_LIST += ${PKG_DIR}/uart_rx_pkg.sv
