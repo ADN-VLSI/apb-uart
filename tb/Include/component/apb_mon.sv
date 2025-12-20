@@ -1,8 +1,6 @@
 `ifndef __GUARD_APB_MON_SV__
 `define __GUARD_APB_MON_SV__ 0
 
-
-
 `include "object/apb_rsp_item.sv"
 
 class apb_mon extends uvm_monitor;

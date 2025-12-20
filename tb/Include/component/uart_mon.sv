@@ -45,7 +45,6 @@ class uart_mon extends uvm_monitor;
         ap.write(rsp_rx);
       end
     join
-    
   endtask
 
 endclass

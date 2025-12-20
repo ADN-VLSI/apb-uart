@@ -64,15 +64,15 @@ interface uart_if;
       SECOND_STOP_BIT = second_stop_bit;                                                          \
       DATA_BITS = data_bits;                                                                      \
                                                                                                   \
-      bit_time   = 1s / baud_rate;                                                                \
+      bit_time   = 1s / BAUD_RATE;                                                                \
       parity_bit = 0;                                                                             \
                                                                                                   \
       /* Calculate parity bit */                                                                  \
-      for (int i = 0; i < data_bits; i++) begin                                                   \
+      for (int i = 0; i < DATA_BITS; i++) begin                                                   \
         parity_bit ^= data[i];                                                                    \
       end                                                                                         \
                                                                                                   \
-      if (parity_type) begin                                                                      \
+      if (PARITY_TYPE) begin                                                                      \
         parity_bit = ~parity_bit;                                                                 \
       end                                                                                         \
                                                                                                   \
@@ -81,13 +81,13 @@ interface uart_if;
       #(bit_time);                                                                                \
                                                                                                   \
       /* Data bits */                                                                             \
-      for (int i = 0; i < data_bits; i++) begin                                                   \
+      for (int i = 0; i < DATA_BITS; i++) begin                                                   \
         reg_``__PORT__`` <= data[i];                                                              \
         #(bit_time);                                                                              \
       end                                                                                         \
                                                                                                   \
       /* Parity bit */                                                                            \
-      if (parity_enable) begin                                                                    \
+      if (PARITY_ENABLE) begin                                                                    \
         reg_``__PORT__`` <= parity_bit;                                                           \
         #(bit_time);                                                                              \
       end                                                                                         \
@@ -95,7 +95,7 @@ interface uart_if;
       /* Stop bits */                                                                             \
       reg_``__PORT__`` <= '1;                                                                     \
       #(bit_time);                                                                                \
-      if (second_stop_bit) begin                                                                  \
+      if (SECOND_STOP_BIT) begin                                                                  \
         #(bit_time);                                                                              \
       end                                                                                         \
                                                                                                   \
@@ -120,36 +120,35 @@ interface uart_if;
                                                                                                   \
       data = '0;                                                                                  \
                                                                                                   \
-      bit_time = 1s / baud_rate;                                                                  \
-                                                                                                  \
       /* Wait for start bit */                                                                    \
       do begin                                                                                    \
         @(negedge ``__PORT__``);                                                                  \
+        bit_time = 1s / BAUD_RATE;                                                                \
         #(bit_time / 2);                                                                          \
       end while (``__PORT__`` != '0);                                                             \
                                                                                                   \
       /* Sample data bits */                                                                      \
-      for (int i = 0; i < data_bits; i++) begin                                                   \
+      for (int i = 0; i < DATA_BITS; i++) begin                                                   \
         #(bit_time);                                                                              \
         data[i] = ``__PORT__``;                                                                   \
       end                                                                                         \
                                                                                                   \
       /* Sample parity bit */                                                                     \
-      if (parity_enable) begin                                                                    \
+      if (PARITY_ENABLE) begin                                                                    \
         #(bit_time);                                                                              \
         received_parity = ``__PORT__``;                                                           \
       end                                                                                         \
                                                                                                   \
       /* Calculate expected parity */                                                             \
       expected_parity = 0;                                                                        \
-      for (int i = 0; i < data_bits; i++) begin                                                   \
+      for (int i = 0; i < DATA_BITS; i++) begin                                                   \
         expected_parity ^= data[i];                                                               \
       end                                                                                         \
-      if (parity_type) begin                                                                      \
+      if (PARITY_TYPE) begin                                                                      \
         expected_parity = ~expected_parity;                                                       \
       end                                                                                         \
       /* Check parity */                                                                          \
-      if (parity_enable) begin                                                                    \
+      if (PARITY_ENABLE) begin                                                                    \
         if (received_parity !== expected_parity) begin                                            \
           $display(`"UART Parity Error for ``__PORT__`` data 0x%0x\nExpected %0b, Received %0b`", \
             data, expected_parity, received_parity);                                              \

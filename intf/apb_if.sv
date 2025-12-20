@@ -102,7 +102,7 @@ interface apb_if #(
       write_strobe = pstrb;
       read_data    = prdata;
       slverr       = pslverr;
-      @(posedge clk_i);
+      @(negedge clk_i);
     end
 
   endtask

@@ -5,11 +5,9 @@
 `include "component/apb_agent.sv"
 `include "component/uart_agent.sv"
 
-
 class apb_uart_env extends uvm_env;
 
   `uvm_component_utils(apb_uart_env)
-    //TODO: Connect scoreboard analysis ports to monitors analysis exports
 
   apb_agent apb;
   uart_agent uart;
@@ -28,6 +26,8 @@ class apb_uart_env extends uvm_env;
 
   function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
+    apb.mon.ap.connect(scbd.m_analysis_imp_apb);
+    uart.mon.ap.connect(scbd.m_analysis_imp_uart);
   endfunction : connect_phase
 endclass
 

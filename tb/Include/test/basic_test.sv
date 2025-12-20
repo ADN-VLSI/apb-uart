@@ -12,7 +12,7 @@ class basic_test extends base_test;
   endfunction : new
 
   task main_phase(uvm_phase phase);
-    uvm_config_db#(int)::set(uvm_root::get(), "parameter", "RANDOM_APB_WDATA_SEQ_LENGTH", 25);
+    uvm_config_db#(int)::set(uvm_root::get(), "parameter", "RANDOM_APB_WDATA_SEQ_LENGTH", 256);
     phase.raise_objection(this);
     `uvm_info(get_type_name(), "Basic test started", UVM_LOW)
     begin

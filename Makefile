@@ -4,7 +4,7 @@
 
 TOP_MODULE := apb_uart_tb
 GUI := 0
-UVM_TESTNAME := base_test
+TEST := base_test
 
 ifeq ($(GUI), 1)
 	XSIM_ARGS += -gui
@@ -12,7 +12,7 @@ else
 	XSIM_ARGS += -runall
 endif
 
-XSIM_ARGS += --testplusarg "UVM_TESTNAME=$(UVM_TESTNAME)"
+XSIM_ARGS += --testplusarg "UVM_TESTNAME=$(TEST)"
 
 ####################################################################################################
 # Directory Setup
