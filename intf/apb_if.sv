@@ -22,6 +22,19 @@ interface apb_if #(
   logic                      pslverr;  // Peripheral slave error
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Internal Variables
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  bit                        is_edge_aligned = 0;
+
+  always @(posedge clk_i) begin
+    is_edge_aligned = 1;
+    #1;
+    is_edge_aligned = 0;
+  end
+
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   // Methods
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +42,11 @@ interface apb_if #(
                                 input logic [DATA_WIDTH-1:0] write_data,
                                 input logic [DATA_WIDTH/8-1:0] write_strobe,
                                 output logic [DATA_WIDTH-1:0] read_data);
+
+    if (!is_edge_aligned) begin
+      @(posedge clk_i);
+    end
+
     // Setup phase
     psel    <= 1'b1;
     penable <= 1'b0;
