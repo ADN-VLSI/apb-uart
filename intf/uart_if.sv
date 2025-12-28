@@ -122,7 +122,7 @@ interface uart_if;
                                                                                                   \
       /* Wait for start bit */                                                                    \
       do begin                                                                                    \
-        @(negedge ``__PORT__``);                                                                  \
+        wait(``__PORT__`` === '0);                                                                \
         bit_time = 1s / BAUD_RATE;                                                                \
         #(bit_time / 2);                                                                          \
       end while (``__PORT__`` != '0);                                                             \

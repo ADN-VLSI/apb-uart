@@ -8,6 +8,12 @@ class uart_mon extends uvm_monitor;
 
   `uvm_component_utils(uart_mon)
 
+  int baud_rate;
+  bit parity_enable;
+  bit parity_type;
+  bit second_stop_bit;
+  int data_bits;
+
   virtual uart_if vif;
   uvm_analysis_port #(uart_rsp_item) ap;
 
@@ -34,17 +40,29 @@ class uart_mon extends uvm_monitor;
     fork
       forever begin
         rsp_tx = uart_rsp_item::type_id::create("rsp_tx");
+        @(negedge vif.tx);
+        set_config();
         vif.recv_tx(rsp_tx.data);
         rsp_tx.direction = 1;
         ap.write(rsp_tx);
       end
       forever begin
         rsp_rx = uart_rsp_item::type_id::create("rsp_rx");
+        @(negedge vif.rx);
+        set_config();
         vif.recv_rx(rsp_rx.data);
         rsp_rx.direction = 0;
         ap.write(rsp_rx);
       end
     join
+  endtask
+
+  task set_config();
+    void'(uvm_config_db#(int)::get(uvm_root::get(), "uart", "baud_rate", baud_rate));
+    void'(uvm_config_db#(bit)::get(uvm_root::get(), "uart", "parity_enable", parity_enable));
+    void'(uvm_config_db#(bit)::get(uvm_root::get(), "uart", "parity_type", parity_type));
+    void'(uvm_config_db#(bit)::get(uvm_root::get(), "uart", "second_stop_bit", second_stop_bit));
+    void'(uvm_config_db#(int)::get(uvm_root::get(), "uart", "data_bits", data_bits));
   endtask
 
 endclass

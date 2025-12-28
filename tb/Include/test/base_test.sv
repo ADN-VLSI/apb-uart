@@ -64,6 +64,11 @@ class base_test extends uvm_test;
     uart_intf.PARITY_TYPE = 0;
     uart_intf.SECOND_STOP_BIT = 0;
     uart_intf.DATA_BITS = 8;
+    uvm_config_db#(int)::set(uvm_root::get(), "uart", "baud_rate", uart_intf.BAUD_RATE);
+    uvm_config_db#(bit)::set(uvm_root::get(), "uart", "parity_enable", uart_intf.PARITY_ENABLE);
+    uvm_config_db#(bit)::set(uvm_root::get(), "uart", "parity_type", uart_intf.PARITY_TYPE);
+    uvm_config_db#(bit)::set(uvm_root::get(), "uart", "second_stop_bit", uart_intf.SECOND_STOP_BIT);
+    uvm_config_db#(int)::set(uvm_root::get(), "uart", "data_bits", uart_intf.DATA_BITS);
     enable_clock(10ns);
     begin
       uart_en_apb_seq my_seq;
