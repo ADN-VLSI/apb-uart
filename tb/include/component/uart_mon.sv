@@ -43,20 +43,22 @@ class uart_mon extends uvm_monitor;
         rsp_tx = uart_rsp_item::type_id::create("rsp_tx");
         @(negedge vif.tx);
         set_config();
-        vif.recv_tx(rsp_tx.data);
+        vif.recv_tx(rsp_tx.data, baud_rate, parity_enable, parity_type, second_stop_bit, data_bits);
         rsp_tx.direction = 0;
         ap.write(rsp_tx);
-        `uvm_info(get_type_name(), $sformatf("UART TX Data Received: 0x%0h", rsp_tx.data), UVM_DEBUG)
+        `uvm_info(get_type_name(), $sformatf("UART TX Data Received: 0x%0h", rsp_tx.data),
+                  UVM_DEBUG)
       end
       forever begin
         `uvm_info(get_type_name(), "UART Monitor waiting for RX data...", UVM_DEBUG)
         rsp_rx = uart_rsp_item::type_id::create("rsp_rx");
         @(negedge vif.rx);
         set_config();
-        vif.recv_rx(rsp_rx.data);
+        vif.recv_rx(rsp_rx.data, baud_rate, parity_enable, parity_type, second_stop_bit, data_bits);
         rsp_rx.direction = 1;
         ap.write(rsp_rx);
-        `uvm_info(get_type_name(), $sformatf("UART RX Data Received: 0x%0h", rsp_rx.data), UVM_DEBUG)
+        `uvm_info(get_type_name(), $sformatf("UART RX Data Received: 0x%0h", rsp_rx.data),
+                  UVM_DEBUG)
       end
     join
   endtask
