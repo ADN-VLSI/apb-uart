@@ -45,8 +45,12 @@ class apb_uart_scbd extends uvm_scoreboard;
   // Implementation for the `sum` analysis port. Called by the monitor.
   function void write_uart(uart_rsp_item item);
     `uvm_info(get_type_name(), $sformatf("Received UART item: %s", item.sprint()), UVM_HIGH)
-    if (item.direction == 1) uart_tx_q.push_back(item.data);
-    if (item.direction == 0) uart_rx_q.push_back(item.data);
+    if (item.direction === '1) begin
+      uart_tx_q.push_back(item.data);
+    end
+    if (item.direction === '0) begin
+      uart_rx_q.push_back(item.data);
+    end
   endfunction
 
   task run_phase(uvm_phase phase);
@@ -54,8 +58,6 @@ class apb_uart_scbd extends uvm_scoreboard;
       apb_rsp_item apb_item;
       wait (apb_q.size());
       apb_item = apb_q.pop_front();
-      $display("APB %s Addr: 0x%0h Data: 0x%0h", (apb_item.tx_type == 1) ? "WRITE" : "READ",
-               apb_item.addr, apb_item.data);
       if (apb_item.tx_type == 1 && apb_item.addr == 4) begin
         uvm_config_db#(int)::set(uvm_root::get(), "uart", "baud_rate", (100000000 / apb_item.data));
       end else if (apb_item.tx_type == 1 && apb_item.addr == 8) begin
@@ -74,22 +76,19 @@ class apb_uart_scbd extends uvm_scoreboard;
         end else begin
           fail_count++;
           `uvm_error(get_type_name(), $sformatf(
-                     "TX Data Mismatch: Expected 0x%0h, Got 0x%0h", apb_item.data[7:0], data))
+                     "TX Data Mismatch: APB 0x%0h, UART 0x%0h", apb_item.data[7:0], data))
         end
       end else if (apb_item.tx_type == 0 && apb_item.addr == 'h18) begin
         byte data;
-        $display("################ %s:%0d", `__FILE__, `__LINE__);
-        $display("################ Waiting for RX data... : %0d", uart_rx_q.size());
         wait (uart_rx_q.size());
-        $display("################ %s:%0d", `__FILE__, `__LINE__);
         data = uart_rx_q.pop_front();
         if (data == apb_item.data[7:0]) begin
           pass_count++;
-          `uvm_info(get_type_name(), $sformatf("TX Data Match: 0x%0h", data), UVM_LOW)
+          `uvm_info(get_type_name(), $sformatf("RX Data Match: 0x%0h", data), UVM_LOW)
         end else begin
           fail_count++;
           `uvm_error(get_type_name(), $sformatf(
-                     "TX Data Mismatch: Expected 0x%0h, Got 0x%0h", apb_item.data[7:0], data))
+                     "RX Data Mismatch: UART 0x%0h, APB 0x%0h", data, apb_item.data[7:0]))
         end
       end
     end

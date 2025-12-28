@@ -5,7 +5,7 @@
 TOP_MODULE := apb_uart_tb
 GUI := 0
 TEST := base_test
-VRB := UVM_HIGH
+VRB := UVM_LOW
 
 ifeq ($(GUI), 1)
 	XSIM_ARGS += -gui
@@ -97,10 +97,10 @@ compile:
 	@make -s ${BUILD_DIR}
 	@make -s ${LOG_DIR}
 	@$(eval TIME := $(shell date +%Y%m%d_%H%M%S))
-	@cd ${BUILD_DIR} && ${XVLOG} -sv ${FILE_LIST} --log ${LOG_DIR}/vlog_${TIME}.log ${HL_EW}
-	@cd ${BUILD_DIR} && ${XELAB} ${TOP_MODULE} -s ${TOP_MODULE} --log ${LOG_DIR}/xelab_${TIME}.log ${HL_EW}
+	@cd ${BUILD_DIR} && ${XVLOG} -sv ${FILE_LIST} --log ${LOG_DIR}/xvlog.log ${HL_EW}
+	@cd ${BUILD_DIR} && ${XELAB} ${TOP_MODULE} -s ${TOP_MODULE} --log ${LOG_DIR}/xelab.log ${HL_EW}
 	
 .PHONY: simulate
 simulate:
 	@echo "${XSIM_ARGS}" > ${BUILD_DIR}/xsim_args
-	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} -f xsim_args --log ${LOG_DIR}/xsim_${TIME}.log ${HL_EW}
+	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} -f xsim_args --log ${LOG_DIR}/xsim_${TEST}.log ${HL_EW}
