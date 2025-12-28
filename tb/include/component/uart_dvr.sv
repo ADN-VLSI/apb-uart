@@ -26,6 +26,7 @@ class uart_dvr extends uvm_driver #(uart_seq_item);
     uart_seq_item req;
     forever begin
       seq_item_port.get_next_item(req);
+      `uvm_info(get_type_name(), $sformatf("Transmitting data: 0x%0h", req.data), UVM_HIGH)
       vif.send_tx(req.data);
       seq_item_port.item_done();
     end
