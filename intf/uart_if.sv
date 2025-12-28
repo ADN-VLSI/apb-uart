@@ -76,6 +76,8 @@ interface uart_if;
         parity_bit = ~parity_bit;                                                                 \
       end                                                                                         \
                                                                                                   \
+      drive_``__PORT__`` <= '1;                                                                   \
+                                                                                                  \
       /* Start bit */                                                                             \
       reg_``__PORT__`` <= '0;                                                                     \
       #(bit_time);                                                                                \
@@ -98,6 +100,8 @@ interface uart_if;
       if (SECOND_STOP_BIT) begin                                                                  \
         #(bit_time);                                                                              \
       end                                                                                         \
+                                                                                                  \
+      drive_``__PORT__`` <= '0;                                                                   \
                                                                                                   \
     endtask                                                                                       \
                                                                                                   \
@@ -174,7 +178,7 @@ interface uart_if;
     realtime bit_time;
     int i;
     i = 0;
-    while (i < tx_len*22) begin
+    while (i < tx_len * 22) begin
       bit_time = 1s / BAUD_RATE;
       #(bit_time / 2);
       i++;

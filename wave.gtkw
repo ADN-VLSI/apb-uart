@@ -1,21 +1,20 @@
 [*]
-[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Sat Dec 20 08:51:22 2025
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Sun Dec 28 08:07:21 2025
 [*]
-[dumpfile] "C:\apb-uart\adn-apb-uart\build\apb_uart_tb.vcd"
-[dumpfile_mtime] "Sat Dec 20 08:50:42 2025"
-[dumpfile_size] 2040865
-[savefile] "C:\apb-uart\adn-apb-uart\wave.gtkw"
+[dumpfile] "/home/foez/Documents/ADN/adn-apb-uart/build/apb_uart_tb.vcd"
+[dumpfile_mtime] "Sun Dec 28 08:06:30 2025"
+[dumpfile_size] 6877132
+[savefile] "/home/foez/Documents/ADN/adn-apb-uart/wave.gtkw"
 [timestart] 0
-[size] 1920 1009
+[size] 1920 1033
 [pos] -1 -1
-*-24.464460 123000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-27.028416 425700000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] apb_uart_tb.
-[treeopen] apb_uart_tb.udut.
-[sst_width] 197
+[sst_width] 277
 [signals_width] 371
 [sst_expanded] 1
-[sst_vpaned_height] 297
+[sst_vpaned_height] 291
 @200
 -CTRL
 @28
@@ -72,5 +71,7 @@ apb_uart_tb.uart_intf.tx
 -
 -
 -
+@29
+apb_uart_tb.udut.rx_i
 [pattern_trace] 1
 [pattern_trace] 0
