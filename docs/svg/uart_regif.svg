@@ -1,0 +1,725 @@
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" style="background: transparent; background-color: transparent;" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="683px" height="820px" viewBox="-0.5 -0.5 683 820" content="&lt;mxfile&gt;&lt;diagram id=&quot;2FaO0u-JA5EfzVUemEMD&quot; name=&quot;Page-1&quot;&gt;7V1bb+I4GP010bQrVQpJg8ojhZnOPFQrtV3NvkXGMcHCsTOOw2V//dq5AGkZoAwxJBiQEr74kmP7HH+2A7bcQbR44iCePLMAEcuxg4XlDi3H6ThuVx6UZZlbeq6XG0KOgyLQ2vCK/0OF0S6sKQ5QUgkoGCMCx1UjZJQiKCo2wDmbV4ONGanmGoMQfTC8QkA+Wn/iQExy64Nnr+3fEQ4nZc4du7gSgTJwYUgmIGDzDZP71XIHnDGRn0WLASKq8MpyyeN9+83V1Y1xRMUhEZw8wgyQtMBmOV0ioz4GeKbuTywL0N1fqbqpR8gI45bbt1TKLsxe0jwCcBpyltLgrhqiM1ZvGWLMqLgbgwiTZX7xy5AzeR+O/QpoIg/PjLIvljNQlyJ5nsQAosKw+l4mNC/KVyVEGY8AKa8kWXNR9s59LJvcI8EU3U02wnd6mX0+wQLdFakqe8xV8muo8iwsjusiqZpkbHpIMXkPXWhvTTxiQSrjFunJmsqTPC6bsja2YbBPk8c9gr3Rdigp4MLnKMTjPVlJ85ay/IPi3YP7RNB31CKOYsZFK2oRxCM/q8l4Gp4ms+BevbcDkmHc/l/1F1yl8elok7tAO27tgG8uj4KnI6LX7cGguzUz2fWBCAnEm8PFHWgw1aIp/eHwxf/5Y/j2/WSgdnJ+2JzKGXkQgYeteXgaUAwMjZvSUs5P42H/rW9o/Fkau86eLDRy7FaGaHXP3QW9nuf9JrNv2cd+ImwE1CA1wSEFJGlzeezwwzGN0waNKHbIH2Ehhs1BInHA8faZAMAT4VOsp+PXy7p+sqRwwhllqZqM4ShBIr8NAAWeIXlC2NxwsQkt+Cq4CMnU18pEvXwcEAan8vhDNb3j+sARbygTDymfZxQxvswKSA4TxmoS17H/TsXRpdWQsjEqVVPlHPepWeQijn61WeVWLJY4U5Tsa72GuYa5JRKvUkWbU5g1T3zcnSaHHVMSndoxZGFqRnGixrarGXhDLSIMgoBrV2HtEqxQosQ4T0aC2+I8zdE5fKdzcHfOsVADIETBaO/TJIbChsIlkqoXtbmCZLwo40WdVo0DIIBeQT6bDiuoRoWNCh+swjcapTdrszXL1kPt5XZruijTRZ24i0oEH7V/oD9aZn2UBMtGx40Vrm9l6Q+W4RpSNDu6dJYtq5k+vfbJkdonMuHUZ5rl7RzMlTgpmxMUhNc6F2Ioe5QbbiZAPoXBeJefWsvPJkC06q925eUIBNZVz38Y5W2Js8RREmv3ls5A2CRmNFFjnBvEuUzGsTENMASC8X1zLFc4OnxBIU6yHybZrHza0Baymdj/9F/eLPWnA9w4nY2XPig4Ub9l9zXBOZ/OrZBqkjrDjIYzg0x9WSHnJUfdnNjAaGhhaHEILcbhhfQXGuhRYDXUqI8aGpfR6yeHWPhjPGY+ZCkVOmlSMxE+4tK0eGgo0XRK8JZS4iOuy6VEqycq3v61ynlYG69Xsq9SOVrkZ8ouJ1tGaI9ibCIyHqUhQTMWJjSRYgYIDgwtjFdpiPG+twDB0viW5/EtX4xv2U794K3zLjcRXa5aGBpcFA3a343yin9piFEfMcywq4G0yL3Lyx12tdq7zH53w9NYkkZt4SI4U/8Gy98/eGX0pOl6IocO3Nf9pFXNClLFtE9BNDbS22q2h9/Ne6tTuQ9HoIWyZ7vpvOab6QznHMTSNhERkd86q2gzxGXwPN6WvYo6qx2QosUTYhES2SOqRYTVpknFrlFOud/SfL0Hk9ctbJON/Zceyoig2PcpXKW93hpJnhS7I5Vf17swZdee1ntZuV//Bw==&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <g>
+            <rect x="0" y="0" width="560" height="820" fill="none" stroke="none" pointer-events="all"/>
+        </g>
+        <g>
+            <g transform="translate(-0.5 -0.5)">
+                <switch>
+                    <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 558px; height: 1px; padding-top: 7px; margin-left: 2px;">
+                            <div style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
+                                <div style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                    <div style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62)); background-color: light-dark(rgb(31, 31, 31), rgb(210, 210, 210)); font-family: &quot;Droid Sans Mono&quot;, &quot;monospace&quot;, monospace; font-weight: normal; font-size: 14px; line-height: 19px; white-space: pre;">
+                                        <div>
+                                            <span style="color: light-dark(rgb(197, 134, 192), rgb(146, 92, 142));">
+                                                module
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                uart_regif
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(197, 134, 192), rgb(146, 92, 142));">
+                                                import
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                apb_uart_pkg
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                ::*
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ;
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                #
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                (
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                parameter
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                int
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ADDR_WIDTH
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                =
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                5
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                parameter
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                int
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                DATA_WIDTH
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                =
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                32
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ) (
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Global signals
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                arst_ni
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Asynchronous reset, active low
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                clk_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Clock Inputs
+                                            </span>
+                                        </div>
+                                        <br/>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory Interface Outputs
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                mreq_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory request
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                [    ADDR_WIDTH
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                -
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                1
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                :
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                0
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ]
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                maddr_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory address
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                mwe_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory write enable
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                [    DATA_WIDTH
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                -
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                1
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                :
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                0
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ]
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                mwdata_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory write data
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                [(DATA_WIDTH
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                /
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                8
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                )
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                -
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                1
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                :
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                0
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ]
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                mstrb_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory byte strobe
+                                            </span>
+                                        </div>
+                                        <br/>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory Interface Inputs
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                mack_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory acknowledge
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                [DATA_WIDTH
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                -
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                1
+                                            </span>
+                                            <span style="color: light-dark(rgb(212, 212, 212), rgb(55, 55, 55));">
+                                                :
+                                            </span>
+                                            <span style="color: light-dark(rgb(181, 206, 168), rgb(53, 74, 41));">
+                                                0
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ]
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                mrdata_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory read data
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                mresp_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Memory response (error indicator)
+                                            </span>
+                                        </div>
+                                        <br/>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Register outputs to UART core
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                ctrl_reg_t
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                ctrl_reg_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                clk_div_reg_t
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                clk_div_reg_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                cfg_reg_t
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                cfg_reg_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                tx_fifo_count_reg_t
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                tx_fifo_count_reg_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                rx_fifo_count_reg_t
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                rx_fifo_count_reg_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <br/>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // TX data interface
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                tx_data_reg_t
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                tx_data_reg_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                tx_data_valid_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                tx_data_ready_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <br/>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // RX data interface
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                rx_data_reg_t
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                rx_data_reg_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                input
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                rx_data_valid_i
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                logic
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                rx_data_ready_o
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                ,
+                                            </span>
+                                        </div>
+                                        <br/>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(106, 153, 85), rgb(91, 131, 73));">
+                                                // Interrupt control register output
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(78, 201, 176), rgb(6, 112, 90));">
+                                                output
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(86, 156, 214), rgb(61, 121, 171));">
+                                                intr_ctrl_reg_t
+                                            </span>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                            </span>
+                                            <span style="color: light-dark(rgb(156, 220, 254), rgb(12, 67, 96));">
+                                                intr_ctrl_reg_o
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span style="color: light-dark(rgb(204, 204, 204), rgb(62, 62, 62));">
+                                                );
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </foreignObject>
+                    <text x="2" y="19" fill="light-dark(#000000, #ffffff)" font-family="&quot;Helvetica&quot;" font-size="12px">
+                        module uart_regif...
+                    </text>
+                </switch>
+            </g>
+        </g>
+    </g>
+    <switch>
+        <g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"/>
+        <a transform="translate(0,-5)" xlink:href="https://www.drawio.com/doc/faq/svg-export-text-problems" target="_blank">
+            <text text-anchor="middle" font-size="10px" x="50%" y="100%">
+                Text is not SVG - cannot display
+            </text>
+        </a>
+    </switch>
+</svg>

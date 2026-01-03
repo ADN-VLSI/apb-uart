@@ -312,6 +312,10 @@ The `uart_tx` module handles the transmission of data over the UART interface. I
 | extra_stop_i | Input     | 1     | Extra stop bit enable signal   |
 | tx_o         | Output    | 1     | UART transmit data output      |
 
+The FSM for this module is as follows:
+
+![uart_tx_fsm](svg/uart_tx_fsm.svg)
+
 ### uart_rx
 
 The `uart_rx` module manages the reception of data from the UART interface. It detects start and stop bits, checks for parity errors, and deserializes incoming data bytes for storage in the RX FIFO. The following diagram illustrates the internal structure of the `uart_rx` module:
@@ -330,3 +334,7 @@ The `uart_rx` module manages the reception of data from the UART interface. It d
 | data_o         | Output    | 8     | Received data byte output      |
 | data_valid_o   | Output    | 1     | Data valid signal              |
 | parity_error_o | Output    | 1     | Parity error indication        |
+
+The FSM for this module is as follows:
+
+![uart_rx_fsm](svg/uart_rx_fsm.svg)
