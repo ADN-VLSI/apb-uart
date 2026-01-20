@@ -16,6 +16,7 @@ The APB-UART peripheral provides a standard UART interface for serial communicat
 - **Interrupt Support** - Multiple interrupt sources for efficient CPU utilization
 - **Clock Domain Crossing** - Safe data transfer between APB and UART clock domains
 - **Parameterizable** - Configurable data and address bus widths
+- **Well-Documented** - Comprehensive comments in all SystemVerilog files for easy maintenance
 
 ## Architecture
 
@@ -167,6 +168,40 @@ if (read_reg(RX_FIFO_COUNT) > 0) {
 }
 ```
 
+## Simulation
+
+The APB-UART project includes a comprehensive UVM testbench for verification. To run simulations:
+
+### Prerequisites
+- Vivado/XSIM (for simulation)
+- Make
+
+### Running Tests
+
+```bash
+# Run the base test (default)
+make
+
+# Run a specific test
+make TEST=basic_read_test
+
+# Run with GUI
+make GUI=1
+
+# Run with high verbosity
+make VRB=UVM_HIGH
+```
+
+Available tests:
+- `base_test` - Basic test setup
+- `basic_read_test` - UART RX to APB read loopback
+- `basic_write_test` - APB write to UART TX
+
+### Testbench Structure
+- UVM agents for APB and UART interfaces
+- Scoreboard for data integrity checking
+- Configurable sequences for various test scenarios
+
 ## Documentation
 
 Detailed design documentation is available in [`docs/design.md`](docs/design.md), including:
@@ -176,6 +211,7 @@ Detailed design documentation is available in [`docs/design.md`](docs/design.md)
 - State machine diagrams for TX/RX
 - Timing specifications
 - Integration guidelines
+- Additional diagrams for clock divider and CDC FIFO
 
 ## License
 
