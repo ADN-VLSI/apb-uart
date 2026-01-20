@@ -247,7 +247,13 @@ The `uart_regif` module manages the UART's configuration and status registers. I
 
 The `cdc_fifo` module implements a clock domain crossing FIFO to safely transfer data between different clock domains. It ensures data integrity and synchronization when moving data from the APB clock domain to the UART clock domain and vice versa. The are used for both TX and RX FIFOs. The following diagram illustrates the internal structure of the `cdc_fifo` module:
 
-![cdc_fifo](svg/cdc_fifo.svg)
+The following diagram shows the top-level view of the CDC FIFO:
+
+![cdc_fifo_top](svg/cdc_fifo_top.svg)
+
+The following diagram provides a detailed description of the CDC FIFO operation:
+
+![cdc_fifo_description](svg/cdc_fifo_description.svg)
 
 #### Parameters
 
@@ -338,3 +344,17 @@ The `uart_rx` module manages the reception of data from the UART interface. It d
 The FSM for this module is as follows:
 
 ![uart_rx_fsm](svg/uart_rx_fsm.svg)
+
+## Additional Diagrams
+
+The following diagram illustrates the clock divider module:
+
+![clk_div](svg/clk_div.svg)
+
+The following diagram shows the top-level view of the CDC FIFO:
+
+![cdc_fifo_top](svg/cdc_fifo_top.svg)
+
+The following diagram provides a detailed description of the CDC FIFO operation:
+
+![cdc_fifo_description](svg/cdc_fifo_description.svg)

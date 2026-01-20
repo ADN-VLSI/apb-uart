@@ -7,9 +7,11 @@ import uvm_pkg::*;
 
 module apb_uart_tb;
 
+  // Parameters for address and data widths
   parameter int ADDR_WIDTH = 32;
   parameter int DATA_WIDTH = 32;
 
+  // Interface instantiations
   ctrl_if ctrl_intf ();
   uart_if uart_intf ();
   apb_if apb_intf (
@@ -17,12 +19,15 @@ module apb_uart_tb;
       .clk_i  (ctrl_intf.clk_i)
   );
 
+  // IRQ signals from DUT
   logic irq_tx_almost_full;
   logic irq_rx_almost_full;
   logic irq_rx_parity_error;
   logic irq_rx_valid;
 
+  // Import package for DUT parameters
   import apb_uart_pkg::*;
+  // DUT instantiation
   uart_top #(
       .ADDR_WIDTH(SYS_ADDR_WIDTH),
       .DATA_WIDTH(SYS_DATA_WIDTH)
@@ -38,35 +43,41 @@ module apb_uart_tb;
       .pready_o(apb_intf.pready),
       .prdata_o(apb_intf.prdata),
       .pslverr_o(apb_intf.pslverr),
+      // UART TX/RX cross-connected for testbench loopback
       .rx_i(uart_intf.tx),
       .tx_o(uart_intf.rx),
       .irq_tx_almost_full(irq_tx_almost_full),
       .irq_rx_almost_full(irq_rx_almost_full),
       .irq_rx_parity_error(irq_rx_parity_error),
       .irq_rx_valid(irq_rx_valid)
-
   );
 
+  // Initial block: configure and run the test
   initial begin
     string test_name;
+    // Get test name from command line, default to base_test
     if (!$value$plusargs("test=%s", test_name)) begin
       test_name = "base_test";
     end
 
+    // Set time format for simulation
     $timeformat(-6, 2, "us");
 
+    // Enable waveform dumping
     $dumpfile("apb_uart_tb.vcd");
     $dumpvars(0, apb_uart_tb);
 
+    // Set configuration database for parameters
     uvm_config_db#(int)::set(uvm_root::get(), "parameter", "ADDR_WIDTH", ADDR_WIDTH);
     uvm_config_db#(int)::set(uvm_root::get(), "parameter", "DATA_WIDTH", DATA_WIDTH);
 
+    // Set virtual interfaces in configuration database
     uvm_config_db#(virtual ctrl_if)::set(uvm_root::get(), "ctrl", "ctrl_intf", ctrl_intf);
     uvm_config_db#(virtual uart_if)::set(uvm_root::get(), "uart", "uart_intf", uart_intf);
     uvm_config_db#(virtual apb_if)::set(uvm_root::get(), "apb", "apb_intf", apb_intf);
 
+    // Run the specified UVM test
     run_test(test_name);
   end
-
 
 endmodule

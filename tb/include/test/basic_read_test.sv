@@ -1,6 +1,8 @@
+// Include guard to prevent multiple inclusions of this file
 `ifndef __GUARD_BASIC_READ_TEST_SV__
 `define __GUARD_BASIC_READ_TEST_SV__ 0
 
+// Include base test and sequence classes
 `include "test/base_test.sv"
 `include "sequence/random_apb_rdata_seq.sv"
 `include "sequence/random_uart_rx_seq.sv"
@@ -20,11 +22,15 @@
 // -----------------------------------------------------------------------------
 class basic_read_test extends base_test;
 
+  // UVM component utilities for factory registration
   `uvm_component_utils(basic_read_test)
+
+  // Constructor for the basic read test
   function new(string name = "basic_read_test", uvm_component parent = null);
     super.new(name, parent);
   endfunction : new
 
+  // Main phase: execute UART RX and APB read sequences
   task main_phase(uvm_phase phase);
     // Hold the phase open until stimulus + drains complete.
     phase.raise_objection(this);
@@ -65,4 +71,5 @@ class basic_read_test extends base_test;
   endtask : main_phase
 
 endclass : basic_read_test
+
 `endif
