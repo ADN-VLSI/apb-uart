@@ -158,8 +158,8 @@ The following diagrams illustrate the internal architecture and key components o
 ![Micro Architecture](svg/march.svg)
 
 - [**apb_memif:**](#apb_memif) This module serves as the interface between the APB bus and the UART's internal registers and FIFOs. It handles APB read and write transactions, manages register access, and coordinates data flow to and from the transmit and receive FIFOs.
-- [**uart_regif:**](#uart_regif) This module manages the UART's configuration and status registers. It provides access to control settings such as baud rate, parity, and stop bits, as well as status indicators like FIFO counts and interrupt flags. It also interfaces with TX and RX data FIFOs for data transmission and reception.
-- [**cdc_fifo:**](#cdc_fifo) This module implements a clock domain crossing FIFO to safely transfer data between different clock domains. It ensures data integrity and synchronization when moving data from the APB clock domain to the UART clock domain and vice versa. The are used for both TX and RX FIFOs.
+- [**uart_regif:**](#uart_regif) Updated register interface that fronts the APB-facing memory requests, maps them into typed control/status registers, and handshakes TX/RX data and interrupt signals with the core.
+- [**cdc_fifo:**](#cdc_fifo) Clock domain crossing FIFO (renamed diagram from `cdc_fifo_top` to `cdc_fifo`) that protects TX and RX paths when traversing between APB and UART clock domains.
 - [**clk_div:**](#clk_div) This module generates the appropriate baud rate clock by dividing the input clock based on the configured clock divider value. It provides timing signals for UART data transmission and reception.
 - [**uart_tx:**](#uart_tx) This module handles the transmission of data over the UART interface. It manages the serialization of data bytes, adds start, stop, and parity bits as configured, and controls the timing of data output on the TX line.
 - [**uart_rx:**](#uart_rx) This module manages the reception of data from the UART interface. It detects start and stop bits, checks for parity errors, and deserializes incoming data bytes for storage in the RX FIFO.
@@ -205,7 +205,7 @@ The `apb_memif` module serves as the bridge between the APB bus and the UART's i
 
 ### uart_regif
 
-The `uart_regif` module manages the UART's configuration and status registers. It provides access to control settings such as baud rate, parity, and stop bits, as well as status indicators like FIFO counts and interrupt flags. It also interfaces with TX and RX data FIFOs for data transmission and reception. The following diagram illustrates the internal structure of the `uart_regif` module:
+The `uart_regif` block has been refreshed to match the latest register file implementation. It now translates memory requests from `apb_memif` into typed control, clock divider, and configuration registers, mirrors TX/RX FIFO counts, handshakes TX/RX data transfers, and surfaces interrupt status back to the core. The updated diagram for the replacement register interface is shown below:
 
 ![uart_regif](svg/uart_regif.svg)
 
@@ -245,13 +245,9 @@ The `uart_regif` module manages the UART's configuration and status registers. I
 
 ### cdc_fifo
 
-The `cdc_fifo` module implements a clock domain crossing FIFO to safely transfer data between different clock domains. It ensures data integrity and synchronization when moving data from the APB clock domain to the UART clock domain and vice versa. The are used for both TX and RX FIFOs. The following diagram illustrates the internal structure of the `cdc_fifo` module:
+The `cdc_fifo` module implements the clock domain crossing FIFOs used on both TX and RX paths, ensuring data integrity between the APB and UART clock domains. The top-level diagram has been renamed to `cdc_fifo` to reflect the updated drawing. The diagrams below show the refreshed top-level view and the detailed CDC FIFO operation:
 
-The following diagram shows the top-level view of the CDC FIFO:
-
-![cdc_fifo_top](svg/cdc_fifo_top.svg)
-
-The following diagram provides a detailed description of the CDC FIFO operation:
+![cdc_fifo](svg/cdc_fifo.svg)
 
 ![cdc_fifo_description](svg/cdc_fifo_description.svg)
 
@@ -351,9 +347,9 @@ The following diagram illustrates the clock divider module:
 
 ![clk_div](svg/clk_div.svg)
 
-The following diagram shows the top-level view of the CDC FIFO:
+The following diagram shows the refreshed top-level view of the CDC FIFO:
 
-![cdc_fifo_top](svg/cdc_fifo_top.svg)
+![cdc_fifo](svg/cdc_fifo.svg)
 
 The following diagram provides a detailed description of the CDC FIFO operation:
 
