@@ -155,7 +155,7 @@ Controls interrupt enables and provides status flags for various UART conditions
 
 The following diagrams illustrate the internal architecture and key components of the APB-UART peripheral.
 
-![Architecture](svg/arch.svg)
+![Micro Architecture](svg/march.svg)
 
 - [**apb_memif:**](#apb_memif) This module serves as the interface between the APB bus and the UART's internal registers and FIFOs. It handles APB read and write transactions, manages register access, and coordinates data flow to and from the transmit and receive FIFOs.
 - [**uart_regif:**](#uart_regif) This module manages the UART's configuration and status registers. It provides access to control settings such as baud rate, parity, and stop bits, as well as status indicators like FIFO counts and interrupt flags. It also interfaces with TX and RX data FIFOs for data transmission and reception.
