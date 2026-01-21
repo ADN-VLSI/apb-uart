@@ -3,7 +3,7 @@
 // It translates APB transactions into memory requests and handles responses.
 // Supports pipelined APB transactions by registering outputs when memory is busy.
 module apb_memif #(
-// Parameters for address and data widths
+    // Parameters for address and data widths
     parameter int ADDR_WIDTH = 32,
     parameter int DATA_WIDTH = 32
 ) (
@@ -25,11 +25,11 @@ module apb_memif #(
     output logic                  pslverr_o, // Peripheral slave error
 
     // Memory Interface Outputs
-    output logic                      mreq_o,    // Memory request (asserted on APB access phase start)
-    output logic [    ADDR_WIDTH-1:0] maddr_o,   // Memory address
-    output logic                      mwe_o,     // Memory write enable
-    output logic [    DATA_WIDTH-1:0] mwdata_o,  // Memory write data
-    output logic [(DATA_WIDTH/8)-1:0] mstrb_o,   // Memory byte strobe
+    output logic mreq_o,  // Memory request (asserted on APB access phase start)
+    output logic [ADDR_WIDTH-1:0] maddr_o,  // Memory address
+    output logic mwe_o,  // Memory write enable
+    output logic [DATA_WIDTH-1:0] mwdata_o,  // Memory write data
+    output logic [(DATA_WIDTH/8)-1:0] mstrb_o,  // Memory byte strobe
 
     // Memory Interface Inputs
     input logic                  mack_i,    // Memory acknowledge (indicates memory response ready)
@@ -41,11 +41,11 @@ module apb_memif #(
   // Signals
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  logic                  penable_q;  // Register to track previous penable state for edge detection.
-  logic                  pout_update;  // Signal to indicate when to update output registers (on mreq or mack).
-  logic                  pready_q;  // Register to hold pready output when memory is busy.
+  logic penable_q;  // Register to track previous penable state for edge detection.
+  logic pout_update;  // Signal to indicate when to update output registers (on mreq or mack).
+  logic pready_q;  // Register to hold pready output when memory is busy.
   logic [DATA_WIDTH-1:0] prdata_q;  // Register to hold prdata output when memory is busy.
-  logic                  pslverr_q;  // Register to hold pslverr output when memory is busy.
+  logic pslverr_q;  // Register to hold pslverr output when memory is busy.
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // Combinational Logic
@@ -107,5 +107,29 @@ module apb_memif #(
   assign pready_o  = pout_update ? mack_i : pready_q;
   assign prdata_o  = pout_update ? mrdata_i : prdata_q;
   assign pslverr_o = pout_update ? mresp_i : pslverr_q;
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Assertions
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // // pready_o must be asserted when penable_i falls
+  // assert property (@(posedge clk_i) disable iff (~arst_ni) ($fell(penable_i)) |=> $past(pready_o))
+  // else $error("APB Memory Interface: pready_o not asserted when penable_i falls.");
+
+  // // paddr_i must not change while penable_i is high
+  // assert property (@(posedge clk_i) disable iff (~arst_ni) penable_i |-> $stable(paddr_i))
+  // else $error("APB Memory Interface: paddr_i changed while penable_i is high.");
+
+  // // pwrite_i must not change while penable_i is high
+  // assert property (@(posedge clk_i) disable iff (~arst_ni) penable_i |-> $stable(pwrite_i))
+  // else $error("APB Memory Interface: pwrite_i changed while penable_i is high.");
+
+  // // pwdata_i must not change while penable_i is high
+  // assert property (@(posedge clk_i) disable iff (~arst_ni) penable_i |-> $stable(pwdata_i))
+  // else $error("APB Memory Interface: pwdata_i changed while penable_i is high.");
+
+  // // pstrb_i must not change while penable_i is high
+  // assert property (@(posedge clk_i) disable iff (~arst_ni) penable_i |-> $stable(pstrb_i))
+  // else $error("APB Memory Interface: pstrb_i changed while penable_i is high.");
 
 endmodule
