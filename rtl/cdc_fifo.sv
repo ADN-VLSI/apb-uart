@@ -258,32 +258,28 @@ module cdc_fifo #(
   // Assertions
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-//   // elem_in_ready_o must be asserted when elem_in_valid_i falls
-//   assert property (@(posedge elem_in_clk_i) disable iff (~arst_ni) $fell(
-//       (elem_in_valid_i)
-//   ) |-> elem_in_ready_o)
-//   else $error("CDC FIFO: elem_in_ready_o not asserted when elem_in_valid_i falls.");
+  assert property (
+    @(posedge elem_in_clk_i)
+    disable iff (!arst_ni)
+    (elem_in_valid_i & ~elem_in_ready_o) |=> $stable(elem_in_i)
+  ) else $error("ASSERTION FAILED: data should remain stable when valid is high and ready is low");
 
-//   // elem_out_ready_i must be asserted when elem_out_valid_o falls
-//   assert property (@(posedge elem_out_clk_i) disable iff (~arst_ni) $fell(
-//       (elem_out_valid_o)
-//   ) |-> elem_out_ready_i)
-//   else $error("CDC FIFO: elem_out_ready_i not asserted when elem_out_valid_o falls.");
+  assert property (
+    @(posedge elem_out_clk_i)
+    disable iff (!arst_ni)
+    (elem_out_valid_o & ~elem_out_ready_i) |=> $stable(elem_out_o)
+  ) else $error("ASSERTION FAILED: data should remain stable when valid is high and ready is low");
 
-//   // elem_in_i must not change while elem_in_valid_i is high and elem_in_ready_o is low
-//   assert property (@(posedge elem_in_clk_i) disable iff (~arst_ni) (elem_in_valid_i & ~elem_in_ready_o) |-> $stable(
-//       elem_in_i
-//   ))
-//   else
-//     $error("CDC FIFO: elem_in_i changed while elem_in_valid_i is high and elem_in_ready_o is low.");
+  assert property (
+    @(posedge elem_in_clk_i)
+    disable iff (!arst_ni)
+    (!elem_in_valid_i && $past(elem_in_valid_i)) |=> $past(elem_in_ready_o,2)
+  ) else $error("ASSERTION FAILED: elem_in_ready_o should be high when elem_in_valid_i goes low");
 
-//   // elem_out_o must not change while elem_out_valid_o is high and elem_out_ready_i is low
-//   assert property (@(posedge elem_out_clk_i) disable iff (~arst_ni) (elem_out_valid_o & ~elem_out_ready_i) |-> $stable(
-//       elem_out_o
-//   ))
-//   else
-//     $error(
-//         "CDC FIFO: elem_out_o changed while elem_out_valid_o is high and elem_out_ready_i is low."
-//     );
+  assert property (
+    @(posedge elem_out_clk_i)
+    disable iff (!arst_ni)
+    (!elem_out_valid_o && $past(elem_out_valid_o)) |=> $past(elem_out_ready_i,2)
+  ) else $error("ASSERTION FAILED: elem_out_ready_i should be high when elem_out_valid_o goes low");
 
 endmodule

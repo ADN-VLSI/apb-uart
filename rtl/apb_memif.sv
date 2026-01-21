@@ -112,24 +112,39 @@ module apb_memif #(
   // Assertions
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // // pready_o must be asserted when penable_i falls
-  // assert property (@(posedge clk_i) disable iff (~arst_ni) ($fell(penable_i)) |=> $past(pready_o))
-  // else $error("APB Memory Interface: pready_o not asserted when penable_i falls.");
+  // pready_o must be high when penable_i goes low
+  assert property (
+    @(posedge clk_i)
+    disable iff (!arst_ni)
+    (!penable_i && $past(penable_i)) |=> $past(pready_o,2)
+  ) else $error("ASSERTION FAILED: pready_o should be high when penable_i goes low");
 
-  // // paddr_i must not change while penable_i is high
-  // assert property (@(posedge clk_i) disable iff (~arst_ni) penable_i |-> $stable(paddr_i))
-  // else $error("APB Memory Interface: paddr_i changed while penable_i is high.");
+  // paddr_i must not change while penable_i is high
+  assert property (
+    @(posedge clk_i)
+    disable iff (!arst_ni)
+    (psel_i && penable_i && !pready_o) |=> $stable(paddr_i))
+  else $error("APB Memory Interface: paddr_i changed while penable_i is high.");
 
-  // // pwrite_i must not change while penable_i is high
-  // assert property (@(posedge clk_i) disable iff (~arst_ni) penable_i |-> $stable(pwrite_i))
-  // else $error("APB Memory Interface: pwrite_i changed while penable_i is high.");
+  // pwrite_i must not change while penable_i is high
+  assert property (
+    @(posedge clk_i)
+    disable iff (!arst_ni)
+    (psel_i && penable_i && !pready_o) |=> $stable(pwrite_i))
+  else $error("APB Memory Interface: pwrite_i changed while penable_i is high.");
 
-  // // pwdata_i must not change while penable_i is high
-  // assert property (@(posedge clk_i) disable iff (~arst_ni) penable_i |-> $stable(pwdata_i))
-  // else $error("APB Memory Interface: pwdata_i changed while penable_i is high.");
+  // pwdata_i must not change while penable_i is high
+  assert property (
+    @(posedge clk_i)
+    disable iff (!arst_ni)
+    (psel_i && penable_i && !pready_o) |=> $stable(pwdata_i))
+  else $error("APB Memory Interface: pwdata_i changed while penable_i is high.");
 
-  // // pstrb_i must not change while penable_i is high
-  // assert property (@(posedge clk_i) disable iff (~arst_ni) penable_i |-> $stable(pstrb_i))
-  // else $error("APB Memory Interface: pstrb_i changed while penable_i is high.");
+  // pstrb_i must not change while penable_i is high
+  assert property (
+    @(posedge clk_i)
+    disable iff (!arst_ni)
+    (psel_i && penable_i && !pready_o) |=> $stable(pstrb_i))
+  else $error("APB Memory Interface: pstrb_i changed while penable_i is high.");
 
 endmodule
