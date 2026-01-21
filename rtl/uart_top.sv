@@ -205,7 +205,7 @@ module uart_top
       .elem_out_o(regif_rx_data_reg.RX_DATA),
       .elem_out_clk_i(clk_i),
       .elem_out_valid_o(regif_rx_data_valid),
-      .elem_out_ready_o(regif_rx_data_ready),
+      .elem_out_ready_i(regif_rx_data_ready),
       .elem_out_count_o(rx_fifo_count_adpt)
   );
 

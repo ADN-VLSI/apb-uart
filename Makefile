@@ -99,8 +99,21 @@ compile:
 	@$(eval TIME := $(shell date +%Y%m%d_%H%M%S))
 	@cd ${BUILD_DIR} && ${XVLOG} -sv ${FILE_LIST} --log ${LOG_DIR}/xvlog.log ${HL_EW}
 	@cd ${BUILD_DIR} && ${XELAB} ${TOP_MODULE} -s ${TOP_MODULE} --log ${LOG_DIR}/xelab.log ${HL_EW}
+	@echo "" > ${BUILD_DIR}/compile_done
 	
+${BUILD_DIR}/compile_done:
+	@make -s compile
+
 .PHONY: simulate
 simulate:
+	@make -s ${BUILD_DIR}
+	@make -s ${BUILD_DIR}/compile_done
 	@echo "${XSIM_ARGS}" > ${BUILD_DIR}/xsim_args
 	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} -f xsim_args --log ${LOG_DIR}/xsim_${TEST}.log ${HL_EW}
+
+all:
+	@make -s clean_full
+	@make -s compile
+	@make -s simulate TEST=base_test
+	@make -s simulate TEST=basic_read_test
+	@make -s simulate TEST=basic_write_test
