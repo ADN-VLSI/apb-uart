@@ -27,7 +27,7 @@ class all_reg_access_seq extends uvm_sequence #(apb_seq_item);
         ))
       seq_length = 1;
 
-    begin
+    repeat (seq_length) begin
       `uvm_do_with(req, {req.addr == 'h00; req.tx_type == 1; req.data[0] == '0;})
       `uvm_do_with(req, {req.addr == 'h00; req.tx_type == 0;})
       `uvm_do_with(req, {req.addr == 'h04; req.tx_type == 1;})
@@ -40,10 +40,6 @@ class all_reg_access_seq extends uvm_sequence #(apb_seq_item);
       `uvm_do_with(req, {req.addr == 'h18; req.tx_type == 0;})
       `uvm_do_with(req, {req.addr == 'h1C; req.tx_type == 1;})
       `uvm_do_with(req, {req.addr == 'h1C; req.tx_type == 0;})
-    end
-
-    repeat (seq_length) begin
-      `uvm_do_with(req, {if (req.addr==0) req.data[0] == '0;})
     end
 
   endtask : body
