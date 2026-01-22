@@ -6,6 +6,7 @@
 `include "object/apb_rsp_item.sv"
 `include "object/uart_rsp_item.sv"
 
+`include "coverage/test_status_cg.sv"
 `include "coverage/uart_transactions_cg.sv"
 `include "coverage/apb_transactions_cg.sv"
 `include "coverage/apb_uart_reg_access_cg.sv"
@@ -31,10 +32,7 @@ class apb_uart_scbd extends uvm_scoreboard;
   protected byte uart_tx_q[$];
   protected byte uart_rx_q[$];
 
-  // Counters for test results
-  protected int pass_count = 0;
-  protected int fail_count = 0;
-
+  test_status_cg         status_cg;
   uart_transactions_cg   uart_cg;
   apb_transactions_cg    apb_cg;
   apb_uart_reg_access_cg reg_cg;
@@ -51,9 +49,10 @@ class apb_uart_scbd extends uvm_scoreboard;
     m_analysis_imp_apb  = new($sformatf("m_analysis_imp_apb"), this);
     m_analysis_imp_uart = new($sformatf("m_analysis_imp_uart"), this);
     // Instantiate the coverage group
-    uart_cg = new();
-    apb_cg  = new();
-    reg_cg  = new();
+    status_cg = new();
+    uart_cg   = new();
+    apb_cg    = new();
+    reg_cg    = new();
   endfunction
 
   // Connect phase: no connections needed
@@ -124,10 +123,10 @@ class apb_uart_scbd extends uvm_scoreboard;
         wait (uart_tx_q.size());
         data = uart_tx_q.pop_front();
         if (data == apb_item.pwdata[7:0]) begin
-          pass_count++;
-          `uvm_info(get_type_name(), $sformatf("TX Data Match: 0x%0h", data), UVM_LOW)
+          status_cg.sample(1);
+          `uvm_info(get_type_name(), $sformatf("TX Data Match: 0x%0h", data), UVM_HIGH)
         end else begin
-          fail_count++;
+          status_cg.sample(0);
           `uvm_error(get_type_name(), $sformatf(
                      "TX Data Mismatch: APB 0x%0h, UART 0x%0h", apb_item.pwdata[7:0], data))
         end
@@ -137,10 +136,10 @@ class apb_uart_scbd extends uvm_scoreboard;
         wait (uart_rx_q.size());
         data = uart_rx_q.pop_front();
         if (data == apb_item.prdata[7:0]) begin
-          pass_count++;
-          `uvm_info(get_type_name(), $sformatf("RX Data Match: 0x%0h", data), UVM_LOW)
+          status_cg.sample(1);
+          `uvm_info(get_type_name(), $sformatf("RX Data Match: 0x%0h", data), UVM_HIGH)
         end else begin
-          fail_count++;
+          status_cg.sample(0);
           `uvm_error(get_type_name(), $sformatf(
                      "RX Data Mismatch: UART 0x%0h, APB 0x%0h", data, apb_item.prdata[7:0]))
         end
@@ -151,10 +150,6 @@ class apb_uart_scbd extends uvm_scoreboard;
 
   // Report phase: display test results
   function void report_phase(uvm_phase phase);
-    `uvm_info(get_type_name(), $sformatf("--- Scoreboard Summary ---"), UVM_NONE)
-    `uvm_info(get_type_name(), $sformatf("Passed: %0d", pass_count), UVM_NONE)
-    `uvm_info(get_type_name(), $sformatf("Failed: %0d", fail_count), UVM_NONE)
-    `uvm_info(get_type_name(), "--------------------------", UVM_NONE)
     `uvm_info(get_type_name(), $sformatf("---- Coverage Summary ----"), UVM_NONE)
     `uvm_info(get_type_name(), $sformatf("apb     : %0.2f%%", apb_cg.get_coverage()), UVM_NONE)
     `uvm_info(get_type_name(), $sformatf("uart    : %0.2f%%", uart_cg.get_coverage()), UVM_NONE)
@@ -162,7 +157,7 @@ class apb_uart_scbd extends uvm_scoreboard;
     `uvm_info(get_type_name(), $sformatf("OVERALL : %0.2f%%", ((apb_cg.get_coverage() + uart_cg.get_coverage() + reg_cg.get_coverage())/3.0)), UVM_NONE)
     `uvm_info(get_type_name(), "--------------------------", UVM_NONE)
 
-    if (fail_count > 0) begin
+    if (status_cg.status.fail.get_coverage() > 0) begin
       `uvm_error(get_type_name(), "Test FAILED")
     end else begin
       `uvm_info(get_type_name(), "Test PASSED", UVM_NONE)
