@@ -36,8 +36,8 @@ covergroup apb_transactions_cg with function sample(
 
   // Coverpoint for pslverr signal (Slave Error)
   coverpoint pslverr {
-    bins         no_error  = {0};
-    illegal_bins error     = {1};
+    bins no_error  = {0};
+    bins error     = {1};
   }
 
 endgroup
