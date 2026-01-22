@@ -123,12 +123,6 @@ simulate:
 	@cd ${BUILD_DIR} && ${XCRG} -report_format html --cov_db_name ${TEST} --log ${LOG_DIR}/xcrg_${TEST}.log
 	@mv ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/${TEST}_fc
 
-.PHONY: merge_coverage
-merge_coverage:
-	@rm -rf ${BUILD_DIR}/xsim.covdb/xcrg_mergedDB
-	@cd ${BUILD_DIR} && ${XCRG} $(shell ls ${BUILD_DIR}/xsim.covdb | sed "s/^/ --cov_db_name /g") --log ${LOG_DIR}/xcrg_all.log
-	@mv ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/all_fc
-
 .PHONY: all
 all:
 	@make -s clean_full
@@ -136,3 +130,6 @@ all:
 	@make -s simulate TEST=base_test
 	@make -s simulate TEST=basic_read_test
 	@make -s simulate TEST=basic_write_test
+	@rm -rf ${BUILD_DIR}/xsim.covdb/xcrg_mergedDB
+	@cd ${BUILD_DIR} && ${XCRG} $(shell ls ${BUILD_DIR}/xsim.covdb | sed "s/^/ --cov_db_name /g") --log ${LOG_DIR}/xcrg_all.log
+	@mv ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/all_fc
