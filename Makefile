@@ -118,11 +118,18 @@ simulate:
 	@make -s ${BUILD_DIR}
 	@make -s ${BUILD_DIR}/compile_done
 	@echo "${XSIM_ARGS}" > ${BUILD_DIR}/xsim_args
-	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} -f xsim_args --log ${LOG_DIR}/xsim_${TEST}.log ${HL_EW}
+	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} -f xsim_args --log ${LOG_DIR}/xsim_${TEST}.log --cov_db_name ${TEST} ${HL_EW}
 	@make -s ${COV_DIR}
-	@cd ${BUILD_DIR} && ${XCRG} -report_format html
-	@cp -r ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/${TOP_MODULE}_${TEST}_fc
+	@cd ${BUILD_DIR} && ${XCRG} -report_format html --cov_db_name ${TEST} --log ${LOG_DIR}/xcrg_${TEST}.log
+	@mv ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/${TEST}_fc
 
+.PHONY: merge_coverage
+merge_coverage:
+	@rm -rf ${BUILD_DIR}/xsim.covdb/xcrg_mergedDB
+	@cd ${BUILD_DIR} && ${XCRG} $(shell ls ${BUILD_DIR}/xsim.covdb | sed "s/^/ --cov_db_name /g") --log ${LOG_DIR}/xcrg_all.log
+	@mv ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/all_fc
+
+.PHONY: all
 all:
 	@make -s clean_full
 	@make -s compile
