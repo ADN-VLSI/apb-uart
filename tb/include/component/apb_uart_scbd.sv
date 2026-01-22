@@ -10,6 +10,61 @@
 `uvm_analysis_imp_decl(_apb)
 `uvm_analysis_imp_decl(_uart)
 
+// Coverage group for UART transactions
+covergroup uart_transactions_cg with function sample(
+  input bit       direction,
+  input bit [7:0] data,
+  input int       baud_rate,
+  input bit       parity_enable,
+  input bit       parity_type,
+  input bit       second_stop_bit
+);
+
+  // Coverpoint for direction (transmit/receive)
+  direction_cp : coverpoint direction {
+    bins tx = {1};
+    bins rx = {0};
+  }
+
+  // Coverpoint for transmitted/received data
+  data_cp : coverpoint data {
+    bins all_0s = {'h00};
+    bins mixed  = {['h01 : 'h7F ]};
+    bins all_1s = {'hff};
+  }
+
+  // Coverpoint for baud rate settings
+  baud_rate_cp : coverpoint baud_rate {
+    bins baud_rate_bins[] = {9600, 19200, 38400, 57600, 115200};
+  }
+
+  // Coverpoint for parity enable
+  parity_enable_cp : coverpoint parity_enable {
+    bins enabled = {1};
+    bins disabled = {0};
+  }
+
+  // Coverpoint for parity type
+  parity_type_cp : coverpoint parity_type {
+    bins even = {0};
+    bins odd  = {1};
+  }
+
+  // Coverpoint for second stop bit
+  second_stop_bit_cp : coverpoint second_stop_bit {
+    bins one_stop_bit = {0};
+    bins two_stop_bits = {1};
+  }
+
+  // cross coverage between direction and data
+  direction_data_cross : cross direction_cp, data_cp;
+  direction_baud_rate_cross : cross direction_cp, baud_rate_cp;
+  direction_parity_enable_cross : cross direction_cp, parity_enable_cp;
+  direction_parity_type_cross : cross direction_cp, parity_type_cp;
+  direction_second_stop_bit_cross : cross direction_cp, second_stop_bit_cp;
+
+endgroup
+
 // APB UART Scoreboard
 // This UVM scoreboard compares APB transactions with UART transactions
 // to verify data integrity and configuration settings.
@@ -31,6 +86,8 @@ class apb_uart_scbd extends uvm_scoreboard;
   protected int pass_count = 0;
   protected int fail_count = 0;
 
+  uart_transactions_cg uart_cg;
+
   // Constructor for the APB UART scoreboard
   function new(string name = "apb_uart_scbd", uvm_component parent = null);
     super.new(name, parent);
@@ -42,6 +99,8 @@ class apb_uart_scbd extends uvm_scoreboard;
     // Create an instance of each analysis implementation
     m_analysis_imp_apb  = new($sformatf("m_analysis_imp_apb"), this);
     m_analysis_imp_uart = new($sformatf("m_analysis_imp_uart"), this);
+    // Instantiate the coverage group
+    uart_cg = new();
   endfunction
 
   // Connect phase: no connections needed
@@ -58,6 +117,16 @@ class apb_uart_scbd extends uvm_scoreboard;
   // Write function for UART analysis port: store UART items based on direction
   function void write_uart(uart_rsp_item item);
     `uvm_info(get_type_name(), $sformatf("Received UART item: %s", item.sprint()), UVM_HIGH)
+
+    uart_cg.sample(
+      item.direction,
+      item.data,
+      item.baud_rate,
+      item.parity_enable,
+      item.parity_type,
+      item.second_stop_bit
+    );
+
     if (item.direction === '1) begin
       uart_tx_q.push_back(item.data);
     end
@@ -121,6 +190,10 @@ class apb_uart_scbd extends uvm_scoreboard;
     `uvm_info(get_type_name(), $sformatf("Passed: %0d", pass_count), UVM_NONE)
     `uvm_info(get_type_name(), $sformatf("Failed: %0d", fail_count), UVM_NONE)
     `uvm_info(get_type_name(), "--------------------------", UVM_NONE)
+    `uvm_info(get_type_name(), $sformatf("---- Coverage Summary ----"), UVM_NONE)
+    `uvm_info(get_type_name(), $sformatf("UART : %0.2f%%", uart_cg.get_coverage()), UVM_NONE)
+    `uvm_info(get_type_name(), "--------------------------", UVM_NONE)
+
     if (fail_count > 0) begin
       `uvm_error(get_type_name(), "Test FAILED")
     end else begin

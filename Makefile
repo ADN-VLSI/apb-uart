@@ -23,6 +23,7 @@ XSIM_ARGS += --testplusarg "UVM_VERBOSITY=$(VRB)"
 ROOT_DIR  := ${CURDIR}
 BUILD_DIR := ${ROOT_DIR}/build
 LOG_DIR   := ${ROOT_DIR}/log
+COV_DIR   := ${ROOT_DIR}/cov
 INC_DIR   := ${ROOT_DIR}/inc
 PKG_DIR   := ${ROOT_DIR}/pkg
 RTL_DIR   := ${ROOT_DIR}/rtl
@@ -52,6 +53,7 @@ XVLOG ?= xvlog
 XVHDL ?= xvhdl
 XELAB ?= xelab
 XSIM  ?= xsim
+XCRG  ?= xcrg
 
 #####################################################################################################
 # Commands
@@ -73,6 +75,11 @@ ${LOG_DIR}:
 	@mkdir -p ${LOG_DIR}
 	@echo "*" > ${LOG_DIR}/.gitignore
 
+${COV_DIR}:
+	@echo "Creating log directory at ${COV_DIR}"
+	@mkdir -p ${COV_DIR}
+	@echo "*" > ${COV_DIR}/.gitignore
+
 .PHONY: clean
 clean:
 	@echo "Cleaning build directory at ${BUILD_DIR}"
@@ -83,6 +90,8 @@ clean_full:
 	@make -s clean
 	@echo "Cleaning log directory at ${LOG_DIR}"
 	@rm -rf ${LOG_DIR}
+	@echo "Cleaning log directory at ${COV_DIR}"
+	@rm -rf ${COV_DIR}
 
 .PHONY: tools_chain
 tools_chain:
@@ -110,6 +119,9 @@ simulate:
 	@make -s ${BUILD_DIR}/compile_done
 	@echo "${XSIM_ARGS}" > ${BUILD_DIR}/xsim_args
 	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} -f xsim_args --log ${LOG_DIR}/xsim_${TEST}.log ${HL_EW}
+	@make -s ${COV_DIR}
+	@cd ${BUILD_DIR} && ${XCRG} -report_format html
+	@cp -r ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/${TOP_MODULE}_${TEST}_fc
 
 all:
 	@make -s clean_full
