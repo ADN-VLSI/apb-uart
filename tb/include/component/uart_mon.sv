@@ -55,8 +55,13 @@ class uart_mon extends uvm_monitor;
         rsp_tx = uart_rsp_item::type_id::create("rsp_tx");
         @(negedge vif.tx);
         set_config();
-        vif.recv_tx(rsp_tx.data, baud_rate, parity_enable, parity_type, second_stop_bit, data_bits);
+        vif.recv_tx(rsp_tx.data, rsp_tx.parity, baud_rate, parity_enable, parity_type, second_stop_bit, data_bits);
         rsp_tx.direction = 0;  // TX direction
+        rsp_tx.baud_rate = baud_rate;
+        rsp_tx.parity_enable = parity_enable;
+        rsp_tx.parity_type = parity_type;
+        rsp_tx.second_stop_bit = second_stop_bit;
+        rsp_tx.data_bits = data_bits;
         ap.write(rsp_tx);
         `uvm_info(get_type_name(), $sformatf("UART TX Data Received: 0x%0h", rsp_tx.data),
                   UVM_DEBUG)
@@ -67,8 +72,13 @@ class uart_mon extends uvm_monitor;
         rsp_rx = uart_rsp_item::type_id::create("rsp_rx");
         @(negedge vif.rx);
         set_config();
-        vif.recv_rx(rsp_rx.data, baud_rate, parity_enable, parity_type, second_stop_bit, data_bits);
+        vif.recv_rx(rsp_rx.data, rsp_rx.parity, baud_rate, parity_enable, parity_type, second_stop_bit, data_bits);
         rsp_rx.direction = 1;  // RX direction
+        rsp_rx.baud_rate = baud_rate;
+        rsp_rx.parity_enable = parity_enable;
+        rsp_rx.parity_type = parity_type;
+        rsp_rx.second_stop_bit = second_stop_bit;
+        rsp_rx.data_bits = data_bits;
         ap.write(rsp_rx);
         `uvm_info(get_type_name(), $sformatf("UART RX Data Received: 0x%0h", rsp_rx.data),
                   UVM_DEBUG)

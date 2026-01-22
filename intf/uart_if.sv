@@ -107,13 +107,12 @@ interface uart_if;
                                                                                                   \
     /* Task to receive data on the UART port */                                                   \
     task automatic recv_``__PORT__``(                                                             \
-        output logic [7:0] data, input int baud_rate = BAUD_RATE,                                 \
+        output logic [7:0] data, output logic parity, input int baud_rate = BAUD_RATE,            \
         input bit parity_enable = PARITY_ENABLE, input bit parity_type = PARITY_TYPE,             \
         input bit second_stop_bit = SECOND_STOP_BIT, input int data_bits = DATA_BITS);            \
                                                                                                   \
       realtime bit_time;                                                                          \
       bit expected_parity;                                                                        \
-      bit received_parity;                                                                        \
                                                                                                   \
       /* Update global parameters */                                                              \
       BAUD_RATE = baud_rate;                                                                      \
@@ -140,23 +139,7 @@ interface uart_if;
       /* Sample parity bit */                                                                     \
       if (PARITY_ENABLE) begin                                                                    \
         #(bit_time);                                                                              \
-        received_parity = ``__PORT__``;                                                           \
-      end                                                                                         \
-                                                                                                  \
-      /* Calculate expected parity */                                                             \
-      expected_parity = 0;                                                                        \
-      for (int i = 0; i < DATA_BITS; i++) begin                                                   \
-        expected_parity ^= data[i];                                                               \
-      end                                                                                         \
-      if (PARITY_TYPE) begin                                                                      \
-        expected_parity = ~expected_parity;                                                       \
-      end                                                                                         \
-      /* Check parity */                                                                          \
-      if (PARITY_ENABLE) begin                                                                    \
-        if (received_parity !== expected_parity) begin                                            \
-          $display(`"UART Parity Error for ``__PORT__`` data 0x%0x\nExpected %0b, Received %0b`", \
-            data, expected_parity, received_parity);                                              \
-        end                                                                                       \
+        parity = ``__PORT__``;                                                                    \
       end                                                                                         \
                                                                                                   \
     endtask                                                                                       \

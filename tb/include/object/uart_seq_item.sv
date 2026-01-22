@@ -9,13 +9,14 @@ class uart_seq_item extends uvm_sequence_item;
 
   // Data field
   rand bit [7:0] data;  // 8-bit data
+  rand int       data_bits;
+
+  constraint data_bits_c { data_bits  == 8; }
 
   // UVM object utilities for factory registration and field automation
   `uvm_object_utils_begin(uart_seq_item)
     `uvm_field_int(data, UVM_ALL_ON)
   `uvm_object_utils_end
-
-  // TODO: Define additional sequence item fields as needed
 
   // Constructor for the UART sequence item
   function new(string name = "uart_seq_item");
