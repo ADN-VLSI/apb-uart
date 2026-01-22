@@ -43,7 +43,8 @@ FILE_LIST += ${PKG_DIR}/uart_rx_pkg.sv
 FILE_LIST += $(INC_DIR)/common_defines.svh
 FILE_LIST += $(shell find ${INTF_DIR}/ -name "*.sv")
 FILE_LIST += $(shell find ${RTL_DIR}/ -name "*.sv")
-FILE_LIST += $(shell find ${TB_DIR}/ -name "*.sv")
+FILE_LIST += ${TB_DIR}/apb_uart_sanity_check_tb.sv
+FILE_LIST += ${TB_DIR}/apb_uart_tb.sv
 	
 ####################################################################################################
 # Tool Setup
@@ -142,3 +143,4 @@ all_tests:
 	@make -s simulate TEST=base_test
 	@make -s simulate TEST=basic_read_test
 	@make -s simulate TEST=basic_write_test
+	@make -s simulate TEST=all_reg_access_test

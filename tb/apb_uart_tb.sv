@@ -2,8 +2,10 @@ import uvm_pkg::*;
 
 `include "uvm_macros.svh"
 `include "test/base_test.sv"
+
 `include "test/basic_write_test.sv"
 `include "test/basic_read_test.sv"
+`include "test/all_reg_access_test.sv"
 
 module apb_uart_tb;
 
