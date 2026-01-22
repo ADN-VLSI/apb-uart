@@ -52,9 +52,12 @@ class apb_mon extends uvm_monitor;
       vif.get_transaction(direction, address, write_data, write_strobe, read_data, slverr);
       // Create a response item and populate its fields
       rsp = apb_rsp_item::type_id::create("rsp");
-      rsp.tx_type = direction;
-      rsp.addr    = address;
-      rsp.data    = (direction == 0) ? read_data : write_data;
+      rsp.paddr   = address;
+      rsp.pwrite  = direction;
+      rsp.pwdata  = write_data;
+      rsp.pstrb   = write_strobe;
+      rsp.prdata  = read_data;
+      rsp.pslverr = slverr;
       // Send the response item via the analysis port
       ap.write(rsp);
     end

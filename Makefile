@@ -121,6 +121,7 @@ simulate:
 	@cd ${BUILD_DIR} && ${XSIM} ${TOP_MODULE} -f xsim_args --log ${LOG_DIR}/xsim_${TEST}.log --cov_db_name ${TEST} ${HL_EW}
 	@make -s ${COV_DIR}
 	@cd ${BUILD_DIR} && ${XCRG} -report_format html --cov_db_name ${TEST} --log ${LOG_DIR}/xcrg_${TEST}.log
+	@rm -rf ${COV_DIR}/${TEST}_fc
 	@mv ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/${TEST}_fc
 
 .PHONY: all
@@ -131,4 +132,5 @@ all:
 	@make -s simulate TEST=basic_read_test
 	@make -s simulate TEST=basic_write_test
 	@cd ${BUILD_DIR} && ${XCRG} $(shell ls ${BUILD_DIR}/xsim.covdb | sed "s/^/ --cov_db_name /g") --log ${LOG_DIR}/xcrg_all.log
+	@rm -rf ${COV_DIR}/all_fc
 	@mv ${BUILD_DIR}/xsim_coverage_report/functionalCoverageReport ${COV_DIR}/all_fc

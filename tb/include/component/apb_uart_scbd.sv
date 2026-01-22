@@ -6,64 +6,13 @@
 `include "object/apb_rsp_item.sv"
 `include "object/uart_rsp_item.sv"
 
+`include "coverage/uart_transactions_cg.sv"
+`include "coverage/apb_transactions_cg.sv"
+`include "coverage/apb_uart_reg_access_cg.sv"
+
 // Declare analysis implementation ports for APB and UART
 `uvm_analysis_imp_decl(_apb)
 `uvm_analysis_imp_decl(_uart)
-
-// Coverage group for UART transactions
-covergroup uart_transactions_cg with function sample(
-  input bit       direction,
-  input bit [7:0] data,
-  input int       baud_rate,
-  input bit       parity_enable,
-  input bit       parity_type,
-  input bit       second_stop_bit
-);
-
-  // Coverpoint for direction (transmit/receive)
-  direction_cp : coverpoint direction {
-    bins tx = {1};
-    bins rx = {0};
-  }
-
-  // Coverpoint for transmitted/received data
-  data_cp : coverpoint data {
-    bins all_0s = {'h00};
-    bins mixed  = {['h01 : 'h7F ]};
-    bins all_1s = {'hff};
-  }
-
-  // Coverpoint for baud rate settings
-  baud_rate_cp : coverpoint baud_rate {
-    bins baud_rate_bins[] = {9600, 19200, 38400, 57600, 115200};
-  }
-
-  // Coverpoint for parity enable
-  parity_enable_cp : coverpoint parity_enable {
-    bins enabled = {1};
-    bins disabled = {0};
-  }
-
-  // Coverpoint for parity type
-  parity_type_cp : coverpoint parity_type {
-    bins even = {0};
-    bins odd  = {1};
-  }
-
-  // Coverpoint for second stop bit
-  second_stop_bit_cp : coverpoint second_stop_bit {
-    bins one_stop_bit = {0};
-    bins two_stop_bits = {1};
-  }
-
-  // cross coverage between direction and data
-  direction_data_cross : cross direction_cp, data_cp;
-  direction_baud_rate_cross : cross direction_cp, baud_rate_cp;
-  direction_parity_enable_cross : cross direction_cp, parity_enable_cp;
-  direction_parity_type_cross : cross direction_cp, parity_type_cp;
-  direction_second_stop_bit_cross : cross direction_cp, second_stop_bit_cp;
-
-endgroup
 
 // APB UART Scoreboard
 // This UVM scoreboard compares APB transactions with UART transactions
@@ -86,7 +35,9 @@ class apb_uart_scbd extends uvm_scoreboard;
   protected int pass_count = 0;
   protected int fail_count = 0;
 
-  uart_transactions_cg uart_cg;
+  uart_transactions_cg   uart_cg;
+  apb_transactions_cg    apb_cg;
+  apb_uart_reg_access_cg reg_cg;
 
   // Constructor for the APB UART scoreboard
   function new(string name = "apb_uart_scbd", uvm_component parent = null);
@@ -101,6 +52,8 @@ class apb_uart_scbd extends uvm_scoreboard;
     m_analysis_imp_uart = new($sformatf("m_analysis_imp_uart"), this);
     // Instantiate the coverage group
     uart_cg = new();
+    apb_cg  = new();
+    reg_cg  = new();
   endfunction
 
   // Connect phase: no connections needed
@@ -111,6 +64,18 @@ class apb_uart_scbd extends uvm_scoreboard;
   // Write function for APB analysis port: store APB items
   function void write_apb(apb_rsp_item item);
     `uvm_info(get_type_name(), $sformatf("Received APB item: %s", item.sprint()), UVM_HIGH)
+
+    apb_cg.sample(
+      item.pwrite,
+      item.pstrb,
+      item.pslverr
+    );
+
+    reg_cg.sample(
+      item.paddr[4:0],
+      item.pwrite
+    );
+
     apb_q.push_back(item);
   endfunction
 
@@ -143,41 +108,41 @@ class apb_uart_scbd extends uvm_scoreboard;
       wait (apb_q.size());
       apb_item = apb_q.pop_front();
       // Handle different APB addresses and operations
-      if (apb_item.tx_type == 1 && apb_item.addr == 4) begin
+      if (apb_item.pwrite == 1 && apb_item.paddr == 4) begin
         // Set baud rate configuration
-        uvm_config_db#(int)::set(uvm_root::get(), "uart", "baud_rate", (100000000 / apb_item.data));
-      end else if (apb_item.tx_type == 1 && apb_item.addr == 8) begin
+        uvm_config_db#(int)::set(uvm_root::get(), "uart", "baud_rate", (100000000 / apb_item.pwdata));
+      end else if (apb_item.pwrite == 1 && apb_item.paddr == 8) begin
         // Set parity configuration
-        void'(uvm_config_db#(bit)::get(uvm_root::get(), "uart", "parity_type", apb_item.data[1]));
-        void'(uvm_config_db#(bit)::get(uvm_root::get(), "uart", "parity_enable", apb_item.data[0]));
+        void'(uvm_config_db#(bit)::get(uvm_root::get(), "uart", "parity_type", apb_item.pwdata[1]));
+        void'(uvm_config_db#(bit)::get(uvm_root::get(), "uart", "parity_enable", apb_item.pwdata[0]));
         void'(uvm_config_db#(bit)::get(
-            uvm_root::get(), "uart", "second_stop_bit", apb_item.data[2]
+            uvm_root::get(), "uart", "second_stop_bit", apb_item.pwdata[2]
         ));
-      end else if (apb_item.tx_type == 1 && apb_item.addr == 'h14) begin
+      end else if (apb_item.pwrite == 1 && apb_item.paddr == 'h14) begin
         // Compare TX data
         byte data;
         wait (uart_tx_q.size());
         data = uart_tx_q.pop_front();
-        if (data == apb_item.data[7:0]) begin
+        if (data == apb_item.pwdata[7:0]) begin
           pass_count++;
           `uvm_info(get_type_name(), $sformatf("TX Data Match: 0x%0h", data), UVM_LOW)
         end else begin
           fail_count++;
           `uvm_error(get_type_name(), $sformatf(
-                     "TX Data Mismatch: APB 0x%0h, UART 0x%0h", apb_item.data[7:0], data))
+                     "TX Data Mismatch: APB 0x%0h, UART 0x%0h", apb_item.pwdata[7:0], data))
         end
-      end else if (apb_item.tx_type == 0 && apb_item.addr == 'h18) begin
+      end else if (apb_item.pwrite == 0 && apb_item.paddr == 'h18) begin
         // Compare RX data
         byte data;
         wait (uart_rx_q.size());
         data = uart_rx_q.pop_front();
-        if (data == apb_item.data[7:0]) begin
+        if (data == apb_item.prdata[7:0]) begin
           pass_count++;
           `uvm_info(get_type_name(), $sformatf("RX Data Match: 0x%0h", data), UVM_LOW)
         end else begin
           fail_count++;
           `uvm_error(get_type_name(), $sformatf(
-                     "RX Data Mismatch: UART 0x%0h, APB 0x%0h", data, apb_item.data[7:0]))
+                     "RX Data Mismatch: UART 0x%0h, APB 0x%0h", data, apb_item.prdata[7:0]))
         end
       end
     end
@@ -191,7 +156,10 @@ class apb_uart_scbd extends uvm_scoreboard;
     `uvm_info(get_type_name(), $sformatf("Failed: %0d", fail_count), UVM_NONE)
     `uvm_info(get_type_name(), "--------------------------", UVM_NONE)
     `uvm_info(get_type_name(), $sformatf("---- Coverage Summary ----"), UVM_NONE)
-    `uvm_info(get_type_name(), $sformatf("UART : %0.2f%%", uart_cg.get_coverage()), UVM_NONE)
+    `uvm_info(get_type_name(), $sformatf("apb     : %0.2f%%", apb_cg.get_coverage()), UVM_NONE)
+    `uvm_info(get_type_name(), $sformatf("uart    : %0.2f%%", uart_cg.get_coverage()), UVM_NONE)
+    `uvm_info(get_type_name(), $sformatf("reg     : %0.2f%%", reg_cg.get_coverage()), UVM_NONE)
+    `uvm_info(get_type_name(), $sformatf("OVERALL : %0.2f%%", ((apb_cg.get_coverage() + uart_cg.get_coverage() + reg_cg.get_coverage())/3.0)), UVM_NONE)
     `uvm_info(get_type_name(), "--------------------------", UVM_NONE)
 
     if (fail_count > 0) begin
