@@ -27,7 +27,7 @@ covergroup uart_transactions_cg with function sample(
   // Coverpoint for baud rate settings
   baud_rate_cp : coverpoint baud_rate {
     bins baud_rate_slow = {9600, 19200};
-    bins baud_rate_mid  = {38400, 57600, 115200, 6250000};
+    bins baud_rate_mid  = {38400, 57600, 115200};
     bins baud_rate_sim  = {6250000};
   }
 
