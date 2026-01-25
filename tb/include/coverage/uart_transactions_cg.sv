@@ -37,10 +37,10 @@ covergroup uart_transactions_cg with function sample(
     bins disabled = {0};
   }
 
-  // Coverpoint for parity type
+  // Coverpoint for parity type iff parity is enabled
   parity_type_cp : coverpoint parity_type {
-    bins even = {0};
-    bins odd  = {1};
+    bins even = {0} iff (parity_enable == 1);
+    bins odd  = {1} iff (parity_enable == 1);
   }
 
   // Coverpoint for second stop bit
