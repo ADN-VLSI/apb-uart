@@ -127,7 +127,7 @@ interface uart_if;
       do begin                                                                                    \
         wait(``__PORT__`` === '0);                                                                \
         bit_time = 1s / BAUD_RATE;                                                                \
-        #(bit_time / 2);                                                                          \
+        #(bit_time / 2); #1ps;                                                                    \
       end while (``__PORT__`` != '0);                                                             \
                                                                                                   \
       /* Sample data bits */                                                                      \
