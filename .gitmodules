@@ -1,3 +1,12 @@
 [submodule "submodule/adn_common"]
 	path = submodule/adn_common
 	url = https://github.com/ADN-VLSI/adn_common.git
+[submodule "submodule/adn_apb"]
+	path = submodule/adn_apb
+	url = https://github.com/ADN-VLSI/adn_apb.git
+[submodule "submodule/adn_clk_rst"]
+	path = submodule/adn_clk_rst
+	url = https://github.com/ADN-VLSI/adn_clk_rst.git
+[submodule "submodule/adn_uart"]
+	path = submodule/adn_uart
+	url = https://github.com/ADN-VLSI/adn_uart.git
