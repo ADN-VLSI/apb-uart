@@ -60,6 +60,11 @@ jobs:
         run: |
           make update_doc_list
 
+      - name: Submodule Update
+        shell: bash
+        run: |
+          git submodule update --init --depth 1
+
       - name: Commit and push changes
         shell: bash
         run: |
