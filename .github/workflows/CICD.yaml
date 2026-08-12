@@ -55,15 +55,15 @@ jobs:
           fi
           rm -rf tagged-files.txt
 
-      - name: Update Documentations & Lists
-        shell: bash
-        run: |
-          make update_doc_list
-
       - name: Submodule Update
         shell: bash
         run: |
           git submodule update --init --depth 1
+
+      - name: Update Documentations & Lists
+        shell: bash
+        run: |
+          make update_doc_list
 
       - name: Commit and push changes
         shell: bash
