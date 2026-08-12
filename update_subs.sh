@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mair_dae () {
-    pushd $1
+    pushd submodule/$1
     git checkout main
     git pull
     popd
