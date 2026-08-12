@@ -1,7 +1,20 @@
 #!/bin/bash
+
+mair_dae () {
+    pushd $1
+    git checkout main
+    git pull
+    popd
+}
+
 git submodule deinit -f --all
 git submodule update --init
-git submodule foreach 'git checkout main && git reset --hard $$(git rev-list --max-parents=0 HEAD) && git pull'
+
+mair_dae adn_apb 
+mair_dae adn_clk_rst 
+mair_dae adn_common 
+mair_dae adn_uart
+
 git add .
 git commit -m "Update submodules to latest main" || echo "No changes to commit"
 git pull
