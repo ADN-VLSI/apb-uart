@@ -19,3 +19,8 @@ git add .
 git commit -m "Update submodules to latest main" || echo "No changes to commit"
 git pull
 git push origin HEAD
+
+clear
+
+git submodule
+
