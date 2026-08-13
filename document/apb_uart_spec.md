@@ -38,24 +38,7 @@ The APB UART is a synthesizable, AMBA APB4-compliant Universal Asynchronous Rece
 | ---------- | ----- | --------- | --------------------------------------------------------- |
 | `UART_IRQ` | 1     | Output    | Combined interrupt request (active-high, level-sensitive) |
 
-# Register Map
-
-## Address Map (APB Word-Aligned)
-
-All registers are 32-bit wide, word-aligned. Only `[11:2]` of PADDR is decoded.
-
-| Offset | Name        | Type | Reset Value   | Description                               |
-| ------ | ----------- | ---- | ------------- | ----------------------------------------- |
-| `0x00` | `UART_DR`   | RW   | `0x0000_0000` | Data Register (TX/RX FIFO access)         |
-| `0x04` | `UART_SR`   | RO   | `0x0000_0060` | Status Register                           |
-| `0x08` | `UART_CR`   | RW   | `0x0000_0000` | Control Register                          |
-| `0x0C` | `UART_BR`   | RW   | `0x0000_0001` | Baud Rate Divisor Register                |
-| `0x10` | `UART_FCR`  | RW   | `0x0000_0000` | FIFO Control Register                     |
-| `0x14` | `UART_IER`  | RW   | `0x0000_0000` | Interrupt Enable Register                 |
-| `0x18` | `UART_ISR`  | RWC  | `0x0000_0000` | Interrupt Status Register (write-1-clear) |
-| `0x1C` | `UART_MCR`  | RW   | `0x0000_0000` | Modem Control Register (optional)         |
-| `0x20` | `UART_MSR`  | RO   | `0x0000_0000` | Modem Status Register (optional)          |
-| `0x24` | `UART_TOUT` | RW   | `0x0000_0000` | RX Timeout Register                       |
+## Module Decleration
 
 ```
 module apb_uart_top #(
