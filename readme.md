@@ -6,6 +6,7 @@
 [`adn_apb_cdc_fifo`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/source/adn_apb_cdc_fifo.md)
 [`dummy_rtl`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/source/dummy_rtl.md)
 [`adn_clk_rst_clk_div`](https://github.com/ADN-VLSI/adn_clk_rst/blob/main/document/source/adn_clk_rst_clk_div.md)
+[`adn_clk_rst_clk_mux`](https://github.com/ADN-VLSI/adn_clk_rst/blob/main/document/source/adn_clk_rst_clk_mux.md)
 [`adn_clk_rst_dual_edge_register`](https://github.com/ADN-VLSI/adn_clk_rst/blob/main/document/source/adn_clk_rst_dual_edge_register.md)
 [`adn_common_address_decoder`](https://github.com/ADN-VLSI/adn_common/blob/main/document/source/adn_common_address_decoder.md)
 [`adn_common_bin_to_gray`](https://github.com/ADN-VLSI/adn_common/blob/main/document/source/adn_common_bin_to_gray.md)
@@ -51,8 +52,7 @@
 [`apb_memif`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/interface/apb_memif.md)
 [`dummy_interface`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/interface/dummy_interface.md)
 [`dummy_interface`](https://github.com/ADN-VLSI/adn_clk_rst/blob/main/document/interface/dummy_interface.md)
-[`adn_PMI`](https://github.com/ADN-VLSI/adn_common/blob/main/document/interface/adn_PMI.md)
-[`dummy_interface`](https://github.com/ADN-VLSI/adn_common/blob/main/document/interface/dummy_interface.md)
+[`adn_common_pmi_if`](https://github.com/ADN-VLSI/adn_common/blob/main/document/interface/adn_common_pmi_if.md)
 [`adn_uart_if`](https://github.com/ADN-VLSI/adn_uart/blob/main/document/interface/adn_uart_if.md)
 
 ## INCLUDE
