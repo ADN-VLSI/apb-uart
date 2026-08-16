@@ -19,20 +19,21 @@ See LICENSE file in the project root for full license information
 
 // @foez---bhai, add comments to the parameters, ports
 module apb_uart_top #(
-    parameter int DATA_WIDTH = 32,
-    parameter int ADDR_WIDTH = 32
+    parameter int APB_ADDR_WIDTH = 32,
+    parameter int APB_DATA_WIDTH = 32,
+    parameter int FIFO_SIZE      = 4    // log2(16) -> Depth of 16 for FIFOs
 ) (
     // APB Bus Interface
-    input  logic                  PCLK,
-    input  logic                  PRESETn,
-    input  logic [ADDR_WIDTH-1:0] PADDR,
-    input  logic                  PSEL,
-    input  logic                  PENABLE,
-    input  logic                  PWRITE,
-    input  logic [DATA_WIDTH-1:0] PWDATA,
-    output logic [DATA_WIDTH-1:0] PRDATA,
-    output logic                  PREADY,
-    output logic                  PSLVERR,
+    input  logic                      PCLK,
+    input  logic                      PRESETn,
+    input  logic [APB_ADDR_WIDTH-1:0] PADDR,
+    input  logic                      PSEL,
+    input  logic                      PENABLE,
+    input  logic                      PWRITE,
+    input  logic [APB_DATA_WIDTH-1:0] PWDATA,
+    output logic [APB_DATA_WIDTH-1:0] PRDATA,
+    output logic                      PREADY,
+    output logic                      PSLVERR,
 
     // UART External Interface
     output logic UART_TX,
