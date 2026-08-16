@@ -12,8 +12,9 @@
 
 |Name|Type|Dimension|Default|Description|
 |-|-|-|-|-|
-|DATA_WIDTH|int||32||
-|ADDR_WIDTH|int||32||
+|APB_ADDR_WIDTH|int||32||
+|APB_DATA_WIDTH|int||32||
+|FIFO_SIZE|int||4|log2(16) -> Depth of 16 for FIFOs|
 
 
 ## Ports
@@ -22,12 +23,12 @@
 |-|-|-|-|-|
 |PCLK|input|logic||APB Bus Interface|
 |PRESETn|input|logic|||
-|PADDR|input|logic [ADDR_WIDTH-1:0]|||
+|PADDR|input|logic [APB_ADDR_WIDTH-1:0]|||
 |PSEL|input|logic|||
 |PENABLE|input|logic|||
 |PWRITE|input|logic|||
-|PWDATA|input|logic [DATA_WIDTH-1:0]|||
-|PRDATA|output|logic [DATA_WIDTH-1:0]|||
+|PWDATA|input|logic [APB_DATA_WIDTH-1:0]|||
+|PRDATA|output|logic [APB_DATA_WIDTH-1:0]|||
 |PREADY|output|logic|||
 |PSLVERR|output|logic|||
 |UART_TX|output|logic||UART External Interface|
