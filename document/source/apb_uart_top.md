@@ -12,8 +12,8 @@
 
 |Name|Type|Dimension|Default|Description|
 |-|-|-|-|-|
-|APB_ADDR_WIDTH|int||32||
-|APB_DATA_WIDTH|int||32||
+|APB_ADDR_WIDTH|int||32|Width of the APB address bus|
+|APB_DATA_WIDTH|int||32|Width of the APB data bus|
 |FIFO_SIZE|int||4|log2(16) -> Depth of 16 for FIFOs|
 
 
@@ -21,26 +21,28 @@
 
 |Name|Direction|Type|Dimension|Description|
 |-|-|-|-|-|
-|PCLK|input|logic||APB Bus Interface|
-|PRESETn|input|logic|||
-|PADDR|input|logic [APB_ADDR_WIDTH-1:0]|||
-|PSEL|input|logic|||
-|PENABLE|input|logic|||
-|PWRITE|input|logic|||
-|PWDATA|input|logic [APB_DATA_WIDTH-1:0]|||
-|PRDATA|output|logic [APB_DATA_WIDTH-1:0]|||
-|PREADY|output|logic|||
-|PSLVERR|output|logic|||
-|UART_TX|output|logic||UART External Interface|
-|UART_RX|input|logic|||
-|UART_IRQ|output|logic||Interrupt|
+|PCLK|input|logic||APB Clock|
+|PRESETn|input|logic||APB Reset (Active Low)|
+|PADDR|input|logic [APB_ADDR_WIDTH-1:0]||APB Address|
+|PSEL|input|logic||APB Select|
+|PENABLE|input|logic||APB Enable|
+|PWRITE|input|logic||APB Write Enable|
+|PWDATA|input|logic [APB_DATA_WIDTH-1:0]||APB Write Data|
+|PRDATA|output|logic [APB_DATA_WIDTH-1:0]||APB Read Data|
+|PREADY|output|logic||APB Ready|
+|PSLVERR|output|logic||APB Slave Error|
+|UART_TX|output|logic||UART Transmit Data|
+|UART_RX|input|logic||UART Receive Data|
+|UART_IRQ|output|logic||UART Interrupt Request|
 
 
 ## Description
 
-@foez---bhai, write the purpose of this module in markdown format here. This is already in multi-line comment, so don't add any additional comment syntax.
+### Purpose
+The `apb_uart_top` module serves as the top-level wrapper for a Universal Asynchronous Receiver-Transmitter (UART) peripheral, designed to interface with an Advanced Peripheral Bus (APB). It integrates register-based configuration, clock division, FIFO buffering for both transmission and reception, and the core UART serial communication logic.
 
-@foez---bhai, describe the use case of this module in markdown format here. This is already in multi-line comment, so don't add any additional comment syntax.
+### Use Case
+This module is intended to be integrated into SoC designs as a standard serial communication peripheral. It allows a system processor (via the APB bus) to configure baud rates, frame formats (data bits, parity, stop bits), and manage data flow through hardware FIFOs. It is ideal for applications requiring asynchronous serial communication, such as debug consoles, sensor interfacing, or inter-chip communication where low pin-count connectivity is required.
 
 | REVISION | DATE       | AUTHOR              | DESCRIPTION                                            |
 |----------|------------|---------------------|--------------------------------------------------------|

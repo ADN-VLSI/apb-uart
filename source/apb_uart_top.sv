@@ -1,8 +1,10 @@
 /*
 
-@foez-bhai, write the purpose of this module in markdown format here. This is already in multi-line comment, so don't add any additional comment syntax.
+### Purpose
+The `apb_uart_top` module serves as the top-level wrapper for a Universal Asynchronous Receiver-Transmitter (UART) peripheral, designed to interface with an Advanced Peripheral Bus (APB). It integrates register-based configuration, clock division, FIFO buffering for both transmission and reception, and the core UART serial communication logic.
 
-@foez-bhai, describe the use case of this module in markdown format here. This is already in multi-line comment, so don't add any additional comment syntax.
+### Use Case
+This module is intended to be integrated into SoC designs as a standard serial communication peripheral. It allows a system processor (via the APB bus) to configure baud rates, frame formats (data bits, parity, stop bits), and manage data flow through hardware FIFOs. It is ideal for applications requiring asynchronous serial communication, such as debug consoles, sensor interfacing, or inter-chip communication where low pin-count connectivity is required.
 
 | REVISION | DATE       | AUTHOR              | DESCRIPTION                                            |
 |----------|------------|---------------------|--------------------------------------------------------|
@@ -17,43 +19,40 @@ See LICENSE file in the project root for full license information
 
 */
 
-// @foez-bhai, add comments to the parameters, ports
 module apb_uart_top #(
-    parameter int APB_ADDR_WIDTH = 32,
-    parameter int APB_DATA_WIDTH = 32,
+    parameter int APB_ADDR_WIDTH = 32, // Width of the APB address bus
+    parameter int APB_DATA_WIDTH = 32, // Width of the APB data bus
     parameter int FIFO_SIZE      = 4    // log2(16) -> Depth of 16 for FIFOs
 ) (
     // APB Bus Interface
-    input  logic                      PCLK,
-    input  logic                      PRESETn,
-    input  logic [APB_ADDR_WIDTH-1:0] PADDR,
-    input  logic                      PSEL,
-    input  logic                      PENABLE,
-    input  logic                      PWRITE,
-    input  logic [APB_DATA_WIDTH-1:0] PWDATA,
-    output logic [APB_DATA_WIDTH-1:0] PRDATA,
-    output logic                      PREADY,
-    output logic                      PSLVERR,
+    input  logic                      PCLK,    // APB Clock
+    input  logic                      PRESETn, // APB Reset (Active Low)
+    input  logic [APB_ADDR_WIDTH-1:0] PADDR,   // APB Address
+    input  logic                      PSEL,    // APB Select
+    input  logic                      PENABLE, // APB Enable
+    input  logic                      PWRITE,  // APB Write Enable
+    input  logic [APB_DATA_WIDTH-1:0] PWDATA,  // APB Write Data
+    output logic [APB_DATA_WIDTH-1:0] PRDATA,  // APB Read Data
+    output logic                      PREADY,  // APB Ready
+    output logic                      PSLVERR, // APB Slave Error
 
     // UART External Interface
-    output logic UART_TX,
-    input  logic UART_RX,
+    output logic UART_TX, // UART Transmit Data
+    input  logic UART_RX, // UART Receive Data
 
     // Interrupt
-    output logic UART_IRQ
+    output logic UART_IRQ // UART Interrupt Request
 );
-
-  // @foez-bhai, add comments to the functional blocks, signals, and submodules
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // SIGNALS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // APB-to-Register translated signals
+  // APB-to-Register translated signals for bus handshake
   logic               reg_write_en;
   logic               reg_read_en;
 
-  // Hardware Control (from Register Block)
+  // Hardware Control signals derived from Register Block configuration
   logic               uart_sw_rst;
   logic               datapath_rst_n;
   logic               tx_fifo_rst_n;
@@ -69,7 +68,7 @@ module apb_uart_top #(
   logic               parity_type;
   logic               stop_bits;
 
-  // FIFO Status
+  // FIFO Status signals for monitoring buffer occupancy
   logic [        9:0] tx_data_cnt;
   logic [        9:0] rx_data_cnt;
   logic [FIFO_SIZE:0] tx_fifo_count;
@@ -79,7 +78,7 @@ module apb_uart_top #(
   logic               rx_fifo_empty;
   logic               rx_fifo_full;
 
-  // TX Datapath
+  // TX Datapath signals connecting FIFO to Transmitter
   logic [        7:0] tx_fifo_wdata;
   logic               tx_fifo_push;  // From APB
   logic               tx_fifo_ready_in;  // To APB
@@ -87,19 +86,19 @@ module apb_uart_top #(
   logic               tx_fifo_valid_out;  // To Tx
   logic               tx_ready_in;  // From Tx
 
-  // RX Datapath
+  // RX Datapath signals connecting Receiver to FIFO
   logic [        7:0] rx_fifo_wdata;  // From Rx
   logic               rx_data_valid_out;  // From Rx
   logic               rx_fifo_push;  // To RX FIFO
   logic               rx_fifo_ready_in;  // From RX FIFO
   logic [        7:0] rx_fifo_rdata;  // To APB
   logic               rx_fifo_pop;  // From APB
-  logic               rx_fifo_valid_out;  // From RX FIFO
+  logic               rx_fifo_valid_out;  // To RX FIFO
 
-  // Generated Clock
+  // Generated Clock for UART baud rate generation
   logic               uart_clk;
 
-  // Arbitration (Unused/Tied-off in single master)
+  // Arbitration signals for bus access control
   logic [        7:0] tx_access_req_id;
   logic               tx_req_valid;
   logic               tx_grant_pop;
@@ -107,14 +106,14 @@ module apb_uart_top #(
   logic               rx_req_valid;
   logic               rx_grant_pop;
 
-  // Interrupt Enables
+  // Interrupt Enable configuration bits
   logic               tx_fifo_empty_int_en;
   logic               tx_fifo_full_int_en;
   logic               rx_fifo_empty_int_en;
   logic               rx_fifo_full_int_en;
   logic               tx_data_valid_masked;
 
-  // Interrupt Controller
+  // Interrupt Controller status signals
   logic               tx_empty_irq;
   logic               tx_full_irq;
   logic               rx_empty_irq;
@@ -162,7 +161,7 @@ module apb_uart_top #(
   // SUBMODULES
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Register Interface
+  // Register Interface: Maps APB transactions to internal control/status registers
   adn_uart_register_interface #(
       .ADDR_WIDTH(APB_ADDR_WIDTH),
       .DATA_WIDTH(APB_DATA_WIDTH)
@@ -220,7 +219,7 @@ module apb_uart_top #(
       .rx_fifo_full_int_en (rx_fifo_full_int_en)
   );
 
-  // 3. Clock Divider
+  // Clock Divider: Generates the baud rate clock from PCLK
   adn_clk_rst_clk_div #(
       .DIV_WIDTH(16)
   ) u_clk_div (
@@ -230,6 +229,7 @@ module apb_uart_top #(
       .clk_o  (uart_clk)
   );
 
+  // TX FIFO: Buffers data to be transmitted
   adn_common_fifo #(
       .DATA_WIDTH(8),
       .FIFO_SIZE (FIFO_SIZE),
@@ -251,6 +251,7 @@ module apb_uart_top #(
       .data_out_ready_i(tx_ready_in)
   );
 
+  // RX FIFO: Buffers received data
   adn_common_fifo #(
       .DATA_WIDTH(8),
       .FIFO_SIZE (FIFO_SIZE),
@@ -272,6 +273,7 @@ module apb_uart_top #(
       .data_out_ready_i(rx_fifo_pop)
   );
 
+  // UART Transmitter: Serializes data from TX FIFO
   adn_uart_transmitter #(
       .DATA_WIDTH(8)
   ) u_uart_tx (
@@ -290,6 +292,7 @@ module apb_uart_top #(
       .tx_o(UART_TX)
   );
 
+  // UART Receiver: Deserializes incoming serial data
   adn_uart_receiver #(
       .OVERSAMPLE(8)
   ) u_uart_rx (
@@ -318,4 +321,3 @@ module apb_uart_top #(
 `endif  // SIMULATION
 
 endmodule
-
