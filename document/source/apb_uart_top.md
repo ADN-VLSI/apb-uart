@@ -45,6 +45,6 @@
 | REVISION | DATE       | AUTHOR              | DESCRIPTION                                            |
 |----------|------------|---------------------|--------------------------------------------------------|
 | 0.1      | 2026-08-13 | Ahasan Ullah Khalid | Initial version                                        |
-| 1.0      | 2026-08-13 | Ahasan Ullah Khalid | Stable release                                         |
+| 1.0      | 2026-08-17 | Ahasan Ullah Khalid | Stable release                                         |
 
 Author : Ahasan Ullah Khalid (aukhalid02@gmail.com)
