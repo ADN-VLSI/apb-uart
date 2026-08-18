@@ -12,8 +12,8 @@
 
 |Name|Type|Dimension|Default|Description|
 |-|-|-|-|-|
-|ADDR_WIDTH|int||32|Define the packed request and response structs for this module's APB interface|
-|DATA_WIDTH|int||32|Define the packed request and response structs for this module's APB interface|
+|ADDR_WIDTH|int||32|Width of the APB address bus|
+|DATA_WIDTH|int||32|Width of the APB data bus|
 |FIFO_SIZE|int||4|log2(16) -> Depth of 16 for FIFOs|
 
 
