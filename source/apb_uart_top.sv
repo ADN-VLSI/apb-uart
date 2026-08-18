@@ -19,22 +19,23 @@ See LICENSE file in the project root for full license information
 
 */
 
+`include "apb/typedef.svh"
+
+// Define the packed request and response structs for this module's APB interface
+`APB_T(apb, ADDR_WIDTH, DATA_WIDTH)
+
 module apb_uart_top #(
     parameter int ADDR_WIDTH = 32,  // Width of the APB address bus
     parameter int DATA_WIDTH = 32,  // Width of the APB data bus
     parameter int FIFO_SIZE  = 4    // log2(16) -> Depth of 16 for FIFOs
 ) (
-    // APB Bus Interface
-    input  logic                  PCLK,     // APB Clock
-    input  logic                  PRESETn,  // APB Reset (Active Low)
-    input  logic [ADDR_WIDTH-1:0] PADDR,    // APB Address
-    input  logic                  PSEL,     // APB Select
-    input  logic                  PENABLE,  // APB Enable
-    input  logic                  PWRITE,   // APB Write Enable
-    input  logic [DATA_WIDTH-1:0] PWDATA,   // APB Write Data
-    output logic [DATA_WIDTH-1:0] PRDATA,   // APB Read Data
-    output logic                  PREADY,   // APB Ready
-    output logic                  PSLVERR,  // APB Slave Error
+    // Global Clock & Reset
+    input logic PCLK,    // APB Clock
+    input logic PRESETn, // APB Reset (Active Low)
+
+    // APB Bus Interface (Struct / Typedef Based)
+    input  apb_req_t  apb_req_i,  // APB Request: psel, penable, paddr, pwrite, pwdata, etc.
+    output apb_resp_t apb_resp_o, // APB Response: pready, prdata, pslverr
 
     // UART External Interface
     output logic UART_TX,  // UART Transmit Data
@@ -85,6 +86,7 @@ module apb_uart_top #(
   logic [        7:0] tx_fifo_rdata;  // To Tx
   logic               tx_fifo_valid_out;  // To Tx
   logic               tx_ready_in;  // From Tx
+  logic               tx_fifo_pop_ready;  // Gated pop to avoid draining when tx_en=0
 
   // RX Datapath signals connecting Receiver to FIFO
   logic [        7:0] rx_fifo_wdata;  // From Rx
@@ -123,9 +125,9 @@ module apb_uart_top #(
   // ASSIGNMENTS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // APB to Register Bus Bridge
-  always_comb reg_write_en = PSEL & PENABLE & PWRITE;
-  always_comb reg_read_en = PSEL & PENABLE & ~PWRITE;
+  // APB to Register Bus Bridge (unpacked from apb_req_i struct)
+  always_comb reg_write_en = apb_req_i.psel & apb_req_i.penable & apb_req_i.pwrite;
+  always_comb reg_read_en = apb_req_i.psel & apb_req_i.penable & ~apb_req_i.pwrite;
 
   // Datapath Reset Management
   always_comb datapath_rst_n = PRESETn & ~uart_sw_rst;
@@ -145,16 +147,17 @@ module apb_uart_top #(
   // Mask Rx data entry unless Receiver is enabled
   always_comb rx_fifo_push = rx_data_valid_out & rx_en;
 
-  // Valid input to Tx is logically masked by the transmitter enable bit
+  // Valid and ready inputs to/from Tx are gated by tx_en
   always_comb tx_data_valid_masked = tx_fifo_valid_out & tx_en;
+  always_comb tx_fifo_pop_ready = tx_ready_in & tx_en;
 
   // Interrupt Controller
   always_comb begin
     tx_empty_irq = tx_fifo_empty & tx_fifo_empty_int_en;
-    tx_full_irq = tx_fifo_full & tx_fifo_full_int_en;
+    tx_full_irq  = tx_fifo_full & tx_fifo_full_int_en;
     rx_empty_irq = rx_fifo_empty & rx_fifo_empty_int_en;
-    rx_full_irq = rx_fifo_full & rx_fifo_full_int_en;
-    UART_IRQ = tx_empty_irq | tx_full_irq | rx_empty_irq | rx_full_irq;
+    rx_full_irq  = rx_fifo_full & rx_fifo_full_int_en;
+    UART_IRQ     = tx_empty_irq | tx_full_irq | rx_empty_irq | rx_full_irq;
   end
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,13 +172,13 @@ module apb_uart_top #(
       .clk  (PCLK),
       .rst_n(PRESETn),
 
-      .reg_addr    (PADDR),
-      .reg_wdata   (PWDATA),
+      .reg_addr    (apb_req_i.paddr),
+      .reg_wdata   (apb_req_i.pwdata),
       .reg_write_en(reg_write_en),
       .reg_read_en (reg_read_en),
-      .reg_rdata   (PRDATA),
-      .reg_ready   (PREADY),
-      .reg_error   (PSLVERR),
+      .reg_rdata   (apb_resp_o.prdata),
+      .reg_ready   (apb_resp_o.pready),
+      .reg_error   (apb_resp_o.pslverr),
 
       .uart_sw_rst  (uart_sw_rst),
       .tx_fifo_flush(tx_fifo_flush),
@@ -248,7 +251,7 @@ module apb_uart_top #(
       // Read Port (To UART Transmitter)
       .data_out_o      (tx_fifo_rdata),
       .data_out_valid_o(tx_fifo_valid_out),
-      .data_out_ready_i(tx_ready_in)
+      .data_out_ready_i(tx_fifo_pop_ready)
   );
 
   // RX FIFO: Buffers received data
@@ -315,7 +318,7 @@ module apb_uart_top #(
 `ifdef SIMULATION
   initial begin
     if (DATA_WIDTH > 2) begin
-      $display("\033[1;33m%m DATA_WIDTH\033[0m");
+      $display("\033[1;33m%m DATA_WIDTH check\033[0m");
     end
   end
 `endif  // SIMULATION
