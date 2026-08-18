@@ -2,7 +2,6 @@
 
 ## SOURCE
 [`apb_uart_top`](document/source/apb_uart_top.md)
-[`document/source/dummy_rtl.md)
 
 [`adn_apb_cdc_fifo`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/source/adn_apb_cdc_fifo.md)
 [`adn_apb_to_pmi`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/source/adn_apb_to_pmi.md)
