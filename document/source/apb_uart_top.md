@@ -12,8 +12,8 @@
 
 |Name|Type|Dimension|Default|Description|
 |-|-|-|-|-|
-|APB_ADDR_WIDTH|int||32|Width of the APB address bus|
-|APB_DATA_WIDTH|int||32|Width of the APB data bus|
+|ADDR_WIDTH|int||32|Width of the APB address bus|
+|DATA_WIDTH|int||32|Width of the APB data bus|
 |FIFO_SIZE|int||4|log2(16) -> Depth of 16 for FIFOs|
 
 
@@ -23,12 +23,12 @@
 |-|-|-|-|-|
 |PCLK|input|logic||APB Clock|
 |PRESETn|input|logic||APB Reset (Active Low)|
-|PADDR|input|logic [APB_ADDR_WIDTH-1:0]||APB Address|
+|PADDR|input|logic [ADDR_WIDTH-1:0]||APB Address|
 |PSEL|input|logic||APB Select|
 |PENABLE|input|logic||APB Enable|
 |PWRITE|input|logic||APB Write Enable|
-|PWDATA|input|logic [APB_DATA_WIDTH-1:0]||APB Write Data|
-|PRDATA|output|logic [APB_DATA_WIDTH-1:0]||APB Read Data|
+|PWDATA|input|logic [DATA_WIDTH-1:0]||APB Write Data|
+|PRDATA|output|logic [DATA_WIDTH-1:0]||APB Read Data|
 |PREADY|output|logic||APB Ready|
 |PSLVERR|output|logic||APB Slave Error|
 |UART_TX|output|logic||UART Transmit Data|
