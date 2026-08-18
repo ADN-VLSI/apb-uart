@@ -12,8 +12,8 @@
 
 |Name|Type|Dimension|Default|Description|
 |-|-|-|-|-|
-|ADDR_WIDTH|int||32|Width of the APB address bus|
-|DATA_WIDTH|int||32|Width of the APB data bus|
+|ADDR_WIDTH|int||32|Define the packed request and response structs for this module's APB interface|
+|DATA_WIDTH|int||32|Define the packed request and response structs for this module's APB interface|
 |FIFO_SIZE|int||4|log2(16) -> Depth of 16 for FIFOs|
 
 
@@ -23,14 +23,8 @@
 |-|-|-|-|-|
 |PCLK|input|logic||APB Clock|
 |PRESETn|input|logic||APB Reset (Active Low)|
-|PADDR|input|logic [ADDR_WIDTH-1:0]||APB Address|
-|PSEL|input|logic||APB Select|
-|PENABLE|input|logic||APB Enable|
-|PWRITE|input|logic||APB Write Enable|
-|PWDATA|input|logic [DATA_WIDTH-1:0]||APB Write Data|
-|PRDATA|output|logic [DATA_WIDTH-1:0]||APB Read Data|
-|PREADY|output|logic||APB Ready|
-|PSLVERR|output|logic||APB Slave Error|
+|apb_req_i|input|apb_req_t||APB Request: psel, penable, paddr, pwrite, pwdata, etc.|
+|apb_resp_o|output|apb_resp_t||APB Response: pready, prdata, pslverr|
 |UART_TX|output|logic||UART Transmit Data|
 |UART_RX|input|logic||UART Receive Data|
 |UART_IRQ|output|logic||UART Interrupt Request|
