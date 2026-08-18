@@ -5,9 +5,11 @@
 [`dummy_rtl`](document/source/dummy_rtl.md)
 
 [`adn_apb_cdc_fifo`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/source/adn_apb_cdc_fifo.md)
+[`adn_apb_to_pmi`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/source/adn_apb_to_pmi.md)
 [`dummy_rtl`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/source/dummy_rtl.md)
 [`adn_clk_rst_clk_div`](https://github.com/ADN-VLSI/adn_clk_rst/blob/main/document/source/adn_clk_rst_clk_div.md)
 [`adn_clk_rst_clk_mux`](https://github.com/ADN-VLSI/adn_clk_rst/blob/main/document/source/adn_clk_rst_clk_mux.md)
+[`adn_clk_rst_delay_generator`](https://github.com/ADN-VLSI/adn_clk_rst/blob/main/document/source/adn_clk_rst_delay_generator.md)
 [`adn_clk_rst_dual_edge_register`](https://github.com/ADN-VLSI/adn_clk_rst/blob/main/document/source/adn_clk_rst_dual_edge_register.md)
 [`adn_common_address_decoder`](https://github.com/ADN-VLSI/adn_common/blob/main/document/source/adn_common_address_decoder.md)
 [`adn_common_bin_to_gray`](https://github.com/ADN-VLSI/adn_common/blob/main/document/source/adn_common_bin_to_gray.md)
@@ -33,6 +35,7 @@
 [`adn_common_synchronizer`](https://github.com/ADN-VLSI/adn_common/blob/main/document/source/adn_common_synchronizer.md)
 [`adn_common_xbar`](https://github.com/ADN-VLSI/adn_common/blob/main/document/source/adn_common_xbar.md)
 [`adn_uart_receiver`](https://github.com/ADN-VLSI/adn_uart/blob/main/document/source/adn_uart_receiver.md)
+[`adn_uart_register_interface`](https://github.com/ADN-VLSI/adn_uart/blob/main/document/source/adn_uart_register_interface.md)
 [`adn_uart_transmitter`](https://github.com/ADN-VLSI/adn_uart/blob/main/document/source/adn_uart_transmitter.md)
 [`dummy_rtl`](https://github.com/ADN-VLSI/adn_uart/blob/main/document/source/dummy_rtl.md)
 
