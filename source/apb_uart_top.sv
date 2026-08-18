@@ -20,21 +20,21 @@ See LICENSE file in the project root for full license information
 */
 
 module apb_uart_top #(
-    parameter int APB_ADDR_WIDTH = 32,  // Width of the APB address bus
-    parameter int APB_DATA_WIDTH = 32,  // Width of the APB data bus
-    parameter int FIFO_SIZE      = 4    // log2(16) -> Depth of 16 for FIFOs
+    parameter int ADDR_WIDTH = 32,  // Width of the APB address bus
+    parameter int DATA_WIDTH = 32,  // Width of the APB data bus
+    parameter int FIFO_SIZE  = 4    // log2(16) -> Depth of 16 for FIFOs
 ) (
     // APB Bus Interface
-    input  logic                      PCLK,     // APB Clock
-    input  logic                      PRESETn,  // APB Reset (Active Low)
-    input  logic [APB_ADDR_WIDTH-1:0] PADDR,    // APB Address
-    input  logic                      PSEL,     // APB Select
-    input  logic                      PENABLE,  // APB Enable
-    input  logic                      PWRITE,   // APB Write Enable
-    input  logic [APB_DATA_WIDTH-1:0] PWDATA,   // APB Write Data
-    output logic [APB_DATA_WIDTH-1:0] PRDATA,   // APB Read Data
-    output logic                      PREADY,   // APB Ready
-    output logic                      PSLVERR,  // APB Slave Error
+    input  logic                  PCLK,     // APB Clock
+    input  logic                  PRESETn,  // APB Reset (Active Low)
+    input  logic [ADDR_WIDTH-1:0] PADDR,    // APB Address
+    input  logic                  PSEL,     // APB Select
+    input  logic                  PENABLE,  // APB Enable
+    input  logic                  PWRITE,   // APB Write Enable
+    input  logic [DATA_WIDTH-1:0] PWDATA,   // APB Write Data
+    output logic [DATA_WIDTH-1:0] PRDATA,   // APB Read Data
+    output logic                  PREADY,   // APB Ready
+    output logic                  PSLVERR,  // APB Slave Error
 
     // UART External Interface
     output logic UART_TX,  // UART Transmit Data
@@ -163,8 +163,8 @@ module apb_uart_top #(
 
   // Register Interface: Maps APB transactions to internal control/status registers
   adn_uart_register_interface #(
-      .ADDR_WIDTH(APB_ADDR_WIDTH),
-      .DATA_WIDTH(APB_DATA_WIDTH)
+      .ADDR_WIDTH(ADDR_WIDTH),
+      .DATA_WIDTH(DATA_WIDTH)
   ) u_reg_intf (
       .clk  (PCLK),
       .rst_n(PRESETn),
