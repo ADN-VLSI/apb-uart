@@ -19,7 +19,7 @@ See LICENSE file in the project root for full license information
 
 */
 
-`include "apb/typedef.svh"
+`include "submodule/adn_apb/include/apb/typedef.svh"
 
 // Define the packed request and response structs for this module's APB interface
 `APB_T(apb, ADDR_WIDTH, DATA_WIDTH)
