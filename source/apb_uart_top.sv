@@ -22,7 +22,7 @@ See LICENSE file in the project root for full license information
 `include "../submodule/adn_apb/include/apb/typedef.svh"
 
 // Define the packed request and response structs for this module's APB interface
-`APB_T(apb, ADDR_WIDTH, DATA_WIDTH)
+`APB_T(apb, 32, 32)
 
 module apb_uart_top #(
     parameter int ADDR_WIDTH = 32,  // Width of the APB address bus
