@@ -1,7 +1,6 @@
 ${APB_UART}/assertion/dummy_checker.sv
 ${APB_UART}/interface/dummy_interface.sv
 ${APB_UART}/source/apb_uart_top.sv
-${APB_UART}/source/dummy_rtl.sv
 -i ${ADN_APB}/include
 -i ${ADN_CLK_RST}/include
 -i ${ADN_COMMON}/include
