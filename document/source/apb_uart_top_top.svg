@@ -1,33 +1,21 @@
-<svg height="640" width="640" xmlns="http://www.w3.org/2000/svg">
+<svg height="390" width="390" xmlns="http://www.w3.org/2000/svg">
 <rect width="100%" height="100%" x="0" y="0" style="fill:white;stroke:white;stroke-width:0"/>
 <g style="fill:white;stroke:black;stroke-width:1">
-<rect width="525" height="525" x="60" y="60"/>
+<rect width="275" height="275" x="60" y="60"/>
 <polygon points="10,95 10,85 30,85 40,95 60,95 40,95 30,105 10,105 10,95"/>
 <text x="65" y="85" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PCLK</text>
 <polygon points="10,145 10,135 30,135 40,145 60,145 40,145 30,155 10,155 10,145"/>
 <text x="65" y="135" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PRESETn</text>
-<polygon points="10,195 10,185 30,185 40,195 60,195 40,195 30,205 10,205 10,195"/>
-<text x="65" y="185" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PADDR</text>
 <polygon points="10,245 10,235 30,235 40,245 60,245 40,245 30,255 10,255 10,245"/>
-<text x="65" y="235" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PSEL</text>
-<polygon points="10,295 10,285 30,285 40,295 60,295 40,295 30,305 10,305 10,295"/>
-<text x="65" y="285" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PENABLE</text>
-<polygon points="10,345 10,335 30,335 40,345 60,345 40,345 30,355 10,355 10,345"/>
-<text x="65" y="335" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PWRITE</text>
-<polygon points="10,395 10,385 30,385 40,395 60,395 40,395 30,405 10,405 10,395"/>
-<text x="65" y="385" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PWDATA</text>
-<polygon points="10,445 20,435 40,435 40,445 60,445 40,445 40,455 20,455 10,445"/>
-<text x="65" y="435" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PRDATA</text>
-<polygon points="10,495 20,485 40,485 40,495 60,495 40,495 40,505 20,505 10,495"/>
-<text x="65" y="485" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PREADY</text>
-<polygon points="10,545 20,535 40,535 40,545 60,545 40,545 40,555 20,555 10,545"/>
-<text x="65" y="535" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">PSLVERR</text>
-<polygon points="585,395 605,395 605,385 625,385 635,395 625,405 605,405 605,395 585,395"/>
-<text x="580" y="385" dominant-baseline="hanging" text-anchor="end" font-size="20" style="fill:black;stroke:black;stroke-width:0">UART_TX</text>
-<polygon points="585,445 605,445 615,435 635,435 635,445 635,455 615,455 605,445 585,445"/>
-<text x="580" y="435" dominant-baseline="hanging" text-anchor="end" font-size="20" style="fill:black;stroke:black;stroke-width:0">UART_RX</text>
-<polygon points="585,545 605,545 605,535 625,535 635,545 625,555 605,555 605,545 585,545"/>
-<text x="580" y="535" dominant-baseline="hanging" text-anchor="end" font-size="20" style="fill:black;stroke:black;stroke-width:0">UART_IRQ</text>
-<text x="322" y="600" dominant-baseline="hanging" text-anchor="middle" font-size="30" style="fill:black;stroke:black;stroke-width:0">apb_uart_top</text>
+<text x="65" y="235" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">apb_req_i</text>
+<polygon points="10,295 20,285 40,285 40,295 60,295 40,295 40,305 20,305 10,295"/>
+<text x="65" y="285" dominant-baseline="hanging" text-anchor="start" font-size="20" style="fill:black;stroke:black;stroke-width:0">apb_resp_o</text>
+<polygon points="335,145 355,145 355,135 375,135 385,145 375,155 355,155 355,145 335,145"/>
+<text x="330" y="135" dominant-baseline="hanging" text-anchor="end" font-size="20" style="fill:black;stroke:black;stroke-width:0">UART_TX</text>
+<polygon points="335,195 355,195 365,185 385,185 385,195 385,205 365,205 355,195 335,195"/>
+<text x="330" y="185" dominant-baseline="hanging" text-anchor="end" font-size="20" style="fill:black;stroke:black;stroke-width:0">UART_RX</text>
+<polygon points="335,295 355,295 355,285 375,285 385,295 375,305 355,305 355,295 335,295"/>
+<text x="330" y="285" dominant-baseline="hanging" text-anchor="end" font-size="20" style="fill:black;stroke:black;stroke-width:0">UART_IRQ</text>
+<text x="197" y="350" dominant-baseline="hanging" text-anchor="middle" font-size="30" style="fill:black;stroke:black;stroke-width:0">apb_uart_top</text>
 </g>
 </svg>
