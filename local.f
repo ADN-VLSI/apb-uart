@@ -1,2 +1,2 @@
--i ${ADN_ENDEC}/testbench
-${ADN_ENDEC}/testbench/dummy_tb.sv
+-i ${APB_UART}/testbench
+${APB_UART}/testbench/apb_uart_top_tb.sv
