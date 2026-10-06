@@ -50,6 +50,7 @@
 [`dummy_checker`](https://github.com/ADN-VLSI/adn_uart/blob/main/document/assertion/dummy_checker.md)
 
 ## INTERFACE
+[`adn_apb_if`](document/interface/adn_apb_if.md)
 [`dummy_interface`](document/interface/dummy_interface.md)
 
 [`apb_memif`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/interface/apb_memif.md)
