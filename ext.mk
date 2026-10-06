@@ -8,6 +8,10 @@ export ADN_APB=$(REPO_ROOT)/submodule/adn_apb
 export ADN_CLK_RST=$(REPO_ROOT)/submodule/adn_clk_rst
 export ADN_UART=$(REPO_ROOT)/submodule/adn_uart
 
+UVM_INCLUDE := $(shell dirname $$(dirname $$(command -v xvlog)))/data/xsim/system_verilog/uvm_include
+XVLOG ?= xvlog -L uvm -i $(UVM_INCLUDE) -i $(REPO_ROOT)/uvm
+XELAB ?= xelab -L uvm
+
 .PHONY: compile_all_submodules
 compile_all_submodules:
 	@make -s compile_submodule SUB=adn_common

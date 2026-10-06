@@ -1,1 +1,3 @@
-ci_simulate dummy_tb default 0
+ci_simulate apb_uart_uvm_tb basic_read_test 0 || exit 1
+ci_simulate apb_uart_uvm_tb basic_write_test 0 || exit 1
+ci_simulate apb_uart_uvm_tb all_reg_access_test 0 || exit 1

@@ -2,7 +2,7 @@
 
 ################################################################################
 # regression.sh
-# Simple CI/regression runner for the ariane testbench.
+# Simple CI/regression runner for the APB UART testbench.
 ################################################################################
 
 ################################################################################
@@ -16,7 +16,10 @@ ci_simulate () {
   # Print a timestamped, colored status message (yellow) without newline
   echo -n -e " $(date +%x\ %H:%M:%S) - \033[1;33mSIMULATING TB:$1 TN:$2 TC:$3\033[0m"
   # Run the make simulate target quietly. STDERR/STDOUT are redirected to /dev/null
-  make -s simulate TOP=$1 TN=$2 TC=$3 DEBUG=0 GUI=0 VCD=0 > /dev/null 2>&1
+  if ! make -s simulate TOP=$1 TN=$2 TC=$3 DEBUG=0 GUI=0 VCD=0 > /dev/null 2>&1; then
+    echo -e "\033[1;31mFailed!\033[0m ($(( $(date +%s) - start_time )) seconds)"
+    return 1
+  fi
   end_time=$(date +%s)
   time_diff=$((end_time - start_time))
   # Print Done in green with elapsed time
@@ -39,16 +42,20 @@ time_diff=$((end_time - start_time))
 echo -e "\033[1G\033[1;32mDone!\033[0m ($time_diff seconds)   \033[21G - \033[1;33mCLEANING UP TEMPORARY FILES\033[0m"
 
 ################################################################################
-# SUBMODULE SETUP
+# CHECK SUBMODULES
 ################################################################################
 
 start_time=$(date +%s)
-echo -n -e " $(date +%x\ %H:%M:%S) - \033[1;33mSETTING UP SUBMODULES\033[0m"
-git submodule deinit -f . &> /dev/null
-git submodule update --init --depth 1 &> /dev/null
+echo -n -e " $(date +%x\ %H:%M:%S) - \033[1;33mCHECKING SUBMODULES\033[0m"
+for submodule in adn_common adn_apb adn_clk_rst adn_uart; do
+  if ! git -C "submodule/$submodule" rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    echo -e "\033[1;31mMissing submodule: $submodule\033[0m"
+    exit 1
+  fi
+done
 end_time=$(date +%s)
 time_diff=$((end_time - start_time))
-echo -e "\033[1G\033[1;32mDone!\033[0m ($time_diff seconds)   \033[21G - \033[1;33mSETTING UP SUBMODULES\033[0m"
+echo -e "\033[1G\033[1;32mDone!\033[0m ($time_diff seconds)   \033[21G - \033[1;33mCHECKING SUBMODULES\033[0m"
 
 ################################################################################
 # SIMULATE
