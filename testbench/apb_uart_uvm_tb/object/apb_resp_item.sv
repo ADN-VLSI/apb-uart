@@ -14,6 +14,7 @@ class apb_rsp_item extends uvm_sequence_item;
 
 
   function new(string name="apb_rsp_item");
-   super.new(name); endfunction
+    super.new(name);
+  endfunction
 
 endclass

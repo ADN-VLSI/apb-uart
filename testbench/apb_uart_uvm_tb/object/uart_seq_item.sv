@@ -12,6 +12,7 @@ class uart_seq_item extends uvm_sequence_item;
 
   function new(string name="uart_seq_item");
     super.new(name);
-    baud=9600; endfunction
+    baud=9600;
+  endfunction
 
 endclass
