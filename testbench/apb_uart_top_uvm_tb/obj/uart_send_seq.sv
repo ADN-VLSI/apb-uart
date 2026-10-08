@@ -1,23 +1,23 @@
 //------------------------------------------------------------------------------
-// APB Write Sequence
-// Performs one APB register write. The caller sets 'addr' and 'data' before
-// starting the sequence.
+// UART Send Sequence
+// Sends one byte into the DUT's UART RX line. The caller sets 'data' (and
+// optionally 'baud') before starting the sequence.
 //------------------------------------------------------------------------------
-class apb_write_seq extends uvm_sequence #(apb_seq_item);
+class uart_send_seq extends uvm_sequence #(uart_seq_item);
 
   // Register the class with the UVM factory (sequences are objects, not components)
-  `uvm_object_utils(apb_write_seq)
+  `uvm_object_utils(uart_send_seq)
 
   //----------------------------------------------------------------------------
   // Fields
   //----------------------------------------------------------------------------
-  bit [31:0] addr;                          // Register address to write (set by caller)
-  bit [31:0] data;                          // Data to write (set by caller)
+  bit [7:0]    data;                        // Byte to send (set by caller)
+  int unsigned baud = 9600;                 // Baud rate for this frame (default 9600)
 
   //----------------------------------------------------------------------------
   // Constructor
   //----------------------------------------------------------------------------
-  function new(string name = "apb_write_seq");
+  function new(string name = "uart_send_seq");
     super.new(name);                        // Give the sequence an instance name
   endfunction
 
@@ -25,21 +25,13 @@ class apb_write_seq extends uvm_sequence #(apb_seq_item);
   // Body: runs when the sequence is started on a sequencer
   //----------------------------------------------------------------------------
   task body();
-    apb_seq_item req;                       // Transaction to send to the driver
-
-    req = apb_seq_item::type_id::create("req");   // Create through the factory
+    // Create the transaction through the factory
+    uart_seq_item req = uart_seq_item::type_id::create("req");
 
     start_item(req);                        // Request the sequencer; blocks until granted
-    req.write = 1'b1;                       // 1 = write transfer
-    req.addr  = addr;                       // Target register address
-    req.data  = data;                       // Data to write (PWDATA)
+    req.data = data;                        // Byte to serialize onto the RX line
+    req.baud = baud;                        // Baud rate used by the driver's vif.send()
     finish_item(req);                       // Send to driver; returns after item_done()
-
-    // Report a slave error response (PSLVERR) filled in by the driver
-    if (req.error) begin
-      `uvm_error("APB_WRITE_ERROR",
-                 $sformatf("write to 0x%08h returned PSLVERR", addr))
-    end
   endtask
 
 endclass
