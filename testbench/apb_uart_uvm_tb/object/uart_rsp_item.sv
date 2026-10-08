@@ -1,0 +1,62 @@
+`ifndef __GUARD_UART_RSP_ITEM_SV__
+`define __GUARD_UART_RSP_ITEM_SV__ 0
+
+class uart_rsp_item extends uvm_sequence_item;
+
+  ///////////////////////////////////////////////////////////////
+  // UART received/transmitted data
+  ///////////////////////////////////////////////////////////////
+  bit [7:0] data;
+
+  ///////////////////////////////////////////////////////////////
+  // Status
+  ///////////////////////////////////////////////////////////////
+  bit       valid;
+
+  // Error indications
+  bit       parity_error;
+  bit       frame_error;
+
+  ///////////////////////////////////////////////////////////////
+  // Transaction direction
+  //
+  // 0 = RX
+  // 1 = TX
+  ///////////////////////////////////////////////////////////////
+  bit       direction;
+
+  ///////////////////////////////////////////////////////////////
+  // Constructor
+  ///////////////////////////////////////////////////////////////
+  function new(string name = "uart_rsp_item");
+    super.new(name);
+  endfunction
+
+  ///////////////////////////////////////////////////////////////
+  // UVM Field Automation
+  ///////////////////////////////////////////////////////////////
+  `uvm_object_utils_begin(uart_rsp_item)
+    `uvm_field_int(data,         UVM_ALL_ON)
+    `uvm_field_int(valid,        UVM_ALL_ON)
+    `uvm_field_int(parity_error, UVM_ALL_ON)
+    `uvm_field_int(frame_error,  UVM_ALL_ON)
+    `uvm_field_int(direction,    UVM_ALL_ON)
+  `uvm_object_utils_end
+
+  ///////////////////////////////////////////////////////////////
+  // Convert to string
+  ///////////////////////////////////////////////////////////////
+  function string convert2string();
+    return $sformatf(
+      "UART_RSP: data=0x%02h valid=%0d direction=%s parity_error=%0d frame_error=%0d",
+      data,
+      valid,
+      direction ? "TX" : "RX",
+      parity_error,
+      frame_error
+    );
+  endfunction
+
+endclass
+
+`endif
