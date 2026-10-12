@@ -1,6 +1,9 @@
 `ifndef __GUARD_UART_SEQUENCER_SV__
 `define __GUARD_UART_SEQUENCER_SV__ 0
 
+`include "object/uart_seq_item.sv"
+`include "object/uart_rsp_item.sv"
+
 class uart_sequencer extends uvm_sequencer #(
   uart_seq_item,
   uart_rsp_item

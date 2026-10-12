@@ -1,6 +1,11 @@
 `ifndef __GUARD_APB_SEQ_ITEM_SV__
 `define __GUARD_APB_SEQ_ITEM_SV__ 0
 
+`include "uvm_macros.svh"
+
+import uvm_pkg::*;
+import uart_reg_if_pkg::*;
+
 class apb_seq_item extends uvm_sequence_item;
 
   // ------------------------------------------------------------
@@ -8,7 +13,7 @@ class apb_seq_item extends uvm_sequence_item;
   // ------------------------------------------------------------
 
   rand logic        we;       // 0: Read, 1: Write
-  rand logic [31:0] addr;     // Word address: byte address >> 2
+  rand logic [31:0] addr;     // Byte Address
   rand logic [31:0] data;     // Write data
 
   // ------------------------------------------------------------
@@ -53,7 +58,7 @@ class apb_seq_item extends uvm_sequence_item;
 
       // Read transaction
       else {
-        addr inside {ADDR_CTRL, ADDR_CFG , ADDR_STAT, ADDR_TXGP, ADDR_TXG , ADDR_RXGP, ADDR_RXG , ADDR_RXD , ADDR_INTR};
+        addr inside {ADDR_CTRL, ADDR_CFG , ADDR_STATUS, ADDR_TXGP, ADDR_TXG , ADDR_RXGP, ADDR_RXG , ADDR_RXD , ADDR_INTR};
       }
     }
   }
@@ -116,10 +121,9 @@ class apb_seq_item extends uvm_sequence_item;
 
   virtual function automatic string to_string();
     return $sformatf(
-      "we=%0b addr=0x%02h byte_addr=0x%02h data=0x%08h",
+      "we=%0b addr=0x%03h data=0x%08h",
       we,
       addr,
-      addr << 2,
       data
     );
   endfunction

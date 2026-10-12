@@ -22,8 +22,10 @@ class apb_driver extends uvm_driver #(
   // Constructor
   // ------------------------------------------------------------
 
-  function new(string name = "apb_driver",
-               uvm_component parent = null);
+  function new(
+    string name = "apb_driver",
+    uvm_component parent = null
+  );
     super.new(name, parent);
   endfunction : new
 
@@ -32,16 +34,20 @@ class apb_driver extends uvm_driver #(
   // ------------------------------------------------------------
 
   virtual function void build_phase(uvm_phase phase);
+
     super.build_phase(phase);
 
     if (!uvm_config_db#(virtual apb_if)::get(
           this, "", "vif", vif
         )) begin
+
       `uvm_fatal(
         get_type_name(),
         "APB virtual interface was not configured"
       )
+
     end
+
   endfunction : build_phase
 
   // ------------------------------------------------------------
@@ -66,23 +72,31 @@ class apb_driver extends uvm_driver #(
 
       `uvm_info(
         get_type_name(),
-        $sformatf("Starting APB transaction: %s", req.to_string()),
+        $sformatf(
+          "Starting APB transaction: %s",
+          req.to_string()
+        ),
         UVM_MEDIUM
       )
 
-      // Execute the APB transfer.
+      // Create response transaction.
       rsp = apb_rsp_item::type_id::create("rsp");
 
+      // Execute APB transfer.
       drive_transfer(req, rsp);
 
-      // Return the response to the requesting sequence.
+      // Associate response with the original request.
       rsp.set_id_info(req);
 
+      // Complete the transaction and return the response.
       seq_item_port.item_done(rsp);
 
       `uvm_info(
         get_type_name(),
-        $sformatf("Completed APB transaction: %s", rsp.to_string()),
+        $sformatf(
+          "Completed APB transaction: %s",
+          rsp.to_string()
+        ),
         UVM_MEDIUM
       )
 
@@ -98,11 +112,13 @@ class apb_driver extends uvm_driver #(
 
     @(negedge vif.PCLK);
 
-    vif.PSEL    = 1'b0;
-    vif.PENABLE = 1'b0;
-    vif.PADDR   = '0;
-    vif.PWRITE  = 1'b0;
-    vif.PWDATA  = '0;
+    vif.psel    = 1'b0;
+    vif.penable = 1'b0;
+    vif.paddr   = '0;
+    vif.pprot   = '0;
+    vif.pwrite  = 1'b0;
+    vif.pwdata  = '0;
+    vif.pstrb   = '0;
 
   endtask : drive_idle
 
@@ -133,11 +149,15 @@ class apb_driver extends uvm_driver #(
 
     @(negedge vif.PCLK);
 
-    vif.PSEL    = 1'b1;
-    vif.PENABLE = 1'b0;
-    vif.PADDR   = req.addr;
-    vif.PWRITE  = req.we;
-    vif.PWDATA  = req.we ? req.data : '0;
+    vif.psel    = 1'b1;
+    vif.penable = 1'b0;
+    vif.paddr   = req.addr;
+    vif.pwrite  = req.we;
+    vif.pwdata  = req.we ? req.data : '0;
+
+    // Use default protection and byte-strobe values.
+    vif.pprot = '0;
+    vif.pstrb = req.we ? '1 : '0;
 
     // ----------------------------------------------------------
     // Access Phase
@@ -145,38 +165,42 @@ class apb_driver extends uvm_driver #(
 
     @(negedge vif.PCLK);
 
-    vif.PENABLE = 1'b1;
+    vif.penable = 1'b1;
 
     // ----------------------------------------------------------
     // Wait For Transfer Completion
     // ----------------------------------------------------------
 
-    // Sample PREADY on the rising edge. If it is low, keep
-    // the APB control and address signals stable.
+    // Wait until the slave asserts PREADY.
+    // Keep APB control and address signals stable while waiting.
 
     do begin
       @(posedge vif.PCLK);
-    end while (vif.PREADY !== 1'b1);
+    end while (vif.pready !== 1'b1);
 
-    // Capture response signals at the completing access phase.
-    rsp.slverr = vif.PSLVERR;
+    // ----------------------------------------------------------
+    // Capture Response
+    // ----------------------------------------------------------
+
+    rsp.slverr = vif.pslverr;
 
     if (!req.we) begin
-      rsp.data = vif.PRDATA;
+      rsp.data = vif.prdata;
     end
 
     // ----------------------------------------------------------
     // Return Bus To Idle
     // ----------------------------------------------------------
 
-    // Deassert APB control signals on the next falling edge.
     @(negedge vif.PCLK);
 
-    vif.PSEL    = 1'b0;
-    vif.PENABLE = 1'b0;
-    vif.PWRITE  = 1'b0;
-    vif.PADDR   = '0;
-    vif.PWDATA  = '0;
+    vif.psel    = 1'b0;
+    vif.penable = 1'b0;
+    vif.pwrite  = 1'b0;
+    vif.paddr   = '0;
+    vif.pwdata  = '0;
+    vif.pprot   = '0;
+    vif.pstrb   = '0;
 
   endtask : drive_transfer
 

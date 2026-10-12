@@ -2,14 +2,12 @@
 `define __GUARD_APB_UART_TB_TOP_SV__ 0
 
 
-
 `include "uvm_macros.svh"
 `include "uart_reg_if_pkg.sv"
 `include "apb_uart_uvm_tb/test/basic_write_test.sv"
 `include "apb_uart_uvm_tb/test/basic_read_test.sv"
 `include "apb_uart_uvm_tb/test/base_test.sv"
 `include "apb_uart_uvm_tb/test/all_reg_access_test.sv"
-
 
 
 import uvm_pkg::*;
@@ -60,7 +58,7 @@ module apb_uart_tb_top;
     // UART Interface
     .UART_TX (uart_vif.UART_TX),
     .UART_RX (uart_vif.UART_RX),
-import uvm_pkg::*;
+
     // Interrupt
     .UART_IRQ (uart_vif.UART_IRQ)
 

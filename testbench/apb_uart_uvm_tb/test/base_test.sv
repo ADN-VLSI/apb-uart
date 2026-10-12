@@ -2,6 +2,7 @@
 `define __GUARD_BASE_TEST_SV__ 0
 
 `include "uvm_macros.svh"
+`include "env/apb_uart_env.sv"
 
 class base_test extends uvm_test;
 

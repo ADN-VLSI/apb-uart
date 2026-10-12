@@ -1,7 +1,7 @@
 `ifndef __GUARD_APB_BASE_SEQ_SV__
 `define __GUARD_APB_BASE_SEQ_SV__ 0
 
-`include "apb_seq_item.sv"
+`include "object/apb_seq_item.sv"
 
 import uart_reg_if_pkg::*;
 

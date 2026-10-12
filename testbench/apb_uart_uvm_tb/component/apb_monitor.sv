@@ -25,11 +25,15 @@ class apb_monitor extends uvm_monitor;
   // Constructor
   // ------------------------------------------------------------
 
-  function new(string name = "apb_monitor",
-               uvm_component parent = null);
+  function new(
+    string name = "apb_monitor",
+    uvm_component parent = null
+  );
+
     super.new(name, parent);
 
     ap = new("ap", this);
+
   endfunction : new
 
   // ------------------------------------------------------------
@@ -37,16 +41,20 @@ class apb_monitor extends uvm_monitor;
   // ------------------------------------------------------------
 
   virtual function void build_phase(uvm_phase phase);
+
     super.build_phase(phase);
 
     if (!uvm_config_db#(virtual apb_if)::get(
           this, "", "vif", vif
         )) begin
+
       `uvm_fatal(
         get_type_name(),
         "APB virtual interface was not configured"
       )
+
     end
+
   endfunction : build_phase
 
   // ------------------------------------------------------------
@@ -57,55 +65,43 @@ class apb_monitor extends uvm_monitor;
 
     apb_rsp_item tr;
 
-    // Wait for reset release.
-    wait (vif.PRESETn === 1'b1);
-
     forever begin
 
+      // Wait for a completed APB transfer.
       @(posedge vif.PCLK);
 
-      // Ignore bus activity during reset.
-      if (vif.PRESETn !== 1'b1) begin
-        continue;
-      end
-
-      // A transfer completes when PSEL, PENABLE, and PREADY
-      // are all asserted.
-      if (
-        vif.PSEL    === 1'b1 &&
-        vif.PENABLE === 1'b1 &&
-        vif.PREADY  === 1'b1
-      ) begin
+      if ((vif.psel    === 1'b1) &&
+          (vif.penable === 1'b1) &&
+          (vif.pready  === 1'b1)) begin
 
         tr = apb_rsp_item::type_id::create("tr");
 
-        // ------------------------------------------------------
-        // Capture APB Transaction
-        // ------------------------------------------------------
+        // Capture transaction information.
+        tr.we     = vif.pwrite;
+        tr.addr   = vif.paddr;
+        tr.slverr = vif.pslverr;
 
-        tr.we     = vif.PWRITE;
-        tr.addr   = vif.PADDR;
-        tr.slverr = vif.PSLVERR;
+        if (vif.pwrite === 1'b1) begin
 
-        // For writes, capture the driven write data.
-        // For reads, capture the returned read data.
-        if (vif.PWRITE === 1'b1) begin
-          tr.data = vif.PWDATA;
+          tr.data = vif.pwdata;
+
         end
         else begin
-          tr.data = vif.PRDATA;
+
+          tr.data = vif.prdata;
+
         end
 
         `uvm_info(
           get_type_name(),
-          $sformatf("Observed APB transaction: %s", tr.to_string()),
+          $sformatf(
+            "Observed APB transaction: %s",
+            tr.to_string()
+          ),
           UVM_MEDIUM
         )
 
-        // ------------------------------------------------------
-        // Publish Transaction
-        // ------------------------------------------------------
-
+        // Publish the observed transaction.
         ap.write(tr);
 
       end

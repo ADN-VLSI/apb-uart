@@ -1,7 +1,7 @@
 `ifndef __GUARD_UART_BASE_SEQ_SV__
 `define __GUARD_UART_BASE_SEQ_SV__ 0
 
-`include "uart_seq_item.sv"
+`include "object/uart_seq_item.sv"
 
 class uart_base_seq extends uvm_sequence #(uart_seq_item);
 

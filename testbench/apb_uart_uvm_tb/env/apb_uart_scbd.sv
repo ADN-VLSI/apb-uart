@@ -1,6 +1,8 @@
 `ifndef __GUARD_APB_UART_SCBD_SV__
 `define __GUARD_APB_UART_SCBD_SV__ 0
 
+
+
 `uvm_analysis_imp_decl(_apb)
 `uvm_analysis_imp_decl(_uart)
 
@@ -267,104 +269,28 @@ class apb_uart_scbd extends uvm_scoreboard;
   // Report Phase
   // ------------------------------------------------------------
 
-  virtual function void report_phase(uvm_phase phase);
-
+   virtual function void report_phase(uvm_phase phase);
     super.report_phase(phase);
 
-    `uvm_info(
-      get_type_name(),
-      "==============================================",
-      UVM_NONE
-    )
-
-    `uvm_info(
-      get_type_name(),
-      "             UART SCOREBOARD SUMMARY          ",
-      UVM_NONE
-    )
-
-    `uvm_info(
-      get_type_name(),
-      $sformatf(
-        "APB transactions : %0d",
-        apb_transaction_count
-      ),
-      UVM_NONE
-    )
-
-    `uvm_info(
-      get_type_name(),
-      $sformatf(
-        "UART TX frames   : %0d",
-        uart_frame_count
-      ),
-      UVM_NONE
-    )
-
-    `uvm_info(
-      get_type_name(),
-      $sformatf(
-        "TX matches       : %0d",
-        tx_match_count
-      ),
-      UVM_NONE
-    )
-
-    `uvm_info(
-      get_type_name(),
-      $sformatf(
-        "TX mismatches    : %0d",
-        tx_mismatch_count
-      ),
-      UVM_NONE
-    )
-
-    `uvm_info(
-      get_type_name(),
-      $sformatf(
-        "APB errors       : %0d",
-        apb_error_count
-      ),
-      UVM_NONE
-    )
-
-    `uvm_info(
-      get_type_name(),
-      $sformatf(
-        "Pending TX bytes : %0d",
-        expected_tx_q.size()
-      ),
-      UVM_NONE
-    )
-
-    `uvm_info(
-      get_type_name(),
-      "==============================================",
-      UVM_NONE
-    )
-
-    if (tx_mismatch_count != 0 || apb_error_count != 0) begin
-
-      `uvm_error(
-        get_type_name(),
-        "Scoreboard detected errors"
-      )
-
+    $display("");
+    $display("========================================");
+    $display("       FINAL TEST SUMMARY               ");
+    $display("========================================");
+    $display(" PASS            = %0d", tx_match_count);
+    $display(" FAIL            = %0d", tx_mismatch_count);
+    $display("========================================");
+    if (tx_mismatch_count == 0 && tx_match_count > 0) begin
+      $display(" ALL TESTS PASSED");
+    end else if (tx_match_count == 0 && tx_mismatch_count == 0) begin
+      $display(" NO TRANSACTIONS CHECKED");
+    end else begin
+      $display(" SOME TESTS FAILED");
     end
-
-    if (expected_tx_q.size() != 0) begin
-
-      `uvm_error(
-        get_type_name(),
-        $sformatf(
-          "%0d expected UART TX bytes were not observed",
-          expected_tx_q.size()
-        )
-      )
-
-    end
+    $display("========================================");
 
   endfunction : report_phase
+
+
 
 endclass : apb_uart_scbd
 

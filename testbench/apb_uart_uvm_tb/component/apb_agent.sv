@@ -1,6 +1,10 @@
 `ifndef __GUARD_APB_AGENT_SV__
 `define __GUARD_APB_AGENT_SV__ 0
 
+`include "component/apb_sequencer.sv"
+`include "component/apb_driver.sv"
+`include "component/apb_monitor.sv"
+
 class apb_agent extends uvm_agent;
 
   // ------------------------------------------------------------

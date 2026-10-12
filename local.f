@@ -1,3 +1,32 @@
 -i ${APB_UART}/testbench
+-i ${APB_UART}/testbench/apb_uart_uvm_tb
 ${APB_UART}/testbench/apb_uart_tb_top.sv
 ${APB_UART}/testbench/dummy_tb.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/interface/uart_if.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/interface/apb_if.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/object/uart_seq_item.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/object/uart_rsp_item.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/object/apb_rsp_item.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/object/apb_seq_item.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/component/uart_monitor.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/component/uart_agent.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/component/apb_monitor.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/component/apb_agent.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/component/uart_driver.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/component/apb_sequencer.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/component/apb_driver.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/component/uart_sequencer.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/env/apb_uart_scbd.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/env/apb_uart_env.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/sequence/random_apb_wdata_seq.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/sequence/uart_base_seq.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/sequence/all_reg_access_seq.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/sequence/apb_base_seq.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/sequence/random_apb_rdata_seq.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/sequence/random_uart_rx_seq.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/sequence/uart_en_apb_seq.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/test/basic_read_test.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/test/basic_write_test.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/test/all_reg_access_test.sv
+${APB_UART}/testbench/apb_uart_uvm_tb/test/base_test.sv
+${APB_UART}/testbench/apb_uart_tb_top.sv

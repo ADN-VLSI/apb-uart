@@ -1,29 +1,16 @@
 `ifndef __GUARD_UART_MONITOR_SV__
 `define __GUARD_UART_MONITOR_SV__ 0
 
-class uart_monitor extends uvm_monitor;
+`include "object/uart_seq_item.sv"
+`include "object/uart_rsp_item.sv"
 
-  // ------------------------------------------------------------
-  // UVM Component Registration
-  // ------------------------------------------------------------
+class uart_monitor extends uvm_monitor;
 
   `uvm_component_utils(uart_monitor)
 
-  // ------------------------------------------------------------
-  // Virtual Interface
-  // ------------------------------------------------------------
-
   virtual uart_if vif;
 
-  // ------------------------------------------------------------
-  // Analysis Port
-  // ------------------------------------------------------------
-
   uvm_analysis_port #(uart_rsp_item) ap;
-
-  // ------------------------------------------------------------
-  // UART Configuration
-  // ------------------------------------------------------------
 
   int baud_rate = 115200;
   int data_bits = 8;
@@ -32,22 +19,21 @@ class uart_monitor extends uvm_monitor;
   bit parity_type = 0;
   bit extra_stop  = 0;
 
-  // ------------------------------------------------------------
-  // Constructor
-  // ------------------------------------------------------------
-
-  function new(string name = "uart_monitor",
-               uvm_component parent = null);
+  function new(
+    string name = "uart_monitor",
+    uvm_component parent = null
+  );
     super.new(name, parent);
-
     ap = new("ap", this);
   endfunction : new
+
 
   // ------------------------------------------------------------
   // Build Phase
   // ------------------------------------------------------------
 
   virtual function void build_phase(uvm_phase phase);
+
     super.build_phase(phase);
 
     if (!uvm_config_db#(virtual uart_if)::get(
@@ -59,7 +45,6 @@ class uart_monitor extends uvm_monitor;
       )
     end
 
-    // Optional configuration overrides.
     void'(uvm_config_db#(int)::get(
       this, "", "baud_rate", baud_rate
     ));
@@ -90,6 +75,7 @@ class uart_monitor extends uvm_monitor;
 
   endfunction : build_phase
 
+
   // ------------------------------------------------------------
   // Run Phase
   // ------------------------------------------------------------
@@ -103,25 +89,27 @@ class uart_monitor extends uvm_monitor;
       // Wait for a possible UART start bit.
       @(negedge vif.UART_TX);
 
-      // Decode the frame.
       tr = uart_rsp_item::type_id::create("tr");
 
-      if (sample_uart_frame(tr)) begin
+      // Decode the UART frame.
+      sample_uart_frame(tr);
 
-        `uvm_info(
-          get_type_name(),
-          $sformatf("Observed UART frame: %s", tr.to_string()),
-          UVM_MEDIUM
-        )
+      // Publish the observed frame.
+      `uvm_info(
+        get_type_name(),
+        $sformatf(
+          "Observed UART frame: %s",
+          tr.to_string()
+        ),
+        UVM_MEDIUM
+      )
 
-        // Publish the observed frame.
-        ap.write(tr);
-
-      end
+      ap.write(tr);
 
     end
 
   endtask : run_phase
+
 
   // ------------------------------------------------------------
   // Sample UART Frame
@@ -132,6 +120,7 @@ class uart_monitor extends uvm_monitor;
   );
 
     time bit_period;
+
     bit sampled_parity;
     bit expected_parity;
     bit [7:0] sampled_data;
@@ -193,6 +182,7 @@ class uart_monitor extends uvm_monitor;
       end
 
       if (sampled_parity !== expected_parity) begin
+
         `uvm_error(
           get_type_name(),
           $sformatf(
@@ -202,6 +192,7 @@ class uart_monitor extends uvm_monitor;
             sampled_parity
           )
         )
+
       end
 
       #(bit_period);
@@ -213,10 +204,12 @@ class uart_monitor extends uvm_monitor;
     // ----------------------------------------------------------
 
     if (vif.UART_TX !== 1'b1) begin
+
       `uvm_error(
         get_type_name(),
         "UART stop bit is not high"
       )
+
     end
 
     #(bit_period);
@@ -224,10 +217,12 @@ class uart_monitor extends uvm_monitor;
     if (extra_stop) begin
 
       if (vif.UART_TX !== 1'b1) begin
+
         `uvm_error(
           get_type_name(),
           "UART second stop bit is not high"
         )
+
       end
 
       #(bit_period);

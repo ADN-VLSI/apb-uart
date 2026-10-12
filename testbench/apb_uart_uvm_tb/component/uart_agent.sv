@@ -1,6 +1,10 @@
 `ifndef __GUARD_UART_AGENT_SV__
 `define __GUARD_UART_AGENT_SV__ 0
 
+`include "component/uart_sequencer.sv"
+`include "component/uart_driver.sv"
+`include "component/uart_monitor.sv"
+
 class uart_agent extends uvm_agent;
 
   // ------------------------------------------------------------

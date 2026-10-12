@@ -3,6 +3,7 @@
 
 `include "uvm_macros.svh"
 `include "base_test.sv"
+`include "sequence/random_apb_wdata_seq.sv"
 
 class basic_write_test extends base_test;
 
@@ -40,16 +41,16 @@ class basic_write_test extends base_test;
     )
 
     // Wait for reset to be released.
-    wait (env.apb_agent.vif.PRESETn === 1'b1);
+    wait (env.apb_agent_inst.vif.PRESETn === 1'b1);
 
     // Allow the DUT to settle after reset.
-    repeat (2) @(posedge env.apb_agent.vif.PCLK);
+    repeat (2) @(posedge env.apb_agent_inst.vif.PCLK);
 
     write_seq = random_apb_wdata_seq::type_id::create(
       "write_seq"
     );
 
-    write_seq.start(env.apb_agent.sequencer);
+    write_seq.start(env.apb_agent_inst.sequencer);
 
     `uvm_info(
       get_type_name(),
