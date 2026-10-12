@@ -1,123 +1,185 @@
-`ifndef APB_DRIVER_SV
-`define APB_DRIVER_SV
+`ifndef __GUARD_APB_DRIVER_SV__
+`define __GUARD_APB_DRIVER_SV__ 0
 
-class apb_driver extends uvm_driver #(apb_seq_item);
+class apb_driver extends uvm_driver #(
+  apb_seq_item,
+  apb_rsp_item
+);
 
-    `uvm_component_utils(apb_driver)
+  // ------------------------------------------------------------
+  // UVM Component Registration
+  // ------------------------------------------------------------
 
-    virtual apb_if vif;
+  `uvm_component_utils(apb_driver)
 
-    function new(
-        string name = "apb_driver",
-        uvm_component parent = null
-    );
-        super.new(name, parent);
-    endfunction
+  // ------------------------------------------------------------
+  // Virtual Interface
+  // ------------------------------------------------------------
 
+  virtual apb_if vif;
 
-    function void build_phase(uvm_phase phase);
+  // ------------------------------------------------------------
+  // Constructor
+  // ------------------------------------------------------------
 
-        super.build_phase(phase);
+  function new(string name = "apb_driver",
+               uvm_component parent = null);
+    super.new(name, parent);
+  endfunction : new
 
-        if (!uvm_config_db#(virtual apb_if)::get(
-                this,
-                "",
-                "vif",
-                vif
-            )) begin
+  // ------------------------------------------------------------
+  // Build Phase
+  // ------------------------------------------------------------
 
-            `uvm_fatal(
-                "APB_DRV_NO_VIF",
-                "Virtual APB interface was not found"
-            )
+  virtual function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
 
-        end
+    if (!uvm_config_db#(virtual apb_if)::get(
+          this, "", "vif", vif
+        )) begin
+      `uvm_fatal(
+        get_type_name(),
+        "APB virtual interface was not configured"
+      )
+    end
+  endfunction : build_phase
 
-    endfunction
+  // ------------------------------------------------------------
+  // Run Phase
+  // ------------------------------------------------------------
 
+  virtual task run_phase(uvm_phase phase);
 
-    task run_phase(uvm_phase phase);
+    apb_seq_item req;
+    apb_rsp_item rsp;
 
-        // --------------------------------------------------------
-        // Initialize APB signals
-        // --------------------------------------------------------
+    // Initialize APB signals.
+    drive_idle();
 
-        vif.psel    = 1'b0;
-        vif.penable = 1'b0;
-        vif.pwrite  = 1'b0;
-        vif.paddr   = '0;
-        vif.pwdata  = '0;
+    // Wait for reset release.
+    wait (vif.PRESETn === 1'b1);
 
+    forever begin
 
-        forever begin
+      // Retrieve the next transaction from the sequencer.
+      seq_item_port.get_next_item(req);
 
-            seq_item_port.get_next_item(req);
+      `uvm_info(
+        get_type_name(),
+        $sformatf("Starting APB transaction: %s", req.to_string()),
+        UVM_MEDIUM
+      )
 
-            drive_transfer(req);
+      // Execute the APB transfer.
+      rsp = apb_rsp_item::type_id::create("rsp");
 
-            seq_item_port.item_done();
+      drive_transfer(req, rsp);
 
-        end
+      // Return the response to the requesting sequence.
+      rsp.set_id_info(req);
 
-    endtask
+      seq_item_port.item_done(rsp);
 
+      `uvm_info(
+        get_type_name(),
+        $sformatf("Completed APB transaction: %s", rsp.to_string()),
+        UVM_MEDIUM
+      )
 
-    task drive_transfer(apb_seq_item tr);
+    end
 
-        // --------------------------------------------------------
-        // APB SETUP phase
-        // --------------------------------------------------------
+  endtask : run_phase
 
-        @(vif.cb_drv);
+  // ------------------------------------------------------------
+  // Drive APB Idle State
+  // ------------------------------------------------------------
 
-        vif.cb_drv.psel    <= 1'b1;
-        vif.cb_drv.penable <= 1'b0;
-        vif.cb_drv.pwrite  <= tr.pwrite;
-        vif.cb_drv.paddr   <= tr.paddr;
-        vif.cb_drv.pwdata  <= tr.pwdata;
+  virtual task drive_idle();
 
+    @(negedge vif.PCLK);
 
-        // --------------------------------------------------------
-        // APB ACCESS phase
-        // --------------------------------------------------------
+    vif.PSEL    = 1'b0;
+    vif.PENABLE = 1'b0;
+    vif.PADDR   = '0;
+    vif.PWRITE  = 1'b0;
+    vif.PWDATA  = '0;
 
-        @(vif.cb_drv);
+  endtask : drive_idle
 
-        vif.cb_drv.penable <= 1'b1;
+  // ------------------------------------------------------------
+  // Drive APB Transfer
+  // ------------------------------------------------------------
 
+  virtual task drive_transfer(
+    input  apb_seq_item req,
+    output apb_rsp_item rsp
+  );
 
-        // --------------------------------------------------------
-        // Wait for PREADY
-        // --------------------------------------------------------
+    // ----------------------------------------------------------
+    // Initialize Response
+    // ----------------------------------------------------------
 
-        while (!vif.cb_drv.pready) begin
-            @(vif.cb_drv);
-        end
+    rsp.we     = req.we;
+    rsp.addr   = req.addr;
+    rsp.data   = '0;
+    rsp.slverr = 1'b0;
 
+    // ----------------------------------------------------------
+    // Setup Phase
+    // ----------------------------------------------------------
 
-        // --------------------------------------------------------
-        // Capture response
-        // --------------------------------------------------------
+    // Drive signals on the falling edge to avoid races with
+    // synchronous DUT logic sampling on the rising edge.
 
-        tr.prdata  = vif.cb_drv.prdata;
-        tr.pready  = vif.cb_drv.pready;
-        tr.pslverr = vif.cb_drv.pslverr;
+    @(negedge vif.PCLK);
 
+    vif.PSEL    = 1'b1;
+    vif.PENABLE = 1'b0;
+    vif.PADDR   = req.addr;
+    vif.PWRITE  = req.we;
+    vif.PWDATA  = req.we ? req.data : '0;
 
-        // --------------------------------------------------------
-        // Return APB to idle
-        // --------------------------------------------------------
+    // ----------------------------------------------------------
+    // Access Phase
+    // ----------------------------------------------------------
 
-        @(vif.cb_drv);
+    @(negedge vif.PCLK);
 
-        vif.cb_drv.psel    <= 1'b0;
-        vif.cb_drv.penable <= 1'b0;
-        vif.cb_drv.pwrite  <= 1'b0;
-        vif.cb_drv.paddr   <= '0;
-        vif.cb_drv.pwdata  <= '0;
+    vif.PENABLE = 1'b1;
 
-    endtask
+    // ----------------------------------------------------------
+    // Wait For Transfer Completion
+    // ----------------------------------------------------------
 
-endclass
+    // Sample PREADY on the rising edge. If it is low, keep
+    // the APB control and address signals stable.
+
+    do begin
+      @(posedge vif.PCLK);
+    end while (vif.PREADY !== 1'b1);
+
+    // Capture response signals at the completing access phase.
+    rsp.slverr = vif.PSLVERR;
+
+    if (!req.we) begin
+      rsp.data = vif.PRDATA;
+    end
+
+    // ----------------------------------------------------------
+    // Return Bus To Idle
+    // ----------------------------------------------------------
+
+    // Deassert APB control signals on the next falling edge.
+    @(negedge vif.PCLK);
+
+    vif.PSEL    = 1'b0;
+    vif.PENABLE = 1'b0;
+    vif.PWRITE  = 1'b0;
+    vif.PADDR   = '0;
+    vif.PWDATA  = '0;
+
+  endtask : drive_transfer
+
+endclass : apb_driver
 
 `endif

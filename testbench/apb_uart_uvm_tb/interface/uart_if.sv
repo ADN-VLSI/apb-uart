@@ -1,71 +1,50 @@
 `ifndef __GUARD_UART_IF_SV__
 `define __GUARD_UART_IF_SV__ 0
 
-interface uart_if #(
-    parameter int PCLK_PERIOD_NS = 10
-)(
-    input logic PCLK,
-    input logic PRESETn
-);
+interface uart_if;
 
-    // ------------------------------------------------------------
-    // UART signals
-    // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // UART External Signals
+  // ------------------------------------------------------------
 
-    logic uart_tx;
-    logic uart_rx;
+  logic UART_TX;
+  logic UART_RX;
+  logic UART_IRQ;
 
+  // ------------------------------------------------------------
+  // UART Monitor Clocking Block
+  // ------------------------------------------------------------
 
-    // ------------------------------------------------------------
-    // Driver clocking block
-    // ------------------------------------------------------------
+  clocking monitor_cb @(posedge UART_TX);
 
-    clocking cb_drv @(posedge PCLK);
+    default input #1step;
 
-        default input #1step output #1step;
+    input UART_TX;
+    input UART_RX;
+    input UART_IRQ;
 
-        output uart_rx;
-        input  uart_tx;
+  endclocking : monitor_cb
 
-    endclocking
+  // ------------------------------------------------------------
+  // UART Driver Modport
+  // ------------------------------------------------------------
 
+  modport DRIVER (
+    input  UART_TX,
+    input  UART_IRQ,
+    output UART_RX
+  );
 
-    // ------------------------------------------------------------
-    // Monitor clocking block
-    // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // UART Monitor Modport
+  // ------------------------------------------------------------
 
-    clocking cb_mon @(posedge PCLK);
+  modport MONITOR (
+    input UART_TX,
+    input UART_RX,
+    input UART_IRQ
+  );
 
-        default input #1step output #1step;
-
-        input uart_rx;
-        input uart_tx;
-
-    endclocking
-
-
-    // ------------------------------------------------------------
-    // Modports
-    // ------------------------------------------------------------
-
-    modport DRIVER (
-        clocking cb_drv
-    );
-
-
-    modport MONITOR (
-        clocking cb_mon
-    );
-
-
-    modport DUT (
-        input  PCLK,
-        input  PRESETn,
-
-        input  uart_rx,
-        output uart_tx
-    );
-
-endinterface
+endinterface : uart_if
 
 `endif

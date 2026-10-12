@@ -1,105 +1,103 @@
 `ifndef __GUARD_APB_IF_SV__
 `define __GUARD_APB_IF_SV__ 0
 
-interface apb_if #(
-    parameter int ADDR_WIDTH = 32,
-    parameter int DATA_WIDTH = 32
-)(
-    input logic PCLK,
-    input logic PRESETn
-);
+interface apb_if;
 
-    // ------------------------------------------------------------
-    // APB Request
-    // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // Clock and Reset
+  // ------------------------------------------------------------
 
-    logic                  psel;
-    logic                  penable;
-    logic                  pwrite;
-    logic [ADDR_WIDTH-1:0] paddr;
-    logic [DATA_WIDTH-1:0] pwdata;
+  logic PCLK;
+  logic PRESETn;
 
-    // ------------------------------------------------------------
-    // APB Response
-    // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // APB Request Signals
+  // ------------------------------------------------------------
 
-    logic [DATA_WIDTH-1:0] prdata;
-    logic                  pready;
-    logic                  pslverr;
+  logic        psel;
+  logic        penable;
+  logic [31:0] paddr;
+  logic [2:0]  pprot;
+  logic        pwrite;
+  logic [31:0] pwdata;
+  logic [3:0]  pstrb;
 
+  // ------------------------------------------------------------
+  // APB Response Signals
+  // ------------------------------------------------------------
 
-    // ------------------------------------------------------------
-    // Driver clocking block
-    // ------------------------------------------------------------
+  logic        pready;
+  logic [31:0] prdata;
+  logic        pslverr;
 
-    clocking cb_drv @(posedge PCLK);
+  // ------------------------------------------------------------
+  // APB Master Clocking Block
+  // ------------------------------------------------------------
 
-        default input #1step output #1step;
+  clocking cb @(posedge PCLK);
 
-        output psel;
-        output penable;
-        output pwrite;
-        output paddr;
-        output pwdata;
+    default input #1step output #0;
 
-        input  prdata;
-        input  pready;
-        input  pslverr;
+    // Master-driven request signals
+    output psel;
+    output penable;
+    output paddr;
+    output pprot;
+    output pwrite;
+    output pwdata;
+    output pstrb;
 
-    endclocking
+    // Slave-driven response signals
+    input pready;
+    input prdata;
+    input pslverr;
 
+  endclocking : cb
 
-    // ------------------------------------------------------------
-    // Monitor clocking block
-    // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // APB Driver Modport
+  // ------------------------------------------------------------
 
-    clocking cb_mon @(posedge PCLK);
+  modport DRIVER (
+    input  PCLK,
+    input  PRESETn,
 
-        default input #1step output #1step;
+    output psel,
+    output penable,
+    output paddr,
+    output pprot,
+    output pwrite,
+    output pwdata,
+    output pstrb,
 
-        input psel;
-        input penable;
-        input pwrite;
-        input paddr;
-        input pwdata;
+    input  pready,
+    input  prdata,
+    input  pslverr,
 
-        input prdata;
-        input pready;
-        input pslverr;
+    clocking cb
+  );
 
-    endclocking
+  // ------------------------------------------------------------
+  // APB Monitor Modport
+  // ------------------------------------------------------------
 
+  modport MONITOR (
+    input PCLK,
+    input PRESETn,
 
-    // ------------------------------------------------------------
-    // Modports
-    // ------------------------------------------------------------
+    input psel,
+    input penable,
+    input paddr,
+    input pprot,
+    input pwrite,
+    input pwdata,
+    input pstrb,
 
-    modport DUT (
-        input  PCLK,
-        input  PRESETn,
+    input pready,
+    input prdata,
+    input pslverr
+  );
 
-        input  psel,
-        input  penable,
-        input  pwrite,
-        input  paddr,
-        input  pwdata,
-
-        output prdata,
-        output pready,
-        output pslverr
-    );
-
-
-    modport DRIVER (
-        clocking cb_drv
-    );
-
-
-    modport MONITOR (
-        clocking cb_mon
-    );
-
-
-endinterface
+endinterface : apb_if
 
 `endif

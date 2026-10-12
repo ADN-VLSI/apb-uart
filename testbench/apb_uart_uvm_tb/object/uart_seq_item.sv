@@ -3,83 +3,70 @@
 
 class uart_seq_item extends uvm_sequence_item;
 
-  ///////////////////////////////////////////////////////////////
-  // UART Data
-  ///////////////////////////////////////////////////////////////
-  rand bit [7:0] data;
+  // UART Transaction Fields
+  rand logic [7:0] data;
+  rand int         baud_rate;
+  rand bit         parity_en;
+  rand bit         parity_type;
+  rand bit         extra_stop;
+  rand int         data_bits;
 
-  ///////////////////////////////////////////////////////////////
-  // UART Configuration
-  ///////////////////////////////////////////////////////////////
-  rand bit [1:0] data_bits;
-  rand bit       parity_en;
-  rand bit       parity_type;
-  rand bit       stop_bits;
+  // UVM Factory Registration
+  `uvm_object_utils_begin(uart_seq_item)
+    `uvm_field_int(data,        UVM_ALL_ON)
+    `uvm_field_int(baud_rate,   UVM_ALL_ON)
+    `uvm_field_int(parity_en,   UVM_ALL_ON)
+    `uvm_field_int(parity_type, UVM_ALL_ON)
+    `uvm_field_int(extra_stop,  UVM_ALL_ON)
+    `uvm_field_int(data_bits,   UVM_ALL_ON)
+  `uvm_object_utils_end
 
-  // 0 = RX  : drive UART_RX
-  // 1 = TX  : expected/observed UART_TX
-  rand bit       direction;        
-
-  ///////////////////////////////////////////////////////////////
-  // Optional error injection
-  ///////////////////////////////////////////////////////////////
-  rand bit       inject_parity_error;
-  rand bit       inject_frame_error;
-
-  ///////////////////////////////////////////////////////////////
   // Constructor
-  ///////////////////////////////////////////////////////////////
   function new(string name = "uart_seq_item");
     super.new(name);
   endfunction
 
-  ///////////////////////////////////////////////////////////////
-  // UVM Field Automation
-  ///////////////////////////////////////////////////////////////
-  `uvm_object_utils_begin(uart_seq_item)
-    `uvm_field_int(data,                UVM_ALL_ON)
-    `uvm_field_int(data_bits,           UVM_ALL_ON)
-    `uvm_field_int(parity_en,           UVM_ALL_ON)
-    `uvm_field_int(parity_type,         UVM_ALL_ON)
-    `uvm_field_int(stop_bits,            UVM_ALL_ON)
-    `uvm_field_int(direction,            UVM_ALL_ON)
-    `uvm_field_int(inject_parity_error,  UVM_ALL_ON)
-    `uvm_field_int(inject_frame_error,   UVM_ALL_ON)
-  `uvm_object_utils_end
+  // Baud Rate Constraint
+  constraint baud_rate_c {
+    soft baud_rate inside {
+      9600,
+      19200,
+      38400,
+      57600,
+      115200,
+      2000000,
+      8000000
+    };
+  }
 
-  ///////////////////////////////////////////////////////////////
-  // Constraints
-  ///////////////////////////////////////////////////////////////
-
-  // DUT supports:
-  // depending on register encoding.
+  // Data Bits Constraint
   constraint data_bits_c {
-    data_bits inside {2'b00, 2'b01, 2'b10, 2'b11};
+    data_bits inside {5, 6, 7, 8};
+    soft data_bits == 8;
   }
 
-  // Error injection is only meaningful for RX stimulus
-  constraint error_injection_c {
-    if (direction == 1'b1) {
-      inject_parity_error == 1'b0;
-      inject_frame_error  == 1'b0;
-    }
+  // Stop Bits Constraint
+  // extra_stop = 0: One stop bit
+  // extra_stop = 1: Two stop bits
+  constraint stop_bits_c {
+    extra_stop inside {0, 1};
   }
 
-  ///////////////////////////////////////////////////////////////
-  // Convert to string
-  ///////////////////////////////////////////////////////////////
-  function string convert2string();
+  // Utility Methods
+  virtual function automatic string to_string();
     return $sformatf(
-      "UART_REQ: data=0x%02h data_bits=%0d parity_en=%0d parity_type=%0d stop_bits=%0d direction=%s parity_err=%0d frame_err=%0d",
+      "data=0x%02h baud_rate=%-7d parity_en=%0b parity_type=%0b extra_stop=%0b data_bits=%0d",
       data,
-      data_bits,
+      baud_rate,
       parity_en,
       parity_type,
-      stop_bits,
-      direction ? "TX" : "RX",
-      inject_parity_error,
-      inject_frame_error
+      extra_stop,
+      data_bits
     );
+  endfunction
+
+  virtual function automatic void display();
+    $display("%s", to_string());
   endfunction
 
 endclass

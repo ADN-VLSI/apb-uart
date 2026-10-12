@@ -1,83 +1,85 @@
-`ifndef BASE_TEST_SV
-`define BASE_TEST_SV
+`ifndef __GUARD_BASE_TEST_SV__
+`define __GUARD_BASE_TEST_SV__ 0
+
+`include "uvm_macros.svh"
 
 class base_test extends uvm_test;
 
-    `uvm_component_utils(base_test)
+  // ------------------------------------------------------------
+  // UVM Registration
+  // ------------------------------------------------------------
 
+  `uvm_component_utils(base_test)
 
-    // ------------------------------------------------------------
-    // Environment
-    // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // Environment
+  // ------------------------------------------------------------
 
-    apb_uart_env env;
+  apb_uart_env env;
 
+  // ------------------------------------------------------------
+  // Constructor
+  // ------------------------------------------------------------
 
-    // ------------------------------------------------------------
-    // Constructor
-    // ------------------------------------------------------------
+  function new(
+    string name = "base_test",
+    uvm_component parent = null
+  );
+    super.new(name, parent);
+  endfunction : new
 
-    function new(
-        string name = "base_test",
-        uvm_component parent = null
+  // ------------------------------------------------------------
+  // Build Phase
+  // ------------------------------------------------------------
+
+  virtual function void build_phase(uvm_phase phase);
+
+    super.build_phase(phase);
+
+    env = apb_uart_env::type_id::create(
+      "env",
+      this
     );
 
-        super.new(name, parent);
+  endfunction : build_phase
 
-    endfunction
+  // ------------------------------------------------------------
+  // End of Elaboration Phase
+  // ------------------------------------------------------------
 
+  virtual function void end_of_elaboration_phase(
+    uvm_phase phase
+  );
 
-    // ------------------------------------------------------------
-    // Build
-    // ------------------------------------------------------------
+    super.end_of_elaboration_phase(phase);
 
-    function void build_phase(uvm_phase phase);
+    `uvm_info(
+      get_type_name(),
+      "APB UART UVM environment constructed",
+      UVM_LOW
+    )
 
-        super.build_phase(phase);
+    // Print component hierarchy for debugging.
+    uvm_top.print_topology();
 
-        env =
-            apb_uart_env::type_id::create(
-                "env",
-                this
-            );
+  endfunction : end_of_elaboration_phase
 
-    endfunction
+  // ------------------------------------------------------------
+  // Report Phase
+  // ------------------------------------------------------------
 
+  virtual function void report_phase(uvm_phase phase);
 
-    // ------------------------------------------------------------
-    // End of elaboration
-    // ------------------------------------------------------------
+    super.report_phase(phase);
 
-    function void end_of_elaboration_phase(
-        uvm_phase phase
-    );
+    `uvm_info(
+      get_type_name(),
+      "APB UART test completed",
+      UVM_LOW
+    )
 
-        super.end_of_elaboration_phase(phase);
+  endfunction : report_phase
 
-        `uvm_info(
-            get_type_name(),
-            "UVM testbench hierarchy constructed",
-            UVM_LOW
-        )
-
-    endfunction
-
-
-    // ------------------------------------------------------------
-    // Run
-    // ------------------------------------------------------------
-
-    task run_phase(uvm_phase phase);
-
-        phase.raise_objection(this);
-
-        // Small startup delay
-        #100ns;
-
-        phase.drop_objection(this);
-
-    endtask
-
-endclass
+endclass : base_test
 
 `endif

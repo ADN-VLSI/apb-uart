@@ -1,78 +1,66 @@
-`ifndef BASIC_WRITE_TEST_SV
-`define BASIC_WRITE_TEST_SV
+`ifndef __GUARD_BASIC_WRITE_TEST_SV__
+`define __GUARD_BASIC_WRITE_TEST_SV__ 0
+
+`include "uvm_macros.svh"
+`include "base_test.sv"
 
 class basic_write_test extends base_test;
 
-    `uvm_component_utils(basic_write_test)
+  // ------------------------------------------------------------
+  // UVM Registration
+  // ------------------------------------------------------------
 
-    import uart_reg_if_pkg::*;
+  `uvm_component_utils(basic_write_test)
 
-    function new(
-        string name = "basic_write_test",
-        uvm_component parent = null
+  // ------------------------------------------------------------
+  // Constructor
+  // ------------------------------------------------------------
+
+  function new(
+    string name = "basic_write_test",
+    uvm_component parent = null
+  );
+    super.new(name, parent);
+  endfunction : new
+
+  // ------------------------------------------------------------
+  // Run Phase
+  // ------------------------------------------------------------
+
+  virtual task run_phase(uvm_phase phase);
+
+    random_apb_wdata_seq write_seq;
+
+    phase.raise_objection(this);
+
+    `uvm_info(
+      get_type_name(),
+      "Starting basic APB write test",
+      UVM_LOW
+    )
+
+    // Wait for reset to be released.
+    wait (env.apb_agent.vif.PRESETn === 1'b1);
+
+    // Allow the DUT to settle after reset.
+    repeat (2) @(posedge env.apb_agent.vif.PCLK);
+
+    write_seq = random_apb_wdata_seq::type_id::create(
+      "write_seq"
     );
 
-        super.new(name, parent);
+    write_seq.start(env.apb_agent.sequencer);
 
-    endfunction
+    `uvm_info(
+      get_type_name(),
+      "Basic APB write test completed",
+      UVM_LOW
+    )
 
+    phase.drop_objection(this);
 
-    task run_phase(uvm_phase phase);
+  endtask : run_phase
 
-        apb_base_seq seq;
-
-        phase.raise_objection(this);
-
-
-        seq = apb_base_seq::type_id::create(
-            "seq"
-        );
-
-
-        // --------------------------------------------------------
-        // CTRL
-        // --------------------------------------------------------
-
-        seq.apb_write(
-            ADDR_CTRL,
-            32'h0000_0018
-        );
-
-
-        // --------------------------------------------------------
-        // CFG
-        // --------------------------------------------------------
-
-        seq.apb_write(
-            ADDR_CFG,
-            32'h0004_005B
-        );
-
-
-        // --------------------------------------------------------
-        // TX data
-        // --------------------------------------------------------
-
-        seq.apb_write(
-            ADDR_TXD,
-            32'h0000_0055
-        );
-
-
-        // --------------------------------------------------------
-        // Interrupt enable
-        // --------------------------------------------------------
-
-        seq.apb_write(
-            ADDR_INTR,
-            32'h0000_000F
-        );
-
-
-        phase.drop_objection(this);
-
-    endtask
-
-endclass
+endclass : basic_write_test
 
 `endif

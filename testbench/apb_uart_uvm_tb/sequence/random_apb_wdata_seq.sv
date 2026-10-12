@@ -1,89 +1,61 @@
 `ifndef __GUARD_RANDOM_APB_WDATA_SEQ_SV__
 `define __GUARD_RANDOM_APB_WDATA_SEQ_SV__ 0
 
+`include "apb_base_seq.sv"
+
 class random_apb_wdata_seq extends apb_base_seq;
 
-    `uvm_object_utils(random_apb_wdata_seq)
+  `uvm_object_utils(random_apb_wdata_seq)
 
-    import uart_reg_if_pkg::*;
+  rand int unsigned num_transactions;
 
-    rand int unsigned num_transactions;
+  constraint num_transactions_c {
+    num_transactions inside {[10:50]};
+  }
 
-    rand bit [31:0] random_wdata;
+  function new(string name = "random_apb_wdata_seq");
+    super.new(name);
+  endfunction
 
-    constraint num_transactions_c {
-        num_transactions inside {[10:100]};
-    }
+  virtual task body();
 
-    function new(string name = "random_apb_wdata_seq");
-        super.new(name);
-    endfunction
+    apb_seq_item req;
 
+    if (!randomize()) begin
+      `uvm_fatal(get_type_name(), "Failed to randomize sequence configuration")
+    end
 
-    virtual task body();
+    `uvm_info(
+      get_type_name(),
+      $sformatf("Starting %0d randomized APB writes", num_transactions),
+      UVM_LOW
+    )
 
-        bit [31:0] addr;
-        bit [31:0] data;
+    repeat (num_transactions) begin
 
-        if (!randomize()) begin
-            `uvm_fatal(
-                get_type_name(),
-                "Failed to randomize random_apb_wdata_seq"
-            )
-        end
+      req = apb_seq_item::type_id::create("req");
 
-        repeat (num_transactions) begin
+      start_item(req);
 
-            // Select only writable registers
-            case ($urandom_range(0, 4))
+      if (!req.randomize() with {
+        we == 1'b1;
+      }) begin
+        `uvm_fatal(get_type_name(), "Failed to randomize APB write request")
+      end
 
-                0: begin
-                    addr = ADDR_CTRL;
-                    data = random_wdata;
-                end
+      `uvm_info(
+        get_type_name(),
+        $sformatf("Random APB WRITE: %s", req.to_string()),
+        UVM_MEDIUM
+      )
 
-                1: begin
-                    addr = ADDR_CFG;
-                    data = random_wdata;
-                end
+      finish_item(req);
 
-                2: begin
-                    addr = ADDR_TXR;
-                    data = random_wdata;
-                end
+    end
 
-                3: begin
-                    addr = ADDR_TXD;
-                    data = random_wdata;
-                end
+    `uvm_info(get_type_name(), "Randomized APB writes completed", UVM_LOW)
 
-                4: begin
-                    addr = ADDR_RXR;
-                    data = random_wdata;
-                end
-
-                default: begin
-                    addr = ADDR_INTR;
-                    data = random_wdata;
-                end
-
-            endcase
-
-            `uvm_info(
-                get_type_name(),
-                $sformatf(
-                    "Random APB write: addr=0x%08h data=0x%08h",
-                    addr,
-                    data
-                ),
-                UVM_LOW
-            )
-
-            apb_write(addr, data);
-
-        end
-
-    endtask
+  endtask : body
 
 endclass
 

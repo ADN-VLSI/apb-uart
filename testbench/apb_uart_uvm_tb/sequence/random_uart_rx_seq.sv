@@ -1,65 +1,59 @@
 `ifndef __GUARD_RANDOM_UART_RX_SEQ_SV__
 `define __GUARD_RANDOM_UART_RX_SEQ_SV__ 0
 
+`include "uart_base_seq.sv"
+
 class random_uart_rx_seq extends uart_base_seq;
 
-    `uvm_object_utils(random_uart_rx_seq)
+  `uvm_object_utils(random_uart_rx_seq)
 
-    rand int unsigned num_bytes;
+  rand int unsigned num_transactions;
 
-    constraint num_bytes_c {
-        num_bytes inside {[1:100]};
-    }
+  constraint num_transactions_c {
+    num_transactions inside {[10:50]};
+  }
 
-    function new(string name = "random_uart_rx_seq");
-        super.new(name);
-    endfunction
+  function new(string name = "random_uart_rx_seq");
+    super.new(name);
+  endfunction
 
+  virtual task body();
 
-    virtual task body();
+    uart_seq_item req;
 
-        uart_seq_item req;
+    if (!randomize()) begin
+      `uvm_fatal(get_type_name(), "Failed to randomize sequence configuration")
+    end
 
-        if (!randomize()) begin
-            `uvm_fatal(
-                get_type_name(),
-                "Failed to randomize random_uart_rx_seq"
-            )
-        end
+    `uvm_info(
+      get_type_name(),
+      $sformatf("Starting %0d randomized UART frames", num_transactions),
+      UVM_LOW
+    )
 
-        `uvm_info(
-            get_type_name(),
-            $sformatf(
-                "Starting random UART RX sequence, bytes=%0d",
-                num_bytes
-            ),
-            UVM_MEDIUM
-        )
+    repeat (num_transactions) begin
 
-        repeat (num_bytes) begin
+      req = uart_seq_item::type_id::create("req");
 
-            req = uart_seq_item::type_id::create("req");
+      start_item(req);
 
-            start_item(req);
+      if (!req.randomize()) begin
+        `uvm_fatal(get_type_name(), "Failed to randomize UART transaction")
+      end
 
-            if (!req.randomize() with {
-                direction == 1'b0;
-                inject_parity_error == 1'b0;
-                inject_frame_error  == 1'b0;
-            }) begin
+      `uvm_info(
+        get_type_name(),
+        $sformatf("Random UART RX: %s", req.to_string()),
+        UVM_MEDIUM
+      )
 
-                `uvm_fatal(
-                    get_type_name(),
-                    "Failed to randomize UART RX transaction"
-                )
+      finish_item(req);
 
-            end
+    end
 
-            finish_item(req);
+    `uvm_info(get_type_name(), "Random UART frames completed", UVM_LOW)
 
-        end
-
-    endtask
+  endtask : body
 
 endclass
 

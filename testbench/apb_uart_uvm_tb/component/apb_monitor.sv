@@ -3,92 +3,117 @@
 
 class apb_monitor extends uvm_monitor;
 
-    `uvm_component_utils(apb_monitor)
+  // ------------------------------------------------------------
+  // UVM Component Registration
+  // ------------------------------------------------------------
 
-    virtual apb_if vif;
+  `uvm_component_utils(apb_monitor)
 
-    uvm_analysis_port #(apb_seq_item) apb_analysis_port;
+  // ------------------------------------------------------------
+  // Virtual Interface
+  // ------------------------------------------------------------
 
+  virtual apb_if vif;
 
-    function new(
-        string name = "apb_monitor",
-        uvm_component parent = null
-    );
-        super.new(name, parent);
+  // ------------------------------------------------------------
+  // Analysis Port
+  // ------------------------------------------------------------
 
-        apb_analysis_port =
-            new("apb_analysis_port", this);
-    endfunction
+  uvm_analysis_port #(apb_rsp_item) ap;
 
+  // ------------------------------------------------------------
+  // Constructor
+  // ------------------------------------------------------------
 
-    function void build_phase(uvm_phase phase);
+  function new(string name = "apb_monitor",
+               uvm_component parent = null);
+    super.new(name, parent);
 
-        super.build_phase(phase);
+    ap = new("ap", this);
+  endfunction : new
 
-        if (!uvm_config_db#(virtual apb_if)::get(
-                this,
-                "",
-                "vif",
-                vif
-            )) begin
+  // ------------------------------------------------------------
+  // Build Phase
+  // ------------------------------------------------------------
 
-            `uvm_fatal(
-                get_type_name(),
-                "APB virtual interface not found"
-            )
+  virtual function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
 
+    if (!uvm_config_db#(virtual apb_if)::get(
+          this, "", "vif", vif
+        )) begin
+      `uvm_fatal(
+        get_type_name(),
+        "APB virtual interface was not configured"
+      )
+    end
+  endfunction : build_phase
+
+  // ------------------------------------------------------------
+  // Run Phase
+  // ------------------------------------------------------------
+
+  virtual task run_phase(uvm_phase phase);
+
+    apb_rsp_item tr;
+
+    // Wait for reset release.
+    wait (vif.PRESETn === 1'b1);
+
+    forever begin
+
+      @(posedge vif.PCLK);
+
+      // Ignore bus activity during reset.
+      if (vif.PRESETn !== 1'b1) begin
+        continue;
+      end
+
+      // A transfer completes when PSEL, PENABLE, and PREADY
+      // are all asserted.
+      if (
+        vif.PSEL    === 1'b1 &&
+        vif.PENABLE === 1'b1 &&
+        vif.PREADY  === 1'b1
+      ) begin
+
+        tr = apb_rsp_item::type_id::create("tr");
+
+        // ------------------------------------------------------
+        // Capture APB Transaction
+        // ------------------------------------------------------
+
+        tr.we     = vif.PWRITE;
+        tr.addr   = vif.PADDR;
+        tr.slverr = vif.PSLVERR;
+
+        // For writes, capture the driven write data.
+        // For reads, capture the returned read data.
+        if (vif.PWRITE === 1'b1) begin
+          tr.data = vif.PWDATA;
         end
-
-    endfunction
-
-
-    task run_phase(uvm_phase phase);
-
-        forever begin
-
-            @(posedge vif.PCLK);
-
-            // APB ACCESS phase
-            if (vif.psel &&
-                vif.penable &&
-                vif.pready) begin
-
-                collect_transaction();
-
-            end
-
+        else begin
+          tr.data = vif.PRDATA;
         end
-
-    endtask
-
-
-    virtual task collect_transaction();
-
-        apb_seq_item item;
-
-        item = apb_seq_item::type_id::create(
-            "item",
-            this
-        );
-
-        item.paddr   = vif.paddr;
-        item.pwrite  = vif.pwrite;
-        item.pwdata  = vif.pwdata;
-        item.prdata  = vif.prdata;
-        item.pslverr = vif.pslverr;
-
 
         `uvm_info(
-            get_type_name(),
-            item.convert2string(),
-            UVM_HIGH
+          get_type_name(),
+          $sformatf("Observed APB transaction: %s", tr.to_string()),
+          UVM_MEDIUM
         )
 
+        // ------------------------------------------------------
+        // Publish Transaction
+        // ------------------------------------------------------
 
-        apb_analysis_port.write(item);
+        ap.write(tr);
 
-    endtask
+      end
 
-endclass
+    end
+
+  endtask : run_phase
+
+endclass : apb_monitor
 
 `endif

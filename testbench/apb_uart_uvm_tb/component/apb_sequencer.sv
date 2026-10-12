@@ -1,17 +1,26 @@
 `ifndef __GUARD_APB_SEQUENCER_SV__
 `define __GUARD_APB_SEQUENCER_SV__ 0
 
-class apb_sequencer extends uvm_sequencer #(apb_seq_item);
+class apb_sequencer extends uvm_sequencer #(
+  apb_seq_item,
+  apb_rsp_item
+);
 
-    `uvm_component_utils(apb_sequencer)
+  // ------------------------------------------------------------
+  // UVM Component Registration
+  // ------------------------------------------------------------
 
-    function new(
-        string name = "apb_sequencer",
-        uvm_component parent = null
-    );
-        super.new(name, parent);
-    endfunction
+  `uvm_component_utils(apb_sequencer)
 
-endclass
+  // ------------------------------------------------------------
+  // Constructor
+  // ------------------------------------------------------------
+
+  function new(string name = "apb_sequencer",
+               uvm_component parent = null);
+    super.new(name, parent);
+  endfunction : new
+
+endclass : apb_sequencer
 
 `endif

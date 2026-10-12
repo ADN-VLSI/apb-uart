@@ -1,60 +1,40 @@
 `ifndef __GUARD_UART_RSP_ITEM_SV__
 `define __GUARD_UART_RSP_ITEM_SV__ 0
 
-class uart_rsp_item extends uvm_sequence_item;
+`include "apb_uart_uvm_tb/object/uart_seq_item.sv"
 
-  ///////////////////////////////////////////////////////////////
-  // UART received/transmitted data
-  ///////////////////////////////////////////////////////////////
-  bit [7:0] data;
+class uart_rsp_item extends uart_seq_item;
 
-  ///////////////////////////////////////////////////////////////
-  // Status
-  ///////////////////////////////////////////////////////////////
-  bit       valid;
+  // UART Response Fields
+  bit parity;
 
-  // Error indications
-  bit       parity_error;
-  bit       frame_error;
+  // UVM Factory Registration
+  `uvm_object_utils_begin(uart_rsp_item)
+    `uvm_field_int(data,        UVM_ALL_ON)
+    `uvm_field_int(baud_rate,   UVM_ALL_ON)
+    `uvm_field_int(parity_en,   UVM_ALL_ON)
+    `uvm_field_int(parity_type, UVM_ALL_ON)
+    `uvm_field_int(extra_stop,  UVM_ALL_ON)
+    `uvm_field_int(data_bits,   UVM_ALL_ON)
+    `uvm_field_int(parity,      UVM_ALL_ON)
+  `uvm_object_utils_end
 
-  ///////////////////////////////////////////////////////////////
-  // Transaction direction
-  //
-  // 0 = RX
-  // 1 = TX
-  ///////////////////////////////////////////////////////////////
-  bit       direction;
-
-  ///////////////////////////////////////////////////////////////
   // Constructor
-  ///////////////////////////////////////////////////////////////
   function new(string name = "uart_rsp_item");
     super.new(name);
   endfunction
 
-  ///////////////////////////////////////////////////////////////
-  // UVM Field Automation
-  ///////////////////////////////////////////////////////////////
-  `uvm_object_utils_begin(uart_rsp_item)
-    `uvm_field_int(data,         UVM_ALL_ON)
-    `uvm_field_int(valid,        UVM_ALL_ON)
-    `uvm_field_int(parity_error, UVM_ALL_ON)
-    `uvm_field_int(frame_error,  UVM_ALL_ON)
-    `uvm_field_int(direction,    UVM_ALL_ON)
-  `uvm_object_utils_end
-
-  ///////////////////////////////////////////////////////////////
-  // Convert to string
-  ///////////////////////////////////////////////////////////////
-  function string convert2string();
+  // Utility Methods
+  virtual function automatic string to_string();
     return $sformatf(
-      "UART_RSP: data=0x%02h valid=%0d direction=%s parity_error=%0d frame_error=%0d",
-      data,
-      valid,
-      direction ? "TX" : "RX",
-      parity_error,
-      frame_error
+      "%s parity=%0b",
+      super.to_string(),
+      parity
     );
+  endfunction
+
+  virtual function automatic void display();
+    $display("%s", to_string());
   endfunction
 
 endclass

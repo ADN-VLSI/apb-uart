@@ -1,82 +1,82 @@
 `ifndef __GUARD_APB_BASE_SEQ_SV__
 `define __GUARD_APB_BASE_SEQ_SV__ 0
 
+`include "apb_seq_item.sv"
+
+import uart_reg_if_pkg::*;
+
 class apb_base_seq extends uvm_sequence #(apb_seq_item);
 
-    `uvm_object_utils(apb_base_seq)
+  `uvm_object_utils(apb_base_seq)
 
-    function new(string name = "apb_base_seq");
-        super.new(name);
-    endfunction
+  // Constructor
+  function new(string name = "apb_base_seq");
+    super.new(name);
+  endfunction
 
-    // ------------------------------------------------------------
-    // APB Write Helper
-    // ------------------------------------------------------------
-    virtual task apb_write(
-        input bit [31:0] addr,
-        input bit [31:0] data
-    );
+  // ------------------------------------------------------------
+  // APB WRITE TASK
+  // ------------------------------------------------------------
 
-        apb_seq_item req;
+  virtual task apb_write(
+    input logic [31:0] byte_addr,
+    input logic [31:0] write_data
+  );
 
-        req = apb_seq_item::type_id::create("req");
+    apb_seq_item req;
 
-        start_item(req);
+    req = apb_seq_item::type_id::create("req");
 
-        req.paddr  = addr;
-        req.pwrite = 1'b1;
-        req.pwdata = data;
+    start_item(req);
 
-        finish_item(req);
+    if (!req.randomize() with {
+      we   == 1'b1;
+      addr == byte_addr;
+      data == write_data;
+    }) begin
+      `uvm_fatal("APB_WRITE", "Failed to randomize APB write transaction")
+    end
 
-    endtask
+    `uvm_info(
+      get_type_name(),
+      $sformatf("APB WRITE: %s", req.to_string()),
+      UVM_MEDIUM
+    )
 
+    finish_item(req);
 
-    // ------------------------------------------------------------
-    // APB Read Helper
-    // ------------------------------------------------------------
-    virtual task apb_read(
-        input bit [31:0] addr
-    );
+  endtask : apb_write
 
-        apb_seq_item req;
+  // ------------------------------------------------------------
+  // APB READ TASK
+  // ------------------------------------------------------------
 
-        req = apb_seq_item::type_id::create("req");
+  virtual task apb_read(
+    input logic [31:0] byte_addr
+  );
 
-        start_item(req);
+    apb_seq_item req;
 
-        req.paddr  = addr;
-        req.pwrite = 1'b0;
-        req.pwdata = '0;
+    req = apb_seq_item::type_id::create("req");
 
-        finish_item(req);
+    start_item(req);
 
-    endtask
+    if (!req.randomize() with {
+      we   == 1'b0;
+      addr == byte_addr;
+    }) begin
+      `uvm_fatal("APB_READ", "Failed to randomize APB read transaction")
+    end
 
+    `uvm_info(
+      get_type_name(),
+      $sformatf("APB READ: %s", req.to_string()),
+      UVM_MEDIUM
+    )
 
-    // ------------------------------------------------------------
-    // APB Write using 32-bit register value
-    // ------------------------------------------------------------
-    virtual task write_reg(
-        input bit [31:0] addr,
-        input bit [31:0] data
-    );
+    finish_item(req);
 
-        apb_write(addr, data);
-
-    endtask
-
-
-    // ------------------------------------------------------------
-    // APB Read using register address
-    // ------------------------------------------------------------
-    virtual task read_reg(
-        input bit [31:0] addr
-    );
-
-        apb_read(addr);
-
-    endtask
+  endtask : apb_read
 
 endclass
 
