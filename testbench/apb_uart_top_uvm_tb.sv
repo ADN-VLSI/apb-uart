@@ -9,8 +9,10 @@
 module apb_uart_top_uvm_tb;
 
   import uvm_pkg::*;
+  import adn_apb_uart_top_uvm_pkg::apb_uart_base_test;
   import adn_apb_uart_top_uvm_pkg::apb_uart_write_test;   // Make test visible to this module
   import adn_apb_uart_top_uvm_pkg::apb_uart_rx_test;      // Make test visible to this module
+  import adn_apb_uart_top_uvm_pkg::apb_uart_cfg_test;
 
   //----------------------------------------------------------------------------
   // Clock, reset and DUT-side signals
@@ -78,8 +80,10 @@ module apb_uart_top_uvm_tb;
     string test_name;                       // Test chosen from the command line
 
     // Reference the test classes so they are linked in and registered with the factory
+    void'(apb_uart_base_test::type_id::get());
     void'(apb_uart_write_test::type_id::get());
     void'(apb_uart_rx_test::type_id::get());
+    void'(apb_uart_cfg_test::type_id::get());
 
     // Initial state: reset asserted, APB bus idle
     presetn = 0;
@@ -96,10 +100,9 @@ module apb_uart_top_uvm_tb;
     // Publish virtual interfaces (must happen before run_test builds the env)
     uvm_config_db#(virtual apb_if)::set(null, "*", "apb_vif", apb);
     uvm_config_db#(virtual adn_uart_if)::set(null, "*", "uart_vif", uart);
-
-    // Select test with +TN=<name>; default is the write test
+    // Select test with +TN=<name>; default base test runs all functional cases
     if (!$value$plusargs("TN=%s", test_name) || test_name == "default")
-      test_name = "apb_uart_write_test";
+      test_name = "apb_uart_base_test";
 
     fork
       run_test(test_name);                  // Start UVM and run the chosen test
