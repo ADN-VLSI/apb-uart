@@ -3,8 +3,10 @@ package adn_apb_uart_top_uvm_pkg;
   `include "uvm_macros.svh"
   `include "../testbench/apb_uart_top_uvm_tb/obj/apb_seq_item.sv"
   `include "../testbench/apb_uart_top_uvm_tb/obj/apb_write_seq.sv"
+  `include "../testbench/apb_uart_top_uvm_tb/obj/apb_read_seq.sv"
   `include "../testbench/apb_uart_top_uvm_tb/obj/apb_rsp_item.sv"
   `include "../testbench/apb_uart_top_uvm_tb/obj/uart_seq_item.sv"
+  `include "../testbench/apb_uart_top_uvm_tb/obj/uart_send_seq.sv"
   `include "../testbench/apb_uart_top_uvm_tb/obj/uart_rsp_item.sv"
   `include "../testbench/apb_uart_top_uvm_tb/cmp/apb_driver.sv"
   `include "../testbench/apb_uart_top_uvm_tb/cmp/apb_monitor.sv"
@@ -16,4 +18,6 @@ package adn_apb_uart_top_uvm_pkg;
   `include "../testbench/apb_uart_top_uvm_tb/cmp/apb_uart_env.sv"
   `include "../testbench/apb_uart_top_uvm_tb/test/apb_uart_base_test.sv"
   `include "../testbench/apb_uart_top_uvm_tb/test/apb_uart_write_test.sv"
+  `include "../testbench/apb_uart_top_uvm_tb/test/apb_uart_rx_test.sv"
+  `include "../testbench/apb_uart_top_uvm_tb/test/apb_uart_cfg_test.sv"
 endpackage
