@@ -60,6 +60,7 @@
 
 ## INCLUDE
 [`dummy.svh`](document/include/dummy.md)
+[`uart_regif_pkg.sv`](document/include/uart_regif_pkg.md)
 
 [`apb/assign.svh`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/include/apb/assign.md)
 [`apb/typedef.svh`](https://github.com/ADN-VLSI/adn_apb/blob/main/document/include/apb/typedef.md)
