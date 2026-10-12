@@ -123,8 +123,17 @@ endif
 $(REPO_ROOT)/local.f:
 	@echo -e "\033[1;33m#\033[0m Generating Testbench Filelist"
 	@echo "-i $(REPO_ROOT)/testbench" > $(REPO_ROOT)/local.f
+	@echo "-i $(REPO_ROOT)/testbench/apb_uart_uvm_tb" >> $(REPO_ROOT)/local.f
 	@find $(REPO_ROOT)/testbench -maxdepth 1 -name "*.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/interface -name "*.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/object -name "*.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/component -name "*.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/env -name "*.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/sequence -name "*.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/test -name "*.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench -maxdepth 1 -name "apb_uart_tb_top.sv" >> $(REPO_ROOT)/local.f
 	@sed -i 's|$(REPO_ROOT)|$$\{$(REPO_NAME_EXP)\}|g' $(REPO_ROOT)/local.f
+
 
 .PHONY: $(BUILD_DIR)/XSIM_ARGS
 $(BUILD_DIR)/XSIM_ARGS:
@@ -163,7 +172,9 @@ compile_this_module:
 		echo -e "\033[1;33m#\033[0m Source files have not changed, skipping compilation."; \
 	else \
 		echo -e "\033[1;33m#\033[0m Source files have changed, recompiling..."; \
-		cd $(BUILD_DIR) && $(XVLOG) -d SIMULATION -sv -f $(REPO_ROOT)/reuse.f -f $(REPO_ROOT)/local.f -log $(LOG_DIR)/xvlog_$(shell date +%Y%m%d_%H%M%S).log $(O_EW); \
+		cd $(BUILD_DIR) && $(XVLOG) -d SIMULATION -L uvm -sv -f $(REPO_ROOT)/reuse.f -f $(REPO_ROOT)/local.f -log $(LOG_DIR)/xvlog_$(shell date +%Y%m%d_%H%M%S).log; \
+		STATUS=$$?; \
+		if [ $$STATUS -ne 0 ]; then exit $$STATUS; fi; \
 		cp $(BUILD_DIR)/hash_new $(BUILD_DIR)/hash_old; \
 		rm -rf $(BUILD_DIR)/xelab_*; \
 	fi

@@ -1,21 +1,70 @@
+`ifndef __GUARD_APB_SEQ_ITEM_SV__
+`define __GUARD_APB_SEQ_ITEM_SV__ 0
+
+`include "uart_regif_pkg.sv"
+
+import uart_regif_pkg::ADDR_CTRL;
+import uart_regif_pkg::ADDR_CFG;
+import uart_regif_pkg::ADDR_STATUS;
+import uart_regif_pkg::ADDR_TXD;
+import uart_regif_pkg::ADDR_RXD;
+import uart_regif_pkg::ADDR_INTR;
+
+// One APB transfer: read or write, address, data
 class apb_seq_item extends uvm_sequence_item;
 
-  rand bit        write;
-  rand bit [31:0] addr, data;
-  bit      [31:0] rdata;
-  bit             error;
+  rand logic        we;    // 1 = write, 0 = read
+  rand logic [ 4:0] addr;  // register address
+  rand logic [31:0] data;  // write data
+
+  // Set to 1 to turn off the address / data restrictions below
+  bit allow_random_addr = 0;
+  bit allow_random_data = 0;
 
   `uvm_object_utils_begin(apb_seq_item)
-  `uvm_field_int(write,UVM_ALL_ON)
-  `uvm_field_int(addr,UVM_ALL_ON)
-  `uvm_field_int(data,UVM_ALL_ON)
-  `uvm_field_int(rdata,UVM_ALL_ON)
-  `uvm_field_int(error,UVM_ALL_ON)
+    `uvm_field_int(we,                UVM_ALL_ON)
+    `uvm_field_int(addr,              UVM_ALL_ON)
+    `uvm_field_int(data,              UVM_ALL_ON)
+    `uvm_field_int(allow_random_addr, UVM_ALL_ON)
+    `uvm_field_int(allow_random_data, UVM_ALL_ON)
   `uvm_object_utils_end
 
-
-  function new(string name="apb_seq_item");
+  function new (string name = "apb_seq_item");
     super.new(name);
   endfunction
 
+  // Only pick valid register addresses (unless allow_random_addr = 1)
+  constraint addr_c {
+    if (!allow_random_addr) {
+      if (we) {
+        // Writable registers
+        addr inside {ADDR_CTRL, ADDR_CFG, ADDR_TXD, ADDR_INTR};
+      }
+      else {
+        // Readable registers
+        addr inside {ADDR_CTRL, ADDR_CFG, ADDR_STATUS, ADDR_RXD, ADDR_INTR};
+      }
+    }
+  }
+
+  // Clear the unused upper bits of each register (unless allow_random_data = 1)
+  function void post_randomize();
+    if (!allow_random_data) begin
+      if (addr == ADDR_CTRL) data[31: 4] = '0;
+      if (addr == ADDR_CFG)  data[31:21] = '0;
+      if (addr == ADDR_TXD)  data[31: 8] = '0;
+      if (addr == ADDR_INTR) data[31: 4] = '0;
+    end
+  endfunction
+
+  virtual function automatic string to_string();
+    return $sformatf("we=%0b addr=0x%02h data=0x%08h", we, addr, data);
+  endfunction
+
+  virtual function automatic void display();
+    $display("%s", to_string());
+  endfunction
+
 endclass
+
+`endif
