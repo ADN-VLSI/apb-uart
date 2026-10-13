@@ -1,7 +1,7 @@
 `ifndef __GUARD_RANDOM_APB_RDATA_SEQ_SV__
 `define __GUARD_RANDOM_APB_RDATA_SEQ_SV__ 0
 
-`include "apb_uart_top_uvm_tb/obj/apb/apb_seq_item.sv"
+`include "apb_uart_uvm_tb/object/apb_seq_item.sv"
 
 // Sequence: read the RXD register over APB, one or more times.
 // How many reads: set RANDOM_APB_RDATA_SEQ_LENGTH in the config DB (default 1).

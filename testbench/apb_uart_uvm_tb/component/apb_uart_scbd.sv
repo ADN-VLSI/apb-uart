@@ -7,8 +7,8 @@ import uvm_pkg::*;
 `include "uart_regif_pkg.sv"
 import uart_regif_pkg::*;
 
-`include "testbench/apb_uart_uvm_tb/object/apb_resp_item.sv"
-`include "testbench/apb_uart_uvm_tb/object/uart_resp_item.sv"
+`include "apb_uart_uvm_tb/object/apb_resp_item.sv"
+`include "apb_uart_uvm_tb/object/uart_resp_item.sv"
 
 // One write function per input: _apb, _uart_tx, _uart_rx
 `uvm_analysis_imp_decl(_apb)

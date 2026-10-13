@@ -1,7 +1,7 @@
 `ifndef __GUARD_APB_UART_REG_RW_SEQ_SV__
 `define __GUARD_APB_UART_REG_RW_SEQ_SV__ 0
 
-`include "apb_uart_top_uvm_tb/obj/apb/apb_seq_item.sv"
+`include "apb_uart_uvm_tb/object/apb_seq_item.sv"
 
 // Sequence: write a random value to the CFG register, then read it back.
 // The scoreboard checks that the value read matches the value written.

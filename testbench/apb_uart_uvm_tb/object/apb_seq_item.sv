@@ -57,7 +57,7 @@ class apb_seq_item extends uvm_sequence_item;
     end
   endfunction
 
-  virtual function automatic string to_string();
+  virtual function string to_string();
     return $sformatf("we=%0b addr=0x%02h data=0x%08h", we, addr, data);
   endfunction
 

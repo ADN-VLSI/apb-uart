@@ -1,7 +1,7 @@
 `ifndef __GUARD_APB_UART_BASE_TEST_SV__
 `define __GUARD_APB_UART_BASE_TEST_SV__ 0
 
-`include "apb_uart_top_uvm_tb/cmp/apb_uart_env.sv"
+`include "apb_uart_uvm_tb/component/apb_uart_env.sv"
 
 // Base test: builds the env, finds the virtual interfaces, and handles
 // reset, clock start and "wait until idle" at the end.

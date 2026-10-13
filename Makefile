@@ -16,7 +16,7 @@ BUILD_DIR := $(REPO_ROOT)/build
 LOG_DIR := $(REPO_ROOT)/log
 REPORT_DIR := $(REPO_ROOT)/report
 
-TN    := default
+TN    := apb_uart_tx_test
 TC    := 0
 VCD   := 0
 DEBUG := 0
@@ -63,7 +63,7 @@ help:
 	@echo -e "    \033[1;32m# Run simulation for a selected top module and test case, etc.\033[0m"
 	@echo -e "    \033[1;32m# The arguments are passed to the testbench to as follows:\033[0m"
 	@echo -e "    \033[0;32m#   TOP   : string top_name;     // TESTBENCH TOP MODULE NAME\033[0m"
-	@echo -e "    \033[0;32m#   TN    : string test_name;    // TEST CASE NAME\033[0m"
+	@echo -e "    \033[0;32m#   TN    : string test_name;    // UVM TEST CLASS NAME, e.g. apb_uart_tx_test\033[0m"
 	@echo -e "    \033[0;32m#   TC    : int    test_count;   // REPEAT COUNT\033[0m"
 	@echo -e "    \033[0;32m#   VCD   : int    vcd;          // GENERATE VCD FILE\033[0m"
 	@echo -e "    \033[0;32m#   DEBUG : int    debug;        // ENABLE DEBUG MODE\033[0m"
@@ -122,16 +122,12 @@ endif
 .PHONY: $(REPO_ROOT)/local.f
 $(REPO_ROOT)/local.f:
 	@echo -e "\033[1;33m#\033[0m Generating Testbench Filelist"
-	@echo "-i $(REPO_ROOT)/testbench" > $(REPO_ROOT)/local.f
+	@echo "-i $(REPO_ROOT)" > $(REPO_ROOT)/local.f
+	@echo "-i $(REPO_ROOT)/testbench" >> $(REPO_ROOT)/local.f
 	@echo "-i $(REPO_ROOT)/testbench/apb_uart_uvm_tb" >> $(REPO_ROOT)/local.f
 	@find $(REPO_ROOT)/testbench -maxdepth 1 -name "*.sv" >> $(REPO_ROOT)/local.f
-	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/interface -name "*.sv" >> $(REPO_ROOT)/local.f
-	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/object -name "*.sv" >> $(REPO_ROOT)/local.f
-	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/component -name "*.sv" >> $(REPO_ROOT)/local.f
-	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/env -name "*.sv" >> $(REPO_ROOT)/local.f
-	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/sequence -name "*.sv" >> $(REPO_ROOT)/local.f
-	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb/test -name "*.sv" >> $(REPO_ROOT)/local.f
-	@find $(REPO_ROOT)/testbench -maxdepth 1 -name "apb_uart_tb_top.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb -name "*_if.sv" >> $(REPO_ROOT)/local.f
+	@find $(REPO_ROOT)/testbench/apb_uart_uvm_tb -maxdepth 1 -name "apb_uart_tb_top.sv" >> $(REPO_ROOT)/local.f
 	@sed -i 's|$(REPO_ROOT)|$$\{$(REPO_NAME_EXP)\}|g' $(REPO_ROOT)/local.f
 
 
@@ -143,6 +139,7 @@ else
 	@echo "-gui --autoloadwcfg --view $(REPO_ROOT)/wcfg/snap_$(TOP).wcfg" > $@
 endif
 	@echo "--testplusarg TN=$(TN)" >> $@
+	@echo "--testplusarg UVM_TESTNAME=$(TN)" >> $@
 	@echo "--testplusarg TC=$(TC)" >> $@
 	@echo "--testplusarg VCD=$(VCD)" >> $@
 	@echo "--testplusarg DEBUG=$(DEBUG)" >> $@
@@ -172,8 +169,8 @@ compile_this_module:
 		echo -e "\033[1;33m#\033[0m Source files have not changed, skipping compilation."; \
 	else \
 		echo -e "\033[1;33m#\033[0m Source files have changed, recompiling..."; \
-		cd $(BUILD_DIR) && $(XVLOG) -d SIMULATION -L uvm -sv -f $(REPO_ROOT)/reuse.f -f $(REPO_ROOT)/local.f -log $(LOG_DIR)/xvlog_$(shell date +%Y%m%d_%H%M%S).log; \
-		STATUS=$$?; \
+		cd $(BUILD_DIR) && $(XVLOG) -d SIMULATION -L uvm -sv -f $(REPO_ROOT)/reuse.f -f $(REPO_ROOT)/local.f -log $(LOG_DIR)/xvlog_$(shell date +%Y%m%d_%H%M%S).log 2>&1 | sed -u 's/ERROR/\x1b[1;31mERROR\x1b[0m/g'; \
+		STATUS=$${PIPESTATUS[0]}; \
 		if [ $$STATUS -ne 0 ]; then exit $$STATUS; fi; \
 		cp $(BUILD_DIR)/hash_new $(BUILD_DIR)/hash_old; \
 		rm -rf $(BUILD_DIR)/xelab_*; \
@@ -182,7 +179,7 @@ compile_this_module:
 # Elaborate
 $(BUILD_DIR)/xelab_$(TOP):
 	@echo -e "\033[1;33m#\033[0m Elaborating $(TOP)"
-	@cd $(BUILD_DIR) && $(XELAB) $(TOP) -s snap_$(TOP) -debug all -log $(LOG_DIR)/xelab_$(TOP)_$(shell date +%Y%m%d_%H%M%S).log $(O_EW)
+	@cd $(BUILD_DIR) && $(XELAB) $(TOP) -s snap_$(TOP) -L uvm --timescale 1ns/1ps -debug all -log $(LOG_DIR)/xelab_$(TOP)_$(shell date +%Y%m%d_%H%M%S).log $(O_EW)
 	@if [ $$? -ne 0 ]; then \
 		echo -e "\033[1;31m#\033[0m Elaboration failed, check log file $(LOG_DIR)/xelab_$(TOP)_$(shell date +%Y%m%d_%H%M%S).log"; \
 		exit 1; \

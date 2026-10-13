@@ -1,7 +1,7 @@
 `ifndef __GUARD_RANDOM_APB_WDATA_SEQ_SV__
 `define __GUARD_RANDOM_APB_WDATA_SEQ_SV__ 0
 
-`include "apb_uart_top_uvm_tb/obj/apb/apb_seq_item.sv"
+`include "apb_uart_uvm_tb/object/apb_seq_item.sv"
 
 // Sequence: write random bytes to the TXD register over APB.
 // How many writes: set RANDOM_APB_WDATA_SEQ_LENGTH in the config DB (default 1).

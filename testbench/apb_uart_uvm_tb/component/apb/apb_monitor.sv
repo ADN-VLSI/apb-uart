@@ -1,14 +1,14 @@
 `ifndef __GUARD_APB_MONITOR_SV__
 `define __GUARD_APB_MONITOR_SV__ 0
 
-`include "testbench/apb_uart_uvm_tb/object/apb_resp_item.sv"
+`include "apb_uart_uvm_tb/object/apb_resp_item.sv"
 
 class apb_monitor extends uvm_monitor;
 
   `uvm_component_utils(apb_monitor)
 
   // Analysis port: sends every observed transaction to the agent/scoreboard
-  uvm_analysis_port #(apb_rsp_item) ap;
+  uvm_analysis_port #(apb_resp_item) ap;
 
   // Virtual interface used to watch the APB signals
   virtual apb_if intf;
@@ -27,10 +27,10 @@ class apb_monitor extends uvm_monitor;
 
   // Watch the bus forever and publish each transaction
   virtual task run_phase(uvm_phase phase);
-    apb_rsp_item item;
+    apb_resp_item item;
 
     forever begin
-      item = apb_rsp_item::type_id::create("item");
+      item = apb_resp_item::type_id::create("item");
       intf.get_transaction(item.addr, item.we, item.data, item.slverr);
       ap.write(item);
     end

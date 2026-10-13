@@ -1,7 +1,7 @@
 `ifndef __GUARD_RANDOM_UART_RX_SEQ_SV__
 `define __GUARD_RANDOM_UART_RX_SEQ_SV__ 0
 
-`include "apb_uart_top_uvm_tb/obj/uart/uart_seq_item.sv"
+`include "apb_uart_uvm_tb/object/uart_seq_item.sv"
 
 // Sequence: send random bytes into the DUT on the UART RX line.
 // How many bytes: set RANDOM_UART_RX_SEQ_LENGTH in the config DB (default 1).
@@ -48,7 +48,7 @@ endclass
 `ifndef __GUARD_RANDOM_UART_RX_SEQ_SV__
 `define __GUARD_RANDOM_UART_RX_SEQ_SV__ 0
 
-`include "apb_uart_top_uvm_tb/obj/uart/uart_seq_item.sv"
+`include "apb_uart_uvm_tb/object/uart_seq_item.sv"
 
 // Sequence: send random bytes into the DUT on the UART RX line.
 // How many bytes: set RANDOM_UART_RX_SEQ_LENGTH in the config DB (default 1).

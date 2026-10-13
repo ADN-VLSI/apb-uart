@@ -1,7 +1,7 @@
 `ifndef __GUARD_APB_DRIVER_SV__
 `define __GUARD_APB_DRIVER_SV__ 0
 
-`include "testbench/apb_uart_uvm_tb/object/apb_seq_item.sv"
+`include "apb_uart_uvm_tb/object/apb_seq_item.sv"
 
 class apb_driver extends uvm_driver #(apb_seq_item);
 

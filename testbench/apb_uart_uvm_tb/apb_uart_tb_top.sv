@@ -6,16 +6,13 @@ import uvm_pkg::*;
 // The interfaces (apb_if, uart_if, ctrl_if) and the DUT must be compiled before this file.
 `include "uart_regif_pkg.sv"
 
-// Same APB struct types as the DUT (apb_req_t / apb_resp_t).
-// If your tool says they are already defined (DUT and testbench share one
-// compilation unit), delete these two lines.
-`include "../submodule/adn_apb/include/apb/typedef.svh"
-`APB_T(apb, 32, 32)
+// apb_req_t / apb_resp_t come from the DUT's own compile (typedef.svh),
+// so they are not declared again here.
 
 // Tests (each one pulls in the base test, env, agents and sequences it needs)
-`include "apb_uart_top_uvm_tb/tests/apb_uart_tx_test.sv"
-`include "apb_uart_top_uvm_tb/tests/apb_uart_rx_test.sv"
-`include "apb_uart_top_uvm_tb/tests/apb_uart_reg_test.sv"
+`include "apb_uart_uvm_tb/tests/apb_uart_tx_test.sv"
+`include "apb_uart_uvm_tb/tests/apb_uart_rx_test.sv"
+`include "apb_uart_uvm_tb/tests/apb_uart_reg_test.sv"
 
 module apb_uart_tb_top;
 
@@ -82,9 +79,13 @@ module apb_uart_tb_top;
   // --------------------------------------------------------------------------
   // Waveform dump
   // --------------------------------------------------------------------------
+  // Enabled with: make simulate ... VCD=1  (the file is build/apb_uart_tb_top.vcd)
   initial begin
-    $dumpfile("dump.vcd");
-    $dumpvars(0, apb_uart_tb_top);
+    int vcd;
+    if ($value$plusargs("VCD=%d", vcd) && vcd != 0) begin
+      $dumpfile("apb_uart_tb_top.vcd");
+      $dumpvars(0, apb_uart_tb_top);
+    end
   end
 
   // --------------------------------------------------------------------------

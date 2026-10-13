@@ -2,7 +2,7 @@
 `define __GUARD_APB_RSP_ITEM_SV__ 0
 
 `include "uart_regif_pkg.sv"
-`include "testbench/apb_uart_uvm_tb/object/apb_seq_item.sv"
+`include "apb_uart_uvm_tb/object/apb_seq_item.sv"
 
 // Response item seen by the APB monitor.
 // Inherits we, addr and data from apb_seq_item and adds the slave error flag.

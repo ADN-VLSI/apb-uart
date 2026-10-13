@@ -1,7 +1,7 @@
 `ifndef __GUARD_UART_DRIVER_SV__
 `define __GUARD_UART_DRIVER_SV__ 0
 
-`include "testbench/apb_uart_uvm_tb/object/uart_seq_item.sv"
+`include "apb_uart_uvm_tb/object/uart_seq_item.sv"
 
 class uart_driver extends uvm_driver #(uart_seq_item);
 

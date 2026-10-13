@@ -1,9 +1,9 @@
 `ifndef __GUARD_APB_UART_TX_TEST_SV__
 `define __GUARD_APB_UART_TX_TEST_SV__ 0
 
-`include "apb_uart_top_uvm_tb/tests/apb_uart_base_test.sv"
-`include "apb_uart_top_uvm_tb/seq/apb_uart_init_seq.sv"
-`include "apb_uart_top_uvm_tb/seq/random_apb_wdata_seq.sv"
+`include "apb_uart_uvm_tb/tests/apb_uart_base_test.sv"
+`include "apb_uart_uvm_tb/sequence/apb_uart_init_seq.sv"
+`include "apb_uart_uvm_tb/sequence/random_apb_wdata_seq.sv"
 
 // TX test: the CPU writes random bytes to TXD over APB,
 // and the scoreboard checks that the same bytes appear on the UART TX line.

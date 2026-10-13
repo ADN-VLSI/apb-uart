@@ -1,14 +1,14 @@
 `ifndef __GUARD_UART_MONITOR_SV__
 `define __GUARD_UART_MONITOR_SV__ 0
 
-`include "testbench/apb_uart_uvm_tb/object/uart_resp_item.sv"
+`include "apb_uart_uvm_tb/object/uart_resp_item.sv"
 
 class uart_monitor extends uvm_monitor;
 
   `uvm_component_utils(uart_monitor)
 
   // Analysis port: sends every observed UART frame to the agent/scoreboard
-  uvm_analysis_port #(uart_rsp_item) ap;
+  uvm_analysis_port #(uart_resp_item) ap;
 
   // Virtual interface used to watch the UART signals
   virtual uart_if intf;
@@ -38,12 +38,12 @@ class uart_monitor extends uvm_monitor;
 
   // Watch the UART line forever and publish each received frame
   virtual task run_phase(uvm_phase phase);
-    uart_rsp_item item;
+    uart_resp_item item;
 
     set_config();
 
     forever begin
-      item = uart_rsp_item::type_id::create("item");
+      item = uart_resp_item::type_id::create("item");
       intf.recv(item.data, item.parity);
 
       // Record the settings that were used for this frame

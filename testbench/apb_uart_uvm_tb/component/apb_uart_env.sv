@@ -1,9 +1,9 @@
 `ifndef __GUARD_APB_UART_ENV_SV__
 `define __GUARD_APB_UART_ENV_SV__ 0
 
-`include "testbench/apb_uart_uvm_tb/component/apb/apb_agent.sv"
-`include "testbench/apb_uart_uvm_tb/component/uart/uart_agent.sv"
-`include "testbench/apb_uart_uvm_tb/component/apb_uart_scbd.sv"
+`include "apb_uart_uvm_tb/component/apb/apb_agent.sv"
+`include "apb_uart_uvm_tb/component/uart/uart_agent.sv"
+`include "apb_uart_uvm_tb/component/apb_uart_scbd.sv"
 
 class apb_uart_env extends uvm_env;
 
