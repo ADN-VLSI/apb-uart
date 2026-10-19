@@ -29,6 +29,7 @@ class uart_driver extends uvm_driver #(uart_seq_item);
 
   task automatic send_frame(uart_seq_item tr);
     int nbits;
+    bit parity_bit;
     nbits=5+int'(tr.data_bits);
     // Keep line idle before the start bit.
     vif.UART_RX <= 1'b1;
@@ -41,7 +42,10 @@ class uart_driver extends uvm_driver #(uart_seq_item);
     end
     if (tr.parity_en) begin
       // Even parity bit is XOR of data bits; odd parity is its inverse.
-      vif.UART_RX <= (^tr.data[nbits-1:0]) ^ tr.parity_type;
+      parity_bit=0;
+      for (int i=0;i<nbits;i++)
+        parity_bit ^= tr.data[i];
+      vif.UART_RX <= parity_bit ^ tr.parity_type;
       bit_time();
     end
     vif.UART_RX <= 1'b1;
