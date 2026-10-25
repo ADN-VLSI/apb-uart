@@ -13,7 +13,7 @@ class apb_uart_rx_test extends apb_uart_base_test;
         phase.raise_objection(this);
 
         `uvm_info(get_type_name(),
-                  "UART RX Test Started",
+                  "TEST START: UART RX test; inject 5 bytes (00, FF, 55, AA, A5) using 8-N-1 framing",
                   UVM_LOW)
 
         seq = uart_rx_seq::type_id::create("seq");
@@ -23,7 +23,7 @@ class apb_uart_rx_test extends apb_uart_base_test;
         #1000;
 
         `uvm_info(get_type_name(),
-                  "UART RX Test Completed",
+                  "TEST COMPLETE: all 5 UART RX input frames were driven",
                   UVM_LOW)
 
         phase.drop_objection(this);

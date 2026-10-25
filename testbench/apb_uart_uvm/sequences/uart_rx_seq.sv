@@ -33,9 +33,9 @@ class uart_rx_seq extends uvm_sequence #(uart_seq_item);
       finish_item(req);
 
       `uvm_info("UART_RX_SEQ",
-                $sformatf("Sending UART RX data: 0x%02h",
-                          req.data),
-                UVM_MEDIUM)
+                $sformatf("UART RX INPUT: frame %0d/5, data=0x%02h, format=8-N-1",
+                          i + 1, req.data),
+                UVM_LOW)
 
     end
 

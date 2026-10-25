@@ -15,14 +15,23 @@ class apb_uart_base_test extends uvm_test;
         env = apb_uart_env::type_id::create("env", this);
     endfunction
 
+    function void end_of_elaboration_phase(uvm_phase phase);
+        super.end_of_elaboration_phase(phase);
+        uvm_top.print_topology();
+    endfunction
+
     task run_phase(uvm_phase phase);
         phase.raise_objection(this);
 
         `uvm_info(get_type_name(),
-                  "APB UART Base Test Started",
+                  "TEST START: APB UART base smoke test; checking that the testbench environment runs",
                   UVM_LOW)
 
         #100;
+
+        `uvm_info(get_type_name(),
+                  "TEST COMPLETE: base smoke test finished; no APB or UART transactions were issued",
+                  UVM_LOW)
 
         phase.drop_objection(this);
     endtask
