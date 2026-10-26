@@ -6,13 +6,13 @@ class apb_driver extends uvm_driver #(apb_seq_item);
     super.new(name,parent);
   endfunction
 
-  function void build_phase(uvm_phase phase);
+  virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     if (!uvm_config_db#(virtual apb_uart_if)::get(this,"","vif",vif))
       `uvm_fatal("NOVIF","apb_driver: virtual interface not set")
   endfunction
 
-  task run_phase(uvm_phase phase);
+  virtual task run_phase(uvm_phase phase);
     apb_seq_item req;
     forever begin
       seq_item_port.get_next_item(req);
@@ -21,7 +21,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
     end
   endtask
 
-  task automatic drive_transfer(apb_seq_item tr);
+  virtual task automatic drive_transfer(apb_seq_item tr);
     @(negedge vif.PCLK);
     vif.psel=1; vif.penable=0;
     vif.paddr=tr.paddr; vif.pwrite=tr.pwrite; vif.pwdata=tr.pwdata;

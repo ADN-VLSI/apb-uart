@@ -9,7 +9,7 @@ class uart_agent extends uvm_agent;
     super.new(name,parent);
   endfunction
 
-  function void build_phase(uvm_phase phase);
+  virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     mon=uart_monitor::type_id::create("mon",this);
     if (get_is_active()==UVM_ACTIVE) begin
@@ -18,7 +18,7 @@ class uart_agent extends uvm_agent;
     end
   endfunction
 
-  function void connect_phase(uvm_phase phase);
+  virtual function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
     if (get_is_active()==UVM_ACTIVE)
       driver.seq_item_port.connect(sequencer.seq_item_export);

@@ -1,4 +1,4 @@
-module apb_uart_tb;
+module apb_uart_uvm_tb;
   import uvm_pkg::*;
   import apb_uart_uvm_pkg::*;
 
@@ -35,11 +35,28 @@ module apb_uart_tb;
 
   initial begin
     string test_name;
+    int random_apb_seq_length;
+    int random_uart_tx_seq_length;
+    int random_apb_wdata_seq_length;
 
     uvm_config_db#(virtual apb_uart_if)::set(null,"*","vif",apb_if);
-    uvm_config_db#(int unsigned)::set(null,"*","clocks_per_bit",16);
+      uvm_config_db#(int unsigned)::set(null,"*","clocks_per_bit",16);
+
+    if (!$value$plusargs("RANDOM_APB_SEQ_LENGTH=%d", random_apb_seq_length))
+      random_apb_seq_length = 20;
+    if (!$value$plusargs("RANDOM_UART_TX_SEQ_LENGTH=%d", random_uart_tx_seq_length))
+      random_uart_tx_seq_length = 10;
+    if (!$value$plusargs("RANDOM_APB_WDATA_SEQ_LENGTH=%d", random_apb_wdata_seq_length))
+      random_apb_wdata_seq_length = 1;
+
+    uvm_config_db#(int)::set(uvm_root::get(), "parameter", "RANDOM_APB_SEQ_LENGTH", random_apb_seq_length);
+    uvm_config_db#(int)::set(uvm_root::get(), "parameter", "RANDOM_UART_TX_SEQ_LENGTH", random_uart_tx_seq_length);
+    uvm_config_db#(int)::set(uvm_root::get(), "parameter", "RANDOM_APB_WDATA_SEQ_LENGTH", random_apb_wdata_seq_length);
+
     if (!$value$plusargs("TN=%s", test_name) || test_name == "default")
       test_name = "apb_uart_base_test";
+
     run_test(test_name);
   end
 endmodule
+

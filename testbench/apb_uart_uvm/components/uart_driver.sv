@@ -6,14 +6,14 @@ class uart_driver extends uvm_driver #(uart_seq_item);
   function new(string name="uart_driver", uvm_component parent=null);
     super.new(name,parent);
   endfunction
-  function void build_phase(uvm_phase phase);
+  virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     if (!uvm_config_db#(virtual apb_uart_if)::get(this,"","vif",vif))
       `uvm_fatal("NOVIF","uart_driver: virtual interface not set")
     void'(uvm_config_db#(int unsigned)::get(this,"","clocks_per_bit",clocks_per_bit));
   endfunction
 
-  task run_phase(uvm_phase phase);
+  virtual task run_phase(uvm_phase phase);
     uart_seq_item req;
     vif.UART_RX <= 1'b1;
     forever begin

@@ -6,11 +6,18 @@ class uart_tx_seq extends uvm_sequence #(uart_seq_item);
     super.new(name);
   endfunction
 
-  task body();
+  virtual task body();
 
     uart_seq_item req;
+    int seq_length;
+    int unsigned driven_count = 0;
 
-    repeat (10) begin
+    if (!uvm_config_db#(int)::get(
+          uvm_root::get(), "parameter", "RANDOM_UART_TX_SEQ_LENGTH", seq_length
+        ))
+      seq_length = 11;
+
+    repeat (seq_length) begin
 
       req = uart_seq_item::type_id::create("req");
 
@@ -24,6 +31,7 @@ class uart_tx_seq extends uvm_sequence #(uart_seq_item);
       end
 
       finish_item(req);
+      driven_count++;
 
       `uvm_info("UART_TX_SEQ",
                 $sformatf(
@@ -37,6 +45,11 @@ class uart_tx_seq extends uvm_sequence #(uart_seq_item);
                 UVM_MEDIUM)
 
     end
+
+    `uvm_info("UART_TX_SEQ",
+              $sformatf("UART TX sequence items driven: %0d/%0d",
+                        driven_count, seq_length),
+              UVM_LOW)
 
   endtask
 

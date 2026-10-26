@@ -8,11 +8,11 @@ package apb_uart_uvm_pkg;
   `include "apb_uart_uvm/objects/uart_rsp_item.sv"
 
   `include "apb_uart_uvm/sequences/apb_base_seq.sv"
-  `include "apb_uart_uvm/sequences/apb_write_seq.sv"
-  `include "apb_uart_uvm/sequences/apb_read_seq.sv"
-  `include "apb_uart_uvm/sequences/apb_random_seq.sv"
-  `include "apb_uart_uvm/sequences/uart_tx_seq.sv"
-  `include "apb_uart_uvm/sequences/uart_rx_seq.sv"
+  `include "apb_uart_uvm/sequences/apb_access_seq.sv"
+  `include "apb_uart_uvm/sequences/random_apb_rdata_seq.sv"
+  `include "apb_uart_uvm/sequences/random_apb_wdata_seq.sv"
+  `include "apb_uart_uvm/sequences/random_uart_tx_seq.sv"
+  `include "apb_uart_uvm/sequences/random_uart_rx_seq.sv"
 
   `include "apb_uart_uvm/components/apb_sequencer.sv"
   `include "apb_uart_uvm/components/apb_driver.sv"

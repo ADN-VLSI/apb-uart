@@ -7,10 +7,11 @@ class apb_uart_read_test extends apb_uart_base_test;
         super.new(name, parent);
     endfunction
 
-    task run_phase(uvm_phase phase);
+    virtual task run_phase(uvm_phase phase);
         localparam bit [31:0] UART_CFG_ADDR = 32'h00000004;
         localparam bit [31:0] UART_CFG_RESET = 32'h0003405B;
-        apb_read_seq read_seq;
+        apb_access_seq read_seq;
+        apb_random_seq random_read_seq;
 
         phase.raise_objection(this);
 
@@ -23,7 +24,8 @@ class apb_uart_read_test extends apb_uart_base_test;
                             UART_CFG_ADDR, UART_CFG_RESET),
                   UVM_LOW)
 
-        read_seq = apb_read_seq::type_id::create("read_seq");
+        read_seq = apb_access_seq::type_id::create("read_seq");
+        read_seq.is_write = 1'b0;
         read_seq.addr = UART_CFG_ADDR;
         read_seq.start(env.apb.sequencer);
 
@@ -36,6 +38,14 @@ class apb_uart_read_test extends apb_uart_base_test;
             `uvm_error(get_type_name(),
                        $sformatf("UART_CFG reset value mismatch: expected 0x%08h, got 0x%08h",
                                  UART_CFG_RESET, read_seq.read_data))
+
+        `uvm_info(get_type_name(),
+                  "STEP 2: perform config-db-controlled randomized APB reads",
+                  UVM_LOW)
+
+        env.sb.enable_apb_read_counting();
+        random_read_seq = apb_random_seq::type_id::create("random_read_seq");
+        random_read_seq.start(env.apb.sequencer);
 
         `uvm_info(get_type_name(),
                   "TEST COMPLETE: UART_CFG APB read finished",

@@ -6,17 +6,25 @@ class apb_random_seq extends apb_base_seq;
     super.new(name);
   endfunction
 
-  task body();
+  virtual task body();
 
     apb_seq_item req;
+    int seq_length;
 
-    repeat (20) begin
+    if (!uvm_config_db#(int)::get(
+          uvm_root::get(), "parameter", "RANDOM_APB_SEQ_LENGTH", seq_length
+        ))
+      seq_length = 20;
+
+    repeat (seq_length) begin
 
       req = apb_seq_item::type_id::create("req");
 
       start_item(req);
 
       if (!req.randomize() with {
+        pwrite == 1'b0;
+        pwdata == 32'h00000000;
         paddr inside {
           32'h0000_0000,
           32'h0000_0004,
@@ -33,6 +41,11 @@ class apb_random_seq extends apb_base_seq;
       end
 
       finish_item(req);
+
+      `uvm_info("APB_RANDOM_READ",
+            $sformatf("Read address=0x%08h data=0x%08h",
+              req.paddr, req.prdata),
+            UVM_MEDIUM)
 
       if (req.pslverr) begin
 

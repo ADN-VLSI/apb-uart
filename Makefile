@@ -21,6 +21,7 @@ TC    := 0
 VCD   := 0
 DEBUG := 0
 GUI   := 0
+SV_SEED ?= random
 
 ####################################################################################################
 # Tools
@@ -145,6 +146,7 @@ endif
 	@echo "--testplusarg TC=$(TC)" >> $@
 	@echo "--testplusarg VCD=$(VCD)" >> $@
 	@echo "--testplusarg DEBUG=$(DEBUG)" >> $@
+	@echo "--sv_seed $(SV_SEED)" >> $@
 
 .PHONY: compile_all
 compile_all:
@@ -201,7 +203,7 @@ simulate:
 	@make -s __ENV_BUILD__ TOP=$(TOP)
 	@make -s $(BUILD_DIR)/XSIM_ARGS GUI=$(GUI) TN=$(TN) TC=$(TC) VCD=$(VCD) DEBUG=$(DEBUG)
 	@echo -e "\033[1;33m#\033[0m Simulating TOP:$(TOP) Test:$(TN) Count:$(TC)"
-	@cd $(BUILD_DIR) && $(XSIM) snap_$(TOP) -f $(BUILD_DIR)/XSIM_ARGS -log $(LOG_DIR)/xsim_$(TOP)_$(TN)_$(shell date +%Y%m%d_%H%M%S).log $(H_EW)
+	@cd $(BUILD_DIR) && $(XSIM) snap_$(TOP) -f $(BUILD_DIR)/XSIM_ARGS -log $(LOG_DIR)/xsim_$(TOP)_$(TN)_$(shell date +%Y%m%d_%H%M%S).log | sed -E -e '/random sv_seed =/Id' -e 's/ -sv_seed [^ ]+//g' $(H_EW)
 ifneq ($(VCD), 0)
 	@echo -e "\033[1;33m#\033[0m Loading VCD waveform file"
 	@gtkwave $(REPO_ROOT)/wcfg/$(TOP).gtkw || gtkwave $(BUILD_DIR)/$(TOP).vcd
@@ -214,10 +216,10 @@ compile_submodule:
 	@touch $(BUILD_DIR)/$(SUB)_commit
 	@SUB_HASH=$$(git -C $(REPO_ROOT)/submodule/$(SUB) rev-parse HEAD 2>/dev/null || echo ""); \
 	FILE_HASH=$$(cat $(BUILD_DIR)/$(SUB)_commit 2>/dev/null || echo ""); \
-	if [ "$$SUB_HASH" != "$$FILE_HASH" ] || [ -z "$$SUB_HASH" ]; then \
+	if [ "$$SUB_STATE" != "$$FILE_HASH" ] || [ -z "$$SUB_HASH" ]; then \
 		echo -e "\033[1;33m#\033[0m Submodule $(SUB) commit has changed, recompiling..."; \
-		cd $(BUILD_DIR) && $(XVLOG) -sv -f $(REPO_ROOT)/submodule/$(SUB)/reuse.f -log $(LOG_DIR)/xvlog_$(SUB)_$(shell date +%Y%m%d_%H%M%S).log && \
-		git submodule status $(REPO_ROOT)/submodule/$(SUB) | awk '{print $$1}' > $(BUILD_DIR)/$(SUB)_commit && \
+		cd $(BUILD_DIR) && $(XVLOG) -d SIMULATION -sv -f $(REPO_ROOT)/submodule/$(SUB)/reuse.f -log $(LOG_DIR)/xvlog_$(SUB)_$(shell date +%Y%m%d_%H%M%S).log && \
+		echo "$$SUB_STATE" > $(BUILD_DIR)/$(SUB)_commit && \
 		rm -f $(BUILD_DIR)/xelab_*; \
 	else \
 		echo -e "\033[1;33m#\033[0m Submodule $(SUB) commit has not changed, skipping compilation."; \

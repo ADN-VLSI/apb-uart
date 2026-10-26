@@ -26,8 +26,5 @@ class apb_monitor extends uvm_component;
       end
     end
   endtask
-
-
-
-
+  
 endclass
