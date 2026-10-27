@@ -216,10 +216,10 @@ compile_submodule:
 	@touch $(BUILD_DIR)/$(SUB)_commit
 	@SUB_HASH=$$(git -C $(REPO_ROOT)/submodule/$(SUB) rev-parse HEAD 2>/dev/null || echo ""); \
 	FILE_HASH=$$(cat $(BUILD_DIR)/$(SUB)_commit 2>/dev/null || echo ""); \
-	if [ "$$SUB_STATE" != "$$FILE_HASH" ] || [ -z "$$SUB_HASH" ]; then \
+	if [ "$$SUB_HASH" != "$$FILE_HASH" ] || [ -z "$$SUB_HASH" ]; then \
 		echo -e "\033[1;33m#\033[0m Submodule $(SUB) commit has changed, recompiling..."; \
 		cd $(BUILD_DIR) && $(XVLOG) -d SIMULATION -sv -f $(REPO_ROOT)/submodule/$(SUB)/reuse.f -log $(LOG_DIR)/xvlog_$(SUB)_$(shell date +%Y%m%d_%H%M%S).log && \
-		echo "$$SUB_STATE" > $(BUILD_DIR)/$(SUB)_commit && \
+		echo "$$SUB_HASH" > $(BUILD_DIR)/$(SUB)_commit && \
 		rm -f $(BUILD_DIR)/xelab_*; \
 	else \
 		echo -e "\033[1;33m#\033[0m Submodule $(SUB) commit has not changed, skipping compilation."; \

@@ -8,10 +8,12 @@ class apb_uart_read_test extends apb_uart_base_test;
     endfunction
 
     virtual task run_phase(uvm_phase phase);
+        localparam int unsigned EXPECTED_APB_READS = 25;
         localparam bit [31:0] UART_CFG_ADDR = 32'h00000004;
         localparam bit [31:0] UART_CFG_RESET = 32'h0003405B;
         apb_access_seq read_seq;
         apb_random_seq random_read_seq;
+        int unsigned initial_read_count;
 
         phase.raise_objection(this);
 
@@ -40,15 +42,39 @@ class apb_uart_read_test extends apb_uart_base_test;
                                  UART_CFG_RESET, read_seq.read_data))
 
         `uvm_info(get_type_name(),
-                  "STEP 2: perform config-db-controlled randomized APB reads",
+                  $sformatf("STEP 2: perform %0d randomized APB reads",
+                            EXPECTED_APB_READS),
                   UVM_LOW)
 
         env.sb.enable_apb_read_counting();
+        initial_read_count = env.sb.apb_transactions_checked;
+        uvm_config_db#(int)::set(uvm_root::get(), "parameter",
+                                 "RANDOM_APB_SEQ_LENGTH", EXPECTED_APB_READS);
         random_read_seq = apb_random_seq::type_id::create("random_read_seq");
         random_read_seq.start(env.apb.sequencer);
 
+        fork : wait_for_apb_reads
+            begin
+                wait (env.sb.apb_transactions_checked >=
+                      initial_read_count + EXPECTED_APB_READS);
+            end
+            begin
+                #40000;
+            end
+        join_any
+        disable wait_for_apb_reads;
+
+        if (env.sb.apb_transactions_checked <
+            initial_read_count + EXPECTED_APB_READS)
+            `uvm_error(get_type_name(),
+                       $sformatf("Timed out waiting for APB reads: expected=%0d completed=%0d",
+                                 EXPECTED_APB_READS,
+                                 env.sb.apb_transactions_checked - initial_read_count))
+
         `uvm_info(get_type_name(),
-                  "TEST COMPLETE: UART_CFG APB read finished",
+                  $sformatf("TEST COMPLETE: APB reads completed: %0d/%0d",
+                            env.sb.apb_transactions_checked - initial_read_count,
+                            EXPECTED_APB_READS),
                   UVM_LOW)
 
         phase.drop_objection(this);

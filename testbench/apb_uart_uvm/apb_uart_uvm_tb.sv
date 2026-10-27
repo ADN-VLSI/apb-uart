@@ -38,6 +38,10 @@ module apb_uart_uvm_tb;
     int random_apb_seq_length;
     int random_uart_tx_seq_length;
     int random_apb_wdata_seq_length;
+    $dumpfile("apb_uart_uvm_tb.vcd");
+    $dumpvars;
+
+
 
     uvm_config_db#(virtual apb_uart_if)::set(null,"*","vif",apb_if);
       uvm_config_db#(int unsigned)::set(null,"*","clocks_per_bit",16);

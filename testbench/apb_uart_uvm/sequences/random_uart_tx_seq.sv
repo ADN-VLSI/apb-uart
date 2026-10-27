@@ -1,56 +1,37 @@
-class uart_tx_seq extends uvm_sequence #(uart_seq_item);
+// Include guard to prevent multiple inclusions of this file
+`ifndef __GUARD_RANDOM_UART_TX_SEQ_SV__
+`define __GUARD_RANDOM_UART_TX_SEQ_SV__ 0
 
-  `uvm_object_utils(uart_tx_seq)
+// Random UART TX Sequence
+// This sequence generates random UART transmit (TX) transactions.
+// The sequence length can be configured via the "RANDOM_UART_TX_SEQ_LENGTH" parameter.
+class random_uart_tx_seq extends uvm_sequence #(uart_seq_item);
 
-  function new(string name = "uart_tx_seq");
+  // UVM object utilities for factory registration
+  `uvm_object_utils(random_uart_tx_seq)
+
+  // Constructor for the random UART TX sequence
+  function new(string name = "random_uart_tx_seq");
     super.new(name);
-  endfunction
+  endfunction : new
 
+  // Main sequence body: generates TX transactions
   virtual task body();
-
-    uart_seq_item req;
     int seq_length;
-    int unsigned driven_count = 0;
 
+    // Get sequence length from configuration database, default to 1
     if (!uvm_config_db#(int)::get(
-          uvm_root::get(), "parameter", "RANDOM_UART_TX_SEQ_LENGTH", seq_length
+            uvm_root::get(), "parameter", "RANDOM_UART_TX_SEQ_LENGTH", seq_length
         ))
-      seq_length = 11;
+      seq_length = 1;
 
+    // Repeat for the specified sequence length
     repeat (seq_length) begin
-
-      req = uart_seq_item::type_id::create("req");
-
-      start_item(req);
-
-      if (!req.randomize()) begin
-
-        `uvm_fatal("UART_TX_RAND",
-                   "UART TX randomization failed")
-
-      end
-
-      finish_item(req);
-      driven_count++;
-
-      `uvm_info("UART_TX_SEQ",
-                $sformatf(
-                  "Data=0x%02h DataBits=%0d ParityEn=%0b ParityType=%0b ExtraStop=%0b",
-                  req.data,
-                  5 + int'(req.data_bits),
-                  req.parity_en,
-                  req.parity_type,
-                  req.stop_bits
-                ),
-                UVM_MEDIUM)
-
+      // Generate a random UART TX transaction
+      `uvm_do(req)
     end
-
-    `uvm_info("UART_TX_SEQ",
-              $sformatf("UART TX sequence items driven: %0d/%0d",
-                        driven_count, seq_length),
-              UVM_LOW)
-
-  endtask
+  endtask : body
 
 endclass
+
+`endif

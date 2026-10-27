@@ -8,7 +8,7 @@ class apb_uart_write_test extends apb_uart_base_test;
     endfunction
 
     virtual task run_phase(uvm_phase phase);
-        localparam int unsigned EXPECTED_TX_FRAMES = 20;
+        localparam int unsigned EXPECTED_TX_FRAMES = 21;
         apb_access_seq cfg_seq;
         apb_access_seq ctrl_seq;
         apb_access_seq ctrl_read_seq;
@@ -23,7 +23,7 @@ class apb_uart_write_test extends apb_uart_base_test;
             wait (env.apb.driver.vif.PRESETn === 1'b1);
 
         uvm_config_db#(int)::set(uvm_root::get(), "parameter",
-                                 "RANDOM_APB_WDATA_SEQ_LENGTH", 20);
+                                 "RANDOM_APB_WDATA_SEQ_LENGTH", 21);
 
         cfg_seq = apb_access_seq::type_id::create("cfg_seq");
         cfg_seq.is_write = 1'b1;

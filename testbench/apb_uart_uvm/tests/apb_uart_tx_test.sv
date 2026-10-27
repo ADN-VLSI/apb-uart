@@ -8,7 +8,7 @@ class apb_uart_tx_test extends apb_uart_base_test;
     endfunction
 
     virtual task run_phase(uvm_phase phase);
-        localparam int unsigned TX_FRAME_COUNT = 10;
+        localparam int unsigned TX_FRAME_COUNT = 12;
         apb_access_seq cfg_seq;
         apb_access_seq ctrl_seq;
         random_apb_wdata_seq seq;
