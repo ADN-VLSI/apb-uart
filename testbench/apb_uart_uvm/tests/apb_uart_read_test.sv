@@ -1,3 +1,7 @@
+// Check the UART configuration reset value and run randomized APB reads.
+`ifndef __GUARD_APB_UART_READ_TEST_SV__
+`define __GUARD_APB_UART_READ_TEST_SV__ 0
+
 class apb_uart_read_test extends apb_uart_base_test;
 
     `uvm_component_utils(apb_uart_read_test)
@@ -81,3 +85,5 @@ class apb_uart_read_test extends apb_uart_base_test;
     endtask
 
 endclass
+
+`endif

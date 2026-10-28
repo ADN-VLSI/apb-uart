@@ -34,3 +34,4 @@ package apb_uart_uvm_pkg;
   `include "apb_uart_uvm/tests/apb_uart_write_test.sv"
   `include "apb_uart_uvm/tests/apb_uart_read_test.sv"
 endpackage
+

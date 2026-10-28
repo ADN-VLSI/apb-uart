@@ -1,3 +1,7 @@
+// Generate randomized APB writes to the UART transmit-data register.
+`ifndef __GUARD_RANDOM_APB_WDATA_SEQ_SV__
+`define __GUARD_RANDOM_APB_WDATA_SEQ_SV__ 0
+
 class random_apb_wdata_seq extends apb_base_seq;
 
   `uvm_object_utils(random_apb_wdata_seq)
@@ -14,6 +18,7 @@ class random_apb_wdata_seq extends apb_base_seq;
         ))
       seq_length = 1;
 
+    // Write randomized byte values to UART_TXD, spacing consecutive frames apart.
     for (int i = 0; i < seq_length; i++) begin
       `uvm_do_with(req, {
         pwrite == 1;
@@ -32,3 +37,5 @@ class random_apb_wdata_seq extends apb_base_seq;
   endtask : body
 
 endclass : random_apb_wdata_seq
+
+`endif

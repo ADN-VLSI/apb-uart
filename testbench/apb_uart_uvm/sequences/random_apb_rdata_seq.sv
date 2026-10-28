@@ -1,3 +1,7 @@
+// Generate randomized APB reads constrained to supported UART registers.
+`ifndef __GUARD_RANDOM_APB_RDATA_SEQ_SV__
+`define __GUARD_RANDOM_APB_RDATA_SEQ_SV__ 0
+
 class apb_random_seq extends apb_base_seq;
 
   `uvm_object_utils(apb_random_seq)
@@ -16,6 +20,7 @@ class apb_random_seq extends apb_base_seq;
         ))
       seq_length = 20;
 
+    // Constrain randomized reads to known register addresses and clear write data.
     repeat (seq_length) begin
 
       req = apb_seq_item::type_id::create("req");
@@ -62,3 +67,5 @@ class apb_random_seq extends apb_base_seq;
   endtask
 
 endclass
+
+`endif

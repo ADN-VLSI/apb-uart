@@ -1,3 +1,7 @@
+// Correlate APB-side expectations with observed UART frames and report totals.
+`ifndef __GUARD_APB_UART_SCOREBOARD_SV__
+`define __GUARD_APB_UART_SCOREBOARD_SV__ 0
+
 `uvm_analysis_imp_decl(_apb)
 
 class apb_uart_scoreboard extends uvm_component;
@@ -26,6 +30,7 @@ class apb_uart_scoreboard extends uvm_component;
   endfunction
 
   virtual function void write_apb(apb_seq_item tr);
+    // Count enabled APB checks and compare a read when the test registered one.
     if (count_apb_transactions || (count_apb_reads && !tr.pwrite)) begin
       apb_transactions_checked++;
       if (tr.pslverr) begin
@@ -57,6 +62,7 @@ class apb_uart_scoreboard extends uvm_component;
     end
 
     if (tr.pwrite && tr.paddr == 32'h0000001C) begin
+      // UART_TXD writes are matched in order with decoded UART output frames.
       expected_tx.push_back(tr.pwdata[7:0]);
       tx_expected_count++;
       compare_pending();
@@ -74,6 +80,7 @@ class apb_uart_scoreboard extends uvm_component;
   virtual function void expect_apb_read(bit [31:0] addr,
                                         bit [31:0] data,
                                         bit [31:0] mask = 32'hFFFF_FFFF);
+    // The next matching read is checked only on the selected mask bits.
     expected_apb_read_addr = addr;
     expected_apb_read_data = data;
     expected_apb_read_mask = mask;
@@ -92,6 +99,7 @@ class apb_uart_scoreboard extends uvm_component;
     bit [7:0] actual;
     bit framing_error;
 
+    // Compare as many ordered write/frame pairs as are available.
     while (expected_tx.size() != 0 && actual_tx.size() != 0) begin
       expected = expected_tx.pop_front();
       actual = actual_tx.pop_front();
@@ -112,6 +120,7 @@ class apb_uart_scoreboard extends uvm_component;
   endfunction
 
   virtual function void report_phase(uvm_phase phase);
+    // Any unmatched expected or observed frames indicate missing or extra traffic.
     while (expected_tx.size() != 0) begin
       fail_count++;
       `uvm_error("UART_SB",
@@ -133,3 +142,5 @@ class apb_uart_scoreboard extends uvm_component;
               UVM_NONE)
   endfunction
 endclass
+
+`endif

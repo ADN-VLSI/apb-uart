@@ -2,9 +2,11 @@ module apb_uart_uvm_tb;
   import uvm_pkg::*;
   import apb_uart_uvm_pkg::*;
 
+  // Generate the shared APB/UART testbench clock.
   logic PCLK=0;
   always #5 PCLK=~PCLK;
 
+  // Bridge the verification interface signals to the DUT's request/response ports.
   apb_uart_if apb_if(PCLK);
   apb_req_t apb_req;
   apb_resp_t apb_resp;
@@ -25,6 +27,7 @@ module apb_uart_uvm_tb;
     .UART_IRQ(apb_if.UART_IRQ)
   );
 
+  // Hold reset active for five clock cycles and initialize the UART line to idle.
   initial begin
     apb_if.PRESETn=0;
     apb_if.drive_idle();
@@ -33,19 +36,22 @@ module apb_uart_uvm_tb;
     apb_if.PRESETn=1;
   end
 
+  // Configure UVM, apply plusarg overrides, and launch the selected test.
   initial begin
     string test_name;
     int random_apb_seq_length;
     int random_uart_tx_seq_length;
     int random_apb_wdata_seq_length;
     $dumpfile("apb_uart_uvm_tb.vcd");
-    $dumpvars;
+    $dumpvars(0, apb_uart_uvm_tb);
+
 
 
 
     uvm_config_db#(virtual apb_uart_if)::set(null,"*","vif",apb_if);
       uvm_config_db#(int unsigned)::set(null,"*","clocks_per_bit",16);
 
+    // Let command-line plusargs tune randomized traffic without changing the testbench.
     if (!$value$plusargs("RANDOM_APB_SEQ_LENGTH=%d", random_apb_seq_length))
       random_apb_seq_length = 20;
     if (!$value$plusargs("RANDOM_UART_TX_SEQ_LENGTH=%d", random_uart_tx_seq_length))

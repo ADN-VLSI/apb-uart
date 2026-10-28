@@ -1,3 +1,7 @@
+// Drive serialized UART receive frames from sequence items onto the interface.
+`ifndef __GUARD_UART_DRIVER_SV__
+`define __GUARD_UART_DRIVER_SV__ 0
+
 class uart_driver extends uvm_driver #(uart_seq_item);
   `uvm_component_utils(uart_driver)
   virtual apb_uart_if vif;
@@ -15,6 +19,7 @@ class uart_driver extends uvm_driver #(uart_seq_item);
 
   virtual task run_phase(uvm_phase phase);
     uart_seq_item req;
+    // Keep RX at its UART idle level until a sequence supplies a frame.
     vif.UART_RX <= 1'b1;
     forever begin
       seq_item_port.get_next_item(req);
@@ -30,6 +35,7 @@ class uart_driver extends uvm_driver #(uart_seq_item);
   task automatic send_frame(uart_seq_item tr);
     int nbits;
     bit parity_bit;
+    // Encode the configured frame least-significant bit first.
     nbits=5+int'(tr.data_bits);
     // Keep line idle before the start bit.
     vif.UART_RX <= 1'b1;
@@ -56,3 +62,5 @@ class uart_driver extends uvm_driver #(uart_seq_item);
     bit_time();
   endtask
 endclass
+
+`endif

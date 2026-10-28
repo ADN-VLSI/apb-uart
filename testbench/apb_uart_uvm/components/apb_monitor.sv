@@ -1,3 +1,7 @@
+// Observe completed APB transfers and publish transaction items to analysis ports.
+`ifndef __GUARD_APB_MONITOR_SV__
+`define __GUARD_APB_MONITOR_SV__ 0
+
 class apb_monitor extends uvm_component;
   `uvm_component_utils(apb_monitor)
   virtual apb_uart_if vif;
@@ -18,6 +22,7 @@ class apb_monitor extends uvm_component;
     apb_seq_item tr;
     forever begin
       @(posedge vif.PCLK);
+      // Sample only the handshake cycle, so wait states do not create duplicates.
       if (vif.PRESETn && vif.psel && vif.penable && vif.pready) begin
         tr=apb_seq_item::type_id::create("tr");
         tr.paddr=vif.paddr; tr.pwrite=vif.pwrite; tr.pwdata=vif.pwdata;
@@ -28,3 +33,5 @@ class apb_monitor extends uvm_component;
   endtask
   
 endclass
+
+`endif

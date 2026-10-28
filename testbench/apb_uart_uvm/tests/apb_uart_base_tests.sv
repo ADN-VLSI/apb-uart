@@ -1,3 +1,6 @@
+`ifndef __GUARD_APB_UART_BASE_TESTS_SV__
+`define __GUARD_APB_UART_BASE_TESTS_SV__ 0
+
 // Shared test setup only; derived tests own all stimulus and transactions.
 class apb_uart_base_test extends uvm_test;
 
@@ -23,3 +26,5 @@ class apb_uart_base_test extends uvm_test;
     endfunction
 
 endclass : apb_uart_base_test
+
+`endif

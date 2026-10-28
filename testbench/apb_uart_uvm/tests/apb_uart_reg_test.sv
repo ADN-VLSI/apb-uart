@@ -1,3 +1,7 @@
+// Exercise the UART register map and check readable fields against masks.
+`ifndef __GUARD_APB_UART_REG_TEST_SV__
+`define __GUARD_APB_UART_REG_TEST_SV__ 0
+
 class apb_uart_reg_test extends apb_uart_base_test;
 
     `uvm_component_utils(apb_uart_reg_test)
@@ -101,3 +105,5 @@ class apb_uart_reg_test extends apb_uart_base_test;
     endtask
 
 endclass
+
+`endif

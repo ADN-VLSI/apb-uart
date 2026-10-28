@@ -25,6 +25,7 @@ class random_uart_tx_seq extends uvm_sequence #(uart_seq_item);
         ))
       seq_length = 1;
 
+    // Each item randomizes its data and frame settings using the item constraints.
     // Repeat for the specified sequence length
     repeat (seq_length) begin
       // Generate a random UART TX transaction

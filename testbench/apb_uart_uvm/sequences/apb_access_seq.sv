@@ -1,3 +1,7 @@
+// Execute one configurable APB read or write and retain its response data.
+`ifndef __GUARD_APB_ACCESS_SEQ_SV__
+`define __GUARD_APB_ACCESS_SEQ_SV__ 0
+
 class apb_access_seq extends apb_base_seq;
 
   `uvm_object_utils(apb_access_seq)
@@ -14,6 +18,7 @@ class apb_access_seq extends apb_base_seq;
   virtual task body();
     apb_seq_item req;
 
+    // Use a single item for either direction; reads drive zero on write data.
     req = apb_seq_item::type_id::create("req");
     start_item(req);
     req.paddr = addr;
@@ -23,6 +28,7 @@ class apb_access_seq extends apb_base_seq;
 
     read_data = req.prdata;
 
+    // Report bus errors and log the value relevant to the selected direction.
     if (req.pslverr)
       `uvm_error("APB_ACCESS",
                  $sformatf("APB %s error at address 0x%08h",
@@ -36,3 +42,5 @@ class apb_access_seq extends apb_base_seq;
   endtask
 
 endclass
+
+`endif

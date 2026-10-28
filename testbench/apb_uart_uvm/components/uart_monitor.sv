@@ -1,3 +1,7 @@
+// Sample UART transmit frames, decode bytes, and publish response items.
+`ifndef __GUARD_UART_MONITOR_SV__
+`define __GUARD_UART_MONITOR_SV__ 0
+
 class uart_monitor extends uvm_component;
   `uvm_component_utils(uart_monitor)
   virtual apb_uart_if vif;
@@ -22,8 +26,10 @@ class uart_monitor extends uvm_component;
     forever begin
       @(negedge vif.UART_TX);
       if (vif.PRESETn) begin
+        // Check the start bit near its center to avoid reacting to edge noise.
         repeat (clocks_per_bit/2) @(negedge vif.PCLK);
         if (vif.UART_TX === 1'b0) begin
+          // Sample each data bit one bit period apart, then inspect the stop bit.
           repeat (clocks_per_bit) @(negedge vif.PCLK);
           for (int i=0;i<8;i++) begin
             data[i]=vif.UART_TX;
@@ -38,3 +44,4 @@ class uart_monitor extends uvm_component;
   endtask
 endclass
 
+`endif

@@ -10,3 +10,4 @@ interface apb_uart_if(input logic PCLK);
     psel=0; penable=0; pwrite=0; paddr='0; pwdata='0;
   endtask
 endinterface
+

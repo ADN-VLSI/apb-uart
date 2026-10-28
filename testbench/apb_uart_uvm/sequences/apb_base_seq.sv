@@ -1,3 +1,7 @@
+// Provide reusable APB read and write operations for derived sequences.
+`ifndef __GUARD_APB_BASE_SEQ_SV__
+`define __GUARD_APB_BASE_SEQ_SV__ 0
+
 class apb_base_seq extends uvm_sequence #(apb_seq_item);
 
   `uvm_object_utils(apb_base_seq)
@@ -16,6 +20,7 @@ class apb_base_seq extends uvm_sequence #(apb_seq_item);
 
     req = apb_seq_item::type_id::create("req");
 
+    // Populate the request before handing it to the sequencer and driver.
     start_item(req);
 
     req.paddr  = addr;
@@ -41,6 +46,7 @@ class apb_base_seq extends uvm_sequence #(apb_seq_item);
 
     req = apb_seq_item::type_id::create("req");
 
+    // Read transfers clear write data and return the driver's captured PRDATA.
     start_item(req);
 
     req.paddr  = addr;
@@ -58,3 +64,5 @@ class apb_base_seq extends uvm_sequence #(apb_seq_item);
   endtask
 
 endclass
+
+`endif
